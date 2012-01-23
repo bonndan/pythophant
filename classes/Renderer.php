@@ -13,6 +13,7 @@ class Renderer
     public function __construct(TokenList $tokenList)
     {
         foreach ($tokenList as $token) {
+            //echo $token->getTokenName();
             echo $token->getContent();
         }
         

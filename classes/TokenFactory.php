@@ -7,28 +7,37 @@ require_once dirname(__FILE__) . '/Token.php';
  */
 class TokenFactory
 {
-
     const INDENTATION_LEVEL = 4;
     const T_ASSIGN = '=';
     const T_OPEN_BRACE = '(';
     const T_CLOSE_BRACE = ')';
+    const T_OPEN_ARRAY = '[';
+    const T_CLOSE_ARRAY = ']';
     const T_THIS = 'this';
     const T_SELF = 'self';
     const T_MEMBER = '.';
+    const T_COMMA = ',';
     const T_NEWLINE = "\n";
     const T_RETURNVALUE = "";
+    const T_IN = "in";
+    const T_PLUS = "+";
 
     /**
      * @var array
      */
     private static $tokens = array(
         'T_ASSIGN' => self::T_ASSIGN,
+        'T_COMMA' => self::T_COMMA,
         'T_MEMBER' => self::T_MEMBER,
         'T_OPEN_BRACE' => self::T_OPEN_BRACE,
         'T_CLOSE_BRACE' => self::T_CLOSE_BRACE,
         'T_SELF' => self::T_SELF,
         'T_THIS' => self::T_THIS,
         'T_RETURNVALUE' => self::T_RETURNVALUE,
+        'T_IN' => self::T_IN,
+        'T_PLUS' => self::T_PLUS,
+        'T_OPEN_ARRAY' => self::T_OPEN_ARRAY,
+        'T_CLOSE_ARRAY' => self::T_CLOSE_ARRAY,
     );
     
     /**
@@ -37,7 +46,7 @@ class TokenFactory
      * @var array 
      */
     public static $returnValues = array(
-        'string', 'int', 'bool', 'boolean', 'void'
+        'string', 'int', 'float', 'bool', 'boolean', 'void'
     );
 
     /**
@@ -50,6 +59,11 @@ class TokenFactory
         'T_VARIABLE' => 'VariableToken',
         'T_NEWLINE' => 'NewLineToken',
         'T_INDENTATION' => 'IndentationToken',
+        'T_STRING' => 'StringToken',
+        'T_IN' => 'InToken',
+        'T_PLUS' => 'PlusToken',
+        'T_OPEN_ARRAY' => 'OpenArrayToken',
+        'T_CLOSE_ARRAY' => 'CloseArrayToken',
     );
 
     /**

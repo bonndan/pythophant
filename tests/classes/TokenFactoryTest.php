@@ -32,7 +32,7 @@ class TokenFactoryTest extends PHPUnit_Framework_TestCase
     public function customTokenProvider()
     {
         return array(
-            array(',', 'T_STRING'),
+            array(',', 'T_COMMA'),
             array('.', 'T_MEMBER'),
             array('"."', 'T_STRING'),
             array('(', 'T_OPEN_BRACE'),

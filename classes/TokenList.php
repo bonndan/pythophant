@@ -1,4 +1,6 @@
 <?php
+
+require_once dirname(__FILE__) . '/Token.php';
 /**
  * token list
  * 
@@ -70,16 +72,31 @@ class TokenList implements Iterator, Countable, ArrayAccess
      * 
      * @return Token|Null 
      */
-    public function getNextNonWhitespace(Token $token)
+    public function getNextNonWhitespace(Token $token, $newLineEnds = true, $incrementor = 1)
     {
         $index = $this->getTokenIndex($token);
-        while($this->offsetExists($index+1)) {
-            $next = $this->tokens[$index];
-            if (!in_array($token->getTokenName(), array('T_WHITESPACE', 'T_INDENT'))) {
+        while($this->offsetExists($index+$incrementor)) {
+            $next = $this->tokens[$index+$incrementor];
+            if ($newLineEnds && $next instanceof NewLineToken) {
+                break;
+            }
+            if (!in_array($next->getTokenName(), array('T_WHITESPACE', 'T_INDENT'))) {
                 return $next;
             }
-            $index++;
+            $index = $index + $incrementor;
         }
+    }
+    
+    /**
+     * get the previous which is not a whitespace
+     * 
+     * @param Token $token
+     * 
+     * @return Token|Null 
+     */
+    public function getPreviousNonWhitespace(Token $token, $newLineEnds = true)
+    {
+        return $this->getNextNonWhitespace($token, $newLineEnds, -1);
     }
     
     /**

@@ -13,7 +13,7 @@ class Parser
     const EXPLICITLY_OPENED = 2;
     
     const T_DECLARATION_BLOCK_OPEN = "{\n";
-    const T_BLOCK_OPEN = " {\n";
+    const T_BLOCK_OPEN = " {";
     const T_BLOCK_CLOSE = "}\n";
     
     /**
@@ -72,6 +72,7 @@ class Parser
             }
         }
         
+        $this->parseStringTokens();
         $this->makeLines();
         $this->parse1();
         $this->makeLines();
@@ -80,6 +81,8 @@ class Parser
 
     /**
      * make lines based on newline tokens
+     * 
+     * @return void
      */
     private function makeLines()
     {
@@ -89,6 +92,15 @@ class Parser
             $this->lines[$currentLine][] = $token;
             if ($token instanceof NewLineToken) {
                 $currentLine++;
+            }
+        }
+    }
+    
+    public function parseStringTokens()
+    {
+        foreach ($this->tokenList as $token) {
+            if ($token instanceof StringToken) {
+                $token->affectTokenList($this->tokenList);
             }
         }
     }
@@ -111,13 +123,20 @@ class Parser
                 continue;
             }
             
+            
             $currentPos = $this->tokenList->getTokenIndex($newlineToken);
+            if($prev = $this->tokenList->offsetGet($currentPos-1)) {
+                if ($this->isTokenIncluded(array($prev), array('T_OPEN_TAG', 'T_DOC_COMMENT'))) {
+                    $newlineToken->setAuxValue("");
+                    continue;
+                }
+            }
             
             $opened = $this->isDeclarationOpened($line);
             if ($opened != false) {
                 
                 $blockOpen = $this->tokenFactory->createToken(
-                    'T_STRING',
+                    'T_DECLARATION_BLOCK_OPEN',
                     self::T_DECLARATION_BLOCK_OPEN,
                     $newlineToken->getLine()
                 );
@@ -215,9 +234,12 @@ class Parser
      * 
      * @return boolean 
      */
-    private function isTokenIncluded(array $tokens, array $hayStack)
+    public function isTokenIncluded(array $tokens, array $hayStack)
     {
         foreach ($tokens as $token) {
+            if (is_null($token)) {
+                return false;
+            }
             if (in_array($token->getTokenName(), $hayStack)) {
                 return true;
             }
@@ -269,7 +291,7 @@ class Parser
         return false;
     }
     
-    private function makeBlocks()
+    private function parseBlocks()
     {
         
     }
