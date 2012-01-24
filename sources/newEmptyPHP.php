@@ -17,6 +17,12 @@ class Schinken extends Wurst
      */
     protected anArray = []
 
+    /**
+     * hanswurst
+     * 
+     * @var MyInterface hans 
+     * @var string      wurst 
+     */
     private hanswurst (MyInterface hans, string wurst = 'Schinken')
         this.hans = hans
         self::wurst = wurst
@@ -27,7 +33,7 @@ class Schinken extends Wurst
     /**
      * final function
      */
-    final public someFunction ()
+    final someFunction ()
         this.hanswurst(1, "hanswurst")
         a = ['b', var1, var2]
         return this.hans + " " + self::wurst

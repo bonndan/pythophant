@@ -14,7 +14,7 @@ class Parser
     
     const T_DECLARATION_BLOCK_OPEN = "{\n";
     const T_BLOCK_OPEN = " {";
-    const T_BLOCK_CLOSE = "}\n";
+    const T_BLOCK_CLOSE = "}\n\n";
     
     /**
      * @var TokenList
@@ -291,9 +291,45 @@ class Parser
         return false;
     }
     
+    /**
+     * 
+     */
     private function parseBlocks()
     {
+        $currentLevel = 0;
+        foreach ($this->lines as $count => $line) {
+            $nestingLevel = 0;
+            if ($line[0] instanceof IndentationToken) {
+                $nestingLevel = $line[0]->getNestingLevel();
+            } 
+            
+            if ($nestingLevel < $currentLevel) {
+                $prevLine = $this->lines[$count-1];
+                $lastToken = $prevLine[count($prevLine)-1];
+                if ($lastToken instanceof NewLineToken) {
+                    $lastToken->setContent(PHP_EOL);
+                    $this->injectBlockClosingAfter($lastToken, $nestingLevel);
+                }
+            }
+            $currentLevel = $nestingLevel;
+        }
         
+        while($currentLevel > 0) {
+            $currentLevel--;
+            $lastToken = $this->tokenList[count($this->tokenList)-1];
+            $this->injectBlockClosingAfter($lastToken, $currentLevel);
+        }
+    }
+    
+    private function injectBlockClosingAfter(Token $token, $nestingLevel)
+    {
+        $index = $this->tokenList->getTokenIndex($token);
+        $this->tokenList->injectToken(
+            IndentationToken::create($nestingLevel),
+            $index+1
+        );
+        $close = new StringToken('T_CLOSE_BLOCK', self::T_BLOCK_CLOSE, 0);
+        $this->tokenList->injectToken($close, $index+2);
     }
     
     /**

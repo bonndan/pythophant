@@ -258,9 +258,30 @@ class NewLineToken extends CustomGenericToken
 
 class IndentationToken extends CustomGenericToken
 {
-
+    /**
+     * @var int 
+     */
     const INDENTATION_SPACES = 4;
 
+    /**
+     * create a new indentation token
+     * 
+     * @param int $nestingLevel
+     * @param int $line
+     * 
+     * @return IndentationToken 
+     */
+    public static function create($nestingLevel, $line = 0)
+    {
+        $content = str_repeat(' ', self::INDENTATION_SPACES * $nestingLevel);
+        return new IndentationToken('T_INDENT', $content, $line);
+    }
+
+    /**
+     *
+     * @param type $content
+     * @throws InvalidArgumentException 
+     */
     public function setContent($content)
     {
         parent::setContent($content);

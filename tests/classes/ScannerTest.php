@@ -48,7 +48,7 @@ class ScannerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(6, count($tokens));
         $this->assertEquals('T_OPEN_TAG', $tokens[0]->getTokenName());
         $this->assertEquals('<?php ', $tokens[0]->getContent());
-        $this->assertEquals('T_WHITESPACE', $tokens[1]->getTokenName());
+        $this->assertEquals('T_NEWLINE', $tokens[1]->getTokenName());
         $this->assertEquals('T_ECHO', $tokens[2]->getTokenName());
         $this->assertEquals('T_WHITESPACE', $tokens[3]->getTokenName());
         $this->assertEquals('T_CONSTANT_ENCAPSED_STRING', $tokens[4]->getTokenName());
