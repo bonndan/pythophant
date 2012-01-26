@@ -58,7 +58,7 @@ class TokenFactory
         'T_RETURNVALUE' => 'ReturnValueToken',
         'T_VARIABLE' => 'VariableToken',
         'T_NEWLINE' => 'NewLineToken',
-        'T_INDENTATION' => 'IndentationToken',
+        'T_INDENT' => 'IndentationToken',
         'T_STRING' => 'StringToken',
         'T_IN' => 'InToken',
         'T_PLUS' => 'PlusToken',
@@ -84,7 +84,7 @@ class TokenFactory
                 $flip = array_flip(self::$tokens);
                 $tokenName = $flip[$tokenized];
             } elseif (in_array($tokenized, self::$returnValues)) {
-                $tokenName = 'T_RETURNVALUE';
+                $tokenName = Token::T_RETURNVALUE;
             }
             
             return $tokenName;
@@ -116,9 +116,9 @@ class TokenFactory
     {
         if (strpos($string, self::T_NEWLINE) !== FALSE) {
             if ($string[strlen($string)-1] == PHP_EOL) {
-                return 'T_NEWLINE';
+                return Token::T_NEWLINE;
             } else {
-                return array ('T_NEWLINE', 'T_INDENTATION');
+                return array (Token::T_NEWLINE, Token::T_INDENT);
             }
         }
         

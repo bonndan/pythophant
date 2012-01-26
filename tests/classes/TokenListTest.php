@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/TokenList.php';
+require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
 
 /**
  * Test class for TokenList.
@@ -43,25 +43,19 @@ class TokenListTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Implement testInjectToken().
+     * testInjectToken().
      */
     public function testInjectToken()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testGetTokenIndex().
-     */
-    public function testGetTokenIndex()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $tokenMock = $this->getTokenMock();
+        $this->assertFalse($this->object->offsetExists(0));
+        $this->object->pushToken($tokenMock);
+        
+        $tokenMock2 = $this->getTokenMock();
+        $this->object->injectToken($tokenMock2, 0);
+        
+        $this->assertEquals($tokenMock2, $this->object->offsetGet(0));
+        $this->assertEquals($tokenMock, $this->object->offsetGet(1));
     }
 
     /**
@@ -95,125 +89,6 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertNull($res);
     }
 
-    /**
-     */
-    public function testGetPreviousNonWhitespace()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testRewind().
-     */
-    public function testRewind()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testCurrent().
-     */
-    public function testCurrent()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testKey().
-     */
-    public function testKey()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testNext().
-     */
-    public function testNext()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testValid().
-     */
-    public function testValid()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testCount().
-     */
-    public function testCount()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testOffsetExists().
-     */
-    public function testOffsetExists()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testOffsetGet().
-     */
-    public function testOffsetGet()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testOffsetSet().
-     */
-    public function testOffsetSet()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testOffsetUnset().
-     */
-    public function testOffsetUnset()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
+ 
 }
 

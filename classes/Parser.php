@@ -10,6 +10,9 @@ require_once dirname(__FILE__) . '/TokenList.php';
  */
 class Parser
 {
+    /**
+     * return value for explicitly declared blocks 
+     */
     const EXPLICITLY_OPENED = 2;
     
     const T_DECLARATION_BLOCK_OPEN = "{\n";
@@ -317,6 +320,7 @@ class Parser
         while($currentLevel > 0) {
             $currentLevel--;
             $lastToken = $this->tokenList[count($this->tokenList)-1];
+            
             $this->injectBlockClosingAfter($lastToken, $currentLevel);
         }
     }

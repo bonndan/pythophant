@@ -20,8 +20,9 @@ class Schinken extends Wurst
     /**
      * hanswurst
      * 
-     * @var MyInterface hans 
-     * @var string      wurst 
+     * @param MyInterface hans 
+     * @param string      wurst 
+     * @return Schinken
      */
     private hanswurst (MyInterface hans, string wurst = 'Schinken')
         this.hans = hans
@@ -37,4 +38,3 @@ class Schinken extends Wurst
         this.hanswurst(1, "hanswurst")
         a = ['b', var1, var2]
         return this.hans + " " + self::wurst
-    

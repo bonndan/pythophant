@@ -1,7 +1,12 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/Parser.php';
+require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
 
+/**
+ *
+ * 
+ *  
+ */
 class IndentationTokenTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -17,10 +22,19 @@ class IndentationTokenTest extends PHPUnit_Framework_TestCase
     public function contentProvider()
     {
         return array(
-            array('    ', ''),
+            array('', ''),
+            array('    ', '    '),
+            array('    ' . PHP_EOL, ''),
             array('    '.PHP_EOL.PHP_EOL, ''),
             array('    '.PHP_EOL.PHP_EOL .'    ', '    '),
             array(PHP_EOL . '    '.PHP_EOL.PHP_EOL .'    ', '    '),
         );
+    }
+    
+    public function testCreate()
+    {
+        $token = IndentationToken::create(2);
+        $this->assertInstanceOf('IndentationToken', $token);
+        $this->assertEquals('        ', $token->getContent());
     }
 }

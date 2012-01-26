@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/Parser.php';
+require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
 
 /**
  * Test class for Parser.
