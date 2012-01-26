@@ -2,12 +2,13 @@
 
 require_once dirname(__FILE__) . '/classes/autoload.php';
 
-$filename = dirname(__FILE__) . '/sources/newEmptyPHP.php';
+$filename = $argv[1];
 $scanner = new Scanner($tokenFactory = new TokenFactory());
 $scanner->scanFile($filename);
 
 $parser = new Parser($tokenFactory);
 $parser->processTokenList($scanner->getTokenList());
 
-new Renderer($parser->getTokenList());
+$renderer = new Renderer($parser->getTokenList());
+echo $renderer->getPHPSource();
 

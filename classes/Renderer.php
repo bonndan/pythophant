@@ -6,44 +6,36 @@
 class Renderer
 {
     /**
+     * list of tokens of a file
+     * @var TokenList 
+     */
+    private $tokenList;
+    
+    /**
      * inject the lines
      * 
      * @param array $lines 
      */
     public function __construct(TokenList $tokenList)
     {
-        foreach ($tokenList as $token) {
-            //echo $token->getTokenName();
-            echo $token->getContent();
+        $this->tokenList = $tokenList;
+    }
+    
+    /**
+     * turns all tokens into their php equivalent
+     * 
+     * @return string 
+     */
+    public function getPHPSource($debugNames = false)
+    {
+        $buffer = "";
+        foreach ($this->tokenList as $token) {
+            if ($debugNames) {
+                echo $token->getTokenName();
+            }
+            $buffer .= $token->getContent();
         }
         
-        echo PHP_EOL;
-    }
-    
-    /**
-     *
-     * @param array $tokens 
-     */
-    public function renderLine(array $tokens)
-    {
-        foreach($tokens as $token) {
-            $this->renderToken(key($token), current($token));
-        }
-    }
-    
-    /**
-     *
-     * @param string $name
-     * @param string $content 
-     */
-    public function renderToken($name, $content)
-    {
-        if (CustomToken::isCustomToken($name)) {
-            echo CustomToken::render($name);
-        } else {
-            if ($name == 'T_STRING')
-                echo "($name)";
-            echo $content;
-        }
+        return $buffer;
     }
 }

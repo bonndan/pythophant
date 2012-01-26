@@ -9,6 +9,7 @@ class XYZ_Controller extends Zend_Controller_Action
         form = new MyForm
     
         if (this.getRequest().isPost() && form.isValid(this.getAllParams()))
-            something.setValues(form.getValues).save
+            something.setValues(form.getValues).save()
+            
         if (something in json)
             dosomething()
