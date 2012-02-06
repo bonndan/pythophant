@@ -29,6 +29,10 @@ class StringToken extends CustomGenericToken
     {
         $parser = new Parser(new TokenFactory);
         
+        if ($this->isConstant()) {
+            return;
+        }
+        
         /**
          * token before 
          */
@@ -42,8 +46,14 @@ class StringToken extends CustomGenericToken
             'T_DOUBLE_COLON',
             'T_COMMA',
             'T_STRING',
-            'T_OPEN_BRACE'
+            'T_OPEN_BRACE',
+            'T_DOUBLE_ARROW',
+            'T_AS',
+            'T_ECHO',
+            'T_BOOLEAN_AND',
+            'T_BOOLEAN_OR',
         );
+        $preVariableIndicators = array_merge($preVariableIndicators, Parser::$controls);
         $preCondition = $parser->isTokenIncluded(array($previous), $preVariableIndicators);
         
         /**
@@ -56,6 +66,12 @@ class StringToken extends CustomGenericToken
             'T_COMMA',
             'T_ASSIGN',
             'T_MEMBER',
+            'T_DOUBLE_COLON',
+            'T_AS',
+            'T_DOUBLE_ARROW',
+            'T_OPEN_ARRAY',
+            'T_BOOLEAN_AND',
+            'T_BOOLEAN_OR',
         );
         $postCondition = $parser->isTokenIncluded(array($next), $postVariableIndicators);
        
@@ -67,5 +83,34 @@ class StringToken extends CustomGenericToken
             $this->tokenName = 'T_VARIABLE';
             $this->content = '$'.$this->content;
         } 
+    }
+    
+    /**
+     * checks if the content might be a constant
+     * @return boolean 
+     */
+    public function isConstant()
+    {
+        if (defined($this->content)) {
+            return true;
+        }
+        
+        if ($this->isUppercase($this->content)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * checks if a string has only uppercase chars except underscores
+     * 
+     * @param string $string 
+     * 
+     * @return boolean
+     */
+    private function isUppercase($string)
+    {
+        return ctype_upper(str_replace('_', '', $string));
     }
 }

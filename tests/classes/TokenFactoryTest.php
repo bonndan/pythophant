@@ -42,6 +42,9 @@ class TokenFactoryTest extends PHPUnit_Framework_TestCase
             array('self', 'T_SELF'),
             array('string', 'T_RETURNVALUE'),
             array('bool', 'T_RETURNVALUE'),
+            array('{', 'T_JSON_OPEN_OBJECT'),
+            array('}', 'T_JSON_CLOSE_OBJECT'),
+            array(':', 'T_JSON_ASSIGN'),
             array('boolean', 'T_RETURNVALUE'),
             
             array(array(T_STRING, "this", 3), 'T_THIS'),

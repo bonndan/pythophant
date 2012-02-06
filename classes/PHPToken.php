@@ -21,7 +21,7 @@ class PHPToken implements Token
     protected $content;
 
     /**
-     *
+     * line number
      * @var int 
      */
     protected $line;

@@ -1,8 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/TokenFactory.php';
-require_once dirname(__FILE__) . '/TokenList.php';
-
 /**
  * File scanner, uses php tokenizer
  * 
@@ -35,24 +32,11 @@ class Scanner
     }
 
     /**
-     * parses the sources and pushes all tokens on the list
-     * 
-     * @param string $filename file contents
-     */
-    public function scanFile($filename)
-    {
-        if (!is_file($filename)) {
-            throw new InvalidArgumentException('Not a file ' . $filename);
-        }
-
-        return $this->scanSource(file_get_contents($filename));
-    }
-
-    /**
      * parses a string
      * 
-     * @param type $source
-     * @return type 
+     * @param string $source
+     * 
+     * @return void 
      */
     public function scanSource($source)
     {

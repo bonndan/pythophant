@@ -7,6 +7,8 @@ interface Token
     const T_COMMA = 'T_COMMA';
     const T_NEWLINE = 'T_NEWLINE';
     const T_INDENT= 'T_INDENT';
+    const T_OPEN_BRACE = 'T_OPEN_BRACE';
+    const T_CLOSE_BRACE = 'T_CLOSE_BRACE';
     
     /**
      * @param string $tokenName

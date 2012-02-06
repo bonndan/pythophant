@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__FILE__) . '/Token.php';
 
 /**
  * factory class to generate Tokens
@@ -14,14 +13,18 @@ class TokenFactory
     const T_OPEN_ARRAY = '[';
     const T_CLOSE_ARRAY = ']';
     const T_THIS = 'this';
+    const T_THIS_MEMBER = '@';
     const T_SELF = 'self';
     const T_MEMBER = '.';
     const T_COMMA = ',';
     const T_NEWLINE = "\n";
     const T_RETURNVALUE = "";
-    const T_IN = "in";
+    //const T_IN = "in";
     const T_PLUS = "+";
-
+    
+    const T_JSON_OPEN_OBJECT = "{";
+    const T_JSON_CLOSE_OBJECT = "}";
+    const T_JSON_ASSIGN = ":";
     /**
      * @var array
      */
@@ -33,11 +36,16 @@ class TokenFactory
         'T_CLOSE_BRACE' => self::T_CLOSE_BRACE,
         'T_SELF' => self::T_SELF,
         'T_THIS' => self::T_THIS,
+        'T_THIS_MEMBER' => self::T_THIS_MEMBER,
         'T_RETURNVALUE' => self::T_RETURNVALUE,
-        'T_IN' => self::T_IN,
+        //'T_IN' => self::T_IN,
         'T_PLUS' => self::T_PLUS,
         'T_OPEN_ARRAY' => self::T_OPEN_ARRAY,
         'T_CLOSE_ARRAY' => self::T_CLOSE_ARRAY,
+        'T_CLOSE_ARRAY' => self::T_CLOSE_ARRAY,
+        'T_JSON_OPEN_OBJECT' => self::T_JSON_OPEN_OBJECT,
+        'T_JSON_CLOSE_OBJECT' => self::T_JSON_CLOSE_OBJECT,
+        'T_JSON_ASSIGN' => self::T_JSON_ASSIGN,
     );
     
     /**
@@ -55,8 +63,8 @@ class TokenFactory
     private static $implementations = array(
         'T_MEMBER' => 'MemberToken',
         'T_THIS' => 'ThisToken',
+        'T_THIS_MEMBER' => 'ThisMemberToken',
         'T_RETURNVALUE' => 'ReturnValueToken',
-        'T_VARIABLE' => 'VariableToken',
         'T_NEWLINE' => 'NewLineToken',
         'T_INDENT' => 'IndentationToken',
         'T_STRING' => 'StringToken',
@@ -64,6 +72,9 @@ class TokenFactory
         'T_PLUS' => 'PlusToken',
         'T_OPEN_ARRAY' => 'OpenArrayToken',
         'T_CLOSE_ARRAY' => 'CloseArrayToken',
+        'T_JSON_ASSIGN' => 'JsonToken',
+        'T_JSON_OPEN_OBJECT' => 'JsonToken',
+        'T_JSON_CLOSE_OBJECT' => 'JsonToken',
     );
 
     /**

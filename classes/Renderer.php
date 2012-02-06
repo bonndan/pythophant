@@ -31,7 +31,7 @@ class Renderer
         $buffer = "";
         foreach ($this->tokenList as $token) {
             if ($debugNames) {
-                echo $token->getTokenName();
+                $buffer .= $token->getTokenName();
             }
             $buffer .= $token->getContent();
         }

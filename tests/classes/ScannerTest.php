@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/Scanner.php';
+require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
 
 /**
  * Test class for Scanner.
@@ -53,5 +53,28 @@ class ScannerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('T_WHITESPACE', $tokens[3]->getTokenName());
         $this->assertEquals('T_CONSTANT_ENCAPSED_STRING', $tokens[4]->getTokenName());
     }
+    
+    /**
+     * testParse().
+     */
+    public function testScanJsonSource()
+    {
+        $this->object = new Scanner(new TokenFactory);
+            
+        $source = "<?php \nmyVar = {'uncle': ['bob', 'joe']}\n";
+        $res = $this->object->scanSource($source);
+        
+        $tokens = $this->object->getTokenList();
+        $this->assertEquals(18, count($tokens));
+        $this->assertEquals('T_OPEN_TAG', $tokens[0]->getTokenName());
+        $this->assertEquals('<?php ', $tokens[0]->getContent());
+        $this->assertEquals('T_NEWLINE', $tokens[1]->getTokenName());
+        $this->assertEquals('T_STRING', $tokens[2]->getTokenName());
+        $this->assertEquals('myVar', $tokens[2]->getContent());
+        $this->assertEquals('T_WHITESPACE', $tokens[3]->getTokenName());
+        $this->assertEquals('T_ASSIGN', $tokens[4]->getTokenName());
+        $this->assertEquals('T_JSON_OPEN_OBJECT', $tokens[6]->getTokenName());
+    }
+
 }
 
