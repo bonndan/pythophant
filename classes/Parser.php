@@ -12,8 +12,8 @@ class Parser
 {
     /**
      * return value for explicitly declared blocks 
+     * @var int
      */
-
     const EXPLICITLY_OPENED = 2;
     const T_DECLARATION_BLOCK_OPEN = "{\n";
     const T_BLOCK_OPEN = " {";
@@ -41,7 +41,6 @@ class Parser
      * @var type 
      */
     private $nestingLevel = 0;
-    private $isJsonEnv;
 
     /**
      *
@@ -70,7 +69,7 @@ class Parser
     /**
      * pass a filename and a token factory
      * 
-     * @param TokenFactory $factory  factory instance
+     * @param TokenFactory $factory factory instance
      */
     public function __construct(TokenFactory $factory)
     {
@@ -115,6 +114,12 @@ class Parser
         }
     }
 
+    /**
+     * process all string token to turn the into their destinated usage or have 
+     * them modify the token list
+     * 
+     * @return void 
+     */
     public function parseStringTokens()
     {
         foreach ($this->tokenList as $token) {
@@ -159,7 +164,6 @@ class Parser
 
             $opened = $this->isDeclarationOpened($line);
             if ($opened != false) {
-
                 $blockOpen = $this->tokenFactory->createToken(
                     'T_DECLARATION_BLOCK_OPEN',
                     self::T_DECLARATION_BLOCK_OPEN,
@@ -178,6 +182,8 @@ class Parser
                 $this->nestingLevel++;
             }
         }
+        
+        
     }
 
     /**
@@ -362,22 +368,36 @@ class Parser
                         $currentLevel--;
                         $tok = $this->injectBlockClosingAfter($tok, $currentLevel);
                     }
+                    
                     $lastToken->setContent(PHP_EOL);
                 }
             }
             $currentLevel = $nestingLevel;
         }
-        
+        $currentLevel--;
         $this->closeClass($currentLevel);
     }
 
     /**
-     * close class etc 
+     * checks the last token in list and inserts newline if necessary. then 
+     * close open block with curly braces based in remaining indentation
      * 
      * @param int $currentLevel
      */
     private function closeClass($currentLevel)
     {
+        $lastToken = $this->tokenList->offsetGet(count($this->tokenList)-1);
+        if (!$lastToken instanceof NewLineToken) {
+            $nl = new NewLineToken('T_NEWLINE', PHP_EOL, $lastToken->getLine() +1);
+            if ($lastToken instanceof IndentationToken) {
+               $nl->setAuxValue(''); 
+            }
+            
+            $this->tokenList->pushToken(
+                $nl
+            );
+        }
+        
         while ($currentLevel >= 0) {
 
             $lastToken = $this->tokenList[count($this->tokenList) - 1];
@@ -411,33 +431,14 @@ class Parser
             $this->tokenList->injectToken(
                 IndentationToken::create($nestingLevel), $index + 1
             );
+        } else {
+            $token->setNestingLevel($nestingLevel);
         }
         
         $close = new StringToken('T_CLOSE_BLOCK', $content, 0);
         $this->tokenList->injectToken($close, $index + 2);
 
         return $close;
-    }
-
-    /**
-     *
-     * @param type $string
-     * @return int
-     * 
-     * @throws LogicException 
-     */
-    private function getIndentation($string)
-    {
-        $string = str_replace(self::T_NEWLINE, '', $string);
-        $level = strlen($string) / self::INDENTATION_LEVEL;
-        if ($level >= 1) {
-            if (strlen($string) % self::INDENTATION_LEVEL) {
-                throw new LogicException('Wrong indentation ' . strlen($string));
-            }
-            return (int) $level;
-        }
-
-        return 0;
     }
 
     /**
@@ -449,5 +450,4 @@ class Parser
     {
         return $this->tokenList;
     }
-
 }

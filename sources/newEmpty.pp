@@ -29,6 +29,7 @@ class Schinken extends Wurst
         self::wurst = wurst
         this.anArray[] = 1
         this.anArray[] = 2
+    
         return this
 
     /**

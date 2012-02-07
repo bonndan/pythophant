@@ -15,4 +15,3 @@ $renderer = new Renderer($parser->getTokenList());
 $content = $renderer->getPHPSource();
     
 $source->writeTarget($content);
-echo $content;

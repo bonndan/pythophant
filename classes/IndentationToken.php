@@ -65,4 +65,8 @@ class IndentationToken extends CustomGenericToken
         return strlen($this->getContent()) / self::INDENTATION_SPACES;
     }
 
+    public function setNestingLevel($nestingLevel)
+    {
+        $this->content = str_repeat(' ', self::INDENTATION_SPACES * $nestingLevel);
+    }
 }

@@ -41,6 +41,10 @@ class XYZ_Controller extends Zend_Controller_Action
     public function someOtherFunction()
     {
         donothing();
+        if (ctype_alnum($json[0])) {
+            dosomething();
+        }
+
     }
 
 }
