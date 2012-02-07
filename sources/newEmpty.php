@@ -45,5 +45,22 @@ class Schinken extends Wurst
         return $this->hans . " " . self::$wurst;
     }
 
+    function anotherMethod()
+    {
+        if (true) {
+            echo "Hello World";
+        }
+
+        else {
+            echo "World, Hello";
+        }
+
+    }
+
+    function anotherMethodAgain ()
+    {
+        echo "Hello World";
+    }
+
 }
 

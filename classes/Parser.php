@@ -15,7 +15,7 @@ class Parser
      * @var int
      */
     const EXPLICITLY_OPENED = 2;
-    const T_DECLARATION_BLOCK_OPEN = "{\n";
+    const T_DECLARATION_BLOCK_OPEN = "{";
     const T_BLOCK_OPEN = " {";
     const T_BLOCK_CLOSE = "}\n\n";
 
@@ -60,6 +60,7 @@ class Parser
      */
     public static $controls = array(
         'T_IF',
+        'T_ELSE',
         'T_ELSEIF',
         'T_FOR',
         'T_FOREACH',
@@ -93,7 +94,7 @@ class Parser
         $this->makeLines();
         $this->parse1();
         $this->parseStringTokens();
-        $this->makeLines();
+        
         $this->parseBlocks();
     }
 
@@ -170,6 +171,13 @@ class Parser
                     $newlineToken->getLine()
                 );
                 $this->tokenList->injectToken($blockOpen, $currentPos + 1);
+                $nl = $this->tokenFactory->createToken(
+                    'T_NEWLINE',
+                    PHP_EOL,
+                    $newlineToken->getLine() +1
+                );
+                $nl->setAuxValue('');
+                $this->tokenList->injectToken($nl, $currentPos + 2);
                 $this->injectIndentationBefore($nestingLevel, $blockOpen);
                 $newlineToken->setAuxValue("");
                 $newlineToken->setContent(PHP_EOL);
@@ -299,6 +307,9 @@ class Parser
          * indications: second (with indentation) token has a lead a and braces found 
          */
         $hasLead = in_array($line[1]->getTokenName(), self::$modifiers);
+        if (!$hasLead && $line[0] instanceof IndentationToken) {
+            $hasLead = $line[0]->getNestingLevel() == 1;
+        }
         $openBrace = $this->isTokenIncluded($line, array(Token::T_OPEN_BRACE));
         $closeBrace = $this->isTokenIncluded($line, array(Token::T_CLOSE_BRACE));
 
@@ -306,7 +317,9 @@ class Parser
     }
 
     /**
-     * check if a line is a declaration
+     * check if a line is a block declaration
+     * 
+     * - injects opening and closing braces (unless "else" is used)
      * 
      * @param array $line Token[]
      * 
@@ -315,11 +328,14 @@ class Parser
     private function isBlock(array $line)
     {
         $found = false;
-        $blocks = self::$controls;
         foreach ($line as $token) {
-            if (in_array($token->getTokenName(), $blocks)) {
+            if (in_array($token->getTokenName(), self::$controls)) {
                 $found = true;
                 $index = $this->tokenList->getTokenIndex($token);
+                
+                if ($token->getTokenName() == 'T_ELSE') {
+                    break;
+                }
                 $this->tokenList->injectToken(
                     new StringToken(Token::T_OPEN_BRACE, '(', 0), $index + 2
                 );
@@ -339,6 +355,16 @@ class Parser
      */
     private function parseBlocks()
     {
+        /**
+         * the last token has to be a newline 
+         */
+        $lastToken = $this->tokenList[count($this->tokenList)-1];
+        if (!$lastToken instanceof NewLineToken) {
+            $this->tokenList->pushToken(NewLineToken::createEmpty());
+        }
+        
+        $this->makeLines();
+        
         $closers = array(
             Token::T_CLOSE_BRACE,
             JsonToken::T_JSON_CLOSE_ARRAY,
@@ -353,7 +379,7 @@ class Parser
             }
 
             /**
-             * inject a block closer "}" if the previous token is no a closer 
+             * inject a block closer "}" if the previous token is not a closer 
              */
             if ($nestingLevel < $currentLevel) {
                 if (isset($line[1]) && in_array($line[1]->getTokenName(), $closers)) {
@@ -372,10 +398,11 @@ class Parser
                     $lastToken->setContent(PHP_EOL);
                 }
             }
+            
             $currentLevel = $nestingLevel;
         }
-        $currentLevel--;
-        $this->closeClass($currentLevel);
+        
+        $this->closeClass($nestingLevel);
     }
 
     /**
@@ -386,25 +413,12 @@ class Parser
      */
     private function closeClass($currentLevel)
     {
-        $lastToken = $this->tokenList->offsetGet(count($this->tokenList)-1);
-        if (!$lastToken instanceof NewLineToken) {
-            $nl = new NewLineToken('T_NEWLINE', PHP_EOL, $lastToken->getLine() +1);
-            if ($lastToken instanceof IndentationToken) {
-               $nl->setAuxValue(''); 
-            }
-            
-            $this->tokenList->pushToken(
-                $nl
-            );
-        }
-        
-        while ($currentLevel >= 0) {
-
+        while ($currentLevel > 0) {
+            $currentLevel--;
             $lastToken = $this->tokenList[count($this->tokenList) - 1];
             $this->injectBlockClosingAfter(
                 $lastToken, $currentLevel
             );
-            $currentLevel--;
         }
     }
 

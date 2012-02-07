@@ -39,3 +39,12 @@ class Schinken extends Wurst
         this.hanswurst(1, "hanswurst")
         a = ['b', var1, var2]
         return this.hans + " " + self::wurst
+    
+    anotherMethod()
+        if true
+            echo "Hello World"
+        else
+            echo "World, Hello"
+
+    anotherMethodAgain ()
+        echo "Hello World"

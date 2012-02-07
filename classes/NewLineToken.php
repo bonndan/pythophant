@@ -25,4 +25,15 @@ class NewLineToken extends CustomGenericToken
             . str_repeat(PHP_EOL, substr_count($this->content, PHP_EOL));
     }
 
+    /**
+     * create a newline token with just a PHP_EOL
+     * 
+     * @return NewLineToken 
+     */
+    public static function createEmpty()
+    {
+        $token = new NewLineToken(Token::T_NEWLINE, PHP_EOL, 0);
+        $token->setAuxValue('');
+        return $token;
+    }
 }

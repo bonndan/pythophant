@@ -34,3 +34,4 @@ class XYZ_Controller extends Zend_Controller_Action
         donothing()
         if ctype_alnum(json[0])
             dosomething()
+            
