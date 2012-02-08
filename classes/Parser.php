@@ -92,6 +92,7 @@ class Parser
     public function processTokenList(TokenList $tokenList)
     {
         $this->tokenList = $tokenList;
+        
         foreach ($this->tokenList as $token) {
             if ($token instanceof CustomToken) {
                 $token->affectTokenList($this->tokenList);

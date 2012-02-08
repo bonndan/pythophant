@@ -22,6 +22,19 @@ class Renderer
     }
     
     /**
+     * add a watermark text
+     * 
+     * @param string $watermarkText 
+     * 
+     * @return void
+     */
+    public function addWaterMark($watermarkText)
+    {
+        $openTag = $this->tokenList[0];
+        $openTag->setContent(trim($openTag->getContent()) . " /** $watermarkText */" . PHP_EOL);
+    }
+    
+    /**
      * turns all tokens into their php equivalent
      * 
      * @return string 
