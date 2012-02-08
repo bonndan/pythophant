@@ -64,7 +64,14 @@ class Parser
         'T_ELSEIF',
         'T_FOR',
         'T_FOREACH',
-        'T_WHILE'
+        'T_WHILE',
+        'T_SWITCH',
+        'T_CASE',
+    );
+    
+    private static $controlsWithoutBraces = array(
+        'T_ELSE',
+        'T_CASE',
     );
 
     /**
@@ -333,7 +340,7 @@ class Parser
                 $found = true;
                 $index = $this->tokenList->getTokenIndex($token);
                 
-                if ($token->getTokenName() == 'T_ELSE') {
+                if (in_array($token->getTokenName(), self::$controlsWithoutBraces)) {
                     break;
                 }
                 $this->tokenList->injectToken(

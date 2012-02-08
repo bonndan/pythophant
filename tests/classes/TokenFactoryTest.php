@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../classes/TokenFactory.php';
+require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
 
 /**
  * Test class for CustomToken.
@@ -44,7 +44,7 @@ class TokenFactoryTest extends PHPUnit_Framework_TestCase
             array('bool', 'T_RETURNVALUE'),
             array('{', 'T_JSON_OPEN_OBJECT'),
             array('}', 'T_JSON_CLOSE_OBJECT'),
-            array(':', 'T_JSON_ASSIGN'),
+            array(':', 'T_COLON'),
             array('boolean', 'T_RETURNVALUE'),
             
             array(array(T_STRING, "this", 3), 'T_THIS'),

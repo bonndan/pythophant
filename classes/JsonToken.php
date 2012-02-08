@@ -44,10 +44,6 @@ class JsonToken extends PHPToken implements CustomToken
         if ($this->content == self::JSON_CLOSE_OBJECT) {
                 $this->content = ')';
         }
-        
-        if ($this->content == self::JSON_ASSIGN) {
-            $this->content = '=>';
-        }
     }
     
     public function setAuxValue($value)

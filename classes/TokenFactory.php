@@ -19,12 +19,13 @@ class TokenFactory
     const T_COMMA = ',';
     const T_NEWLINE = "\n";
     const T_RETURNVALUE = "";
-    //const T_IN = "in";
     const T_PLUS = "+";
+    const T_QUESTION = "?";
+    const T_COLON = ":";
     
     const T_JSON_OPEN_OBJECT = "{";
     const T_JSON_CLOSE_OBJECT = "}";
-    const T_JSON_ASSIGN = ":";
+    
     /**
      * @var array
      */
@@ -38,14 +39,17 @@ class TokenFactory
         'T_THIS' => self::T_THIS,
         'T_THIS_MEMBER' => self::T_THIS_MEMBER,
         'T_RETURNVALUE' => self::T_RETURNVALUE,
-        //'T_IN' => self::T_IN,
         'T_PLUS' => self::T_PLUS,
+        'T_QUESTION' => self::T_QUESTION,
+        'T_COLON' => self::T_COLON,
+        
         'T_OPEN_ARRAY' => self::T_OPEN_ARRAY,
         'T_CLOSE_ARRAY' => self::T_CLOSE_ARRAY,
         'T_CLOSE_ARRAY' => self::T_CLOSE_ARRAY,
+        
         'T_JSON_OPEN_OBJECT' => self::T_JSON_OPEN_OBJECT,
         'T_JSON_CLOSE_OBJECT' => self::T_JSON_CLOSE_OBJECT,
-        'T_JSON_ASSIGN' => self::T_JSON_ASSIGN,
+        
     );
     
     /**
@@ -72,7 +76,7 @@ class TokenFactory
         'T_PLUS' => 'PlusToken',
         'T_OPEN_ARRAY' => 'OpenArrayToken',
         'T_CLOSE_ARRAY' => 'CloseArrayToken',
-        'T_JSON_ASSIGN' => 'JsonToken',
+        'T_COLON' => 'ColonToken',
         'T_JSON_OPEN_OBJECT' => 'JsonToken',
         'T_JSON_CLOSE_OBJECT' => 'JsonToken',
     );
@@ -137,14 +141,15 @@ class TokenFactory
     }
     
     /**
-     *
-     * @param type $tokenName
-     * @param type $content
-     * @param type $line 
+     * create a token by passing its tokenName. content and line number are optional.
+     * 
+     * @param string $tokenName
+     * @param string $content
+     * @param int    $line 
      * 
      * @return Token
      */
-    public function createToken($tokenName, $content, $line)
+    public function createToken($tokenName, $content = NULL, $line = 0)
     {
         $class = 'PHPToken';
         if (array_key_exists($tokenName, self::$implementations)) {
@@ -152,6 +157,10 @@ class TokenFactory
         } elseif ($this->isCustomToken($tokenName)) {
             $content = constant('self::' . $tokenName);
             $class = 'CustomGenericToken';
+        }
+        
+        if ($content === NULL && defined('self::' . $tokenName)) {
+            $content = constant('self::' . $tokenName);
         }
         
         return new $class($tokenName, $content, $line);

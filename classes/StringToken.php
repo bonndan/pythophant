@@ -52,6 +52,7 @@ class StringToken extends CustomGenericToken
             'T_ECHO',
             'T_BOOLEAN_AND',
             'T_BOOLEAN_OR',
+            'T_RETURN',
         );
         $preVariableIndicators = array_merge($preVariableIndicators, Parser::$controls);
         $preCondition = $parser->isTokenIncluded(array($previous), $preVariableIndicators);
