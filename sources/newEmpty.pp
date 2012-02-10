@@ -5,7 +5,14 @@ class Schinken extends Wurst
      * hans
      * @var int 
      */
-    private hans
+    private accessible int hans
+    
+    /**
+     * myCountable
+     * @var Countable 
+     */
+    private accessible Countable myCountable
+    
     /**
      * wurst
      * @var string 

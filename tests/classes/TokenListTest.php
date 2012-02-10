@@ -59,7 +59,7 @@ class TokenListTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @todo Implement testGetNextNonWhitespace().
+     * 
      */
     public function testGetNextNonWhitespace1()
     {
@@ -89,6 +89,19 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertNull($res);
     }
 
- 
+
+    public function testIsTokenIncluded()
+    {
+        $token = new StringToken('T_STRING', 'my', 1);
+        $res = $this->object->isTokenIncluded(array($token), array('T_STRING'));
+        $this->assertTrue($res);
+    }
+    
+    public function testTokenIsNotIncluded()
+    {
+        $token = new StringToken('T_STRING', 'my', 1);
+        $res = $this->object->isTokenIncluded(array($token), array('T_ASSIGN'));
+        $this->assertFalse($res);
+    }
 }
 

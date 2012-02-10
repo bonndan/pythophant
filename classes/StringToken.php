@@ -27,8 +27,6 @@ class StringToken extends CustomGenericToken
      */
     private function checkIfIsVariable(TokenList $tokenList)
     {
-        $parser = new Parser(new TokenFactory);
-        
         if ($this->isConstant()) {
             return;
         }
@@ -37,44 +35,21 @@ class StringToken extends CustomGenericToken
          * token before 
          */
         $previous = $tokenList->getPreviousNonWhitespace($this);
-        $preVariableIndicators = array(
-            Token::T_RETURNVALUE,
-            'T_STATIC',
-            'T_PRIVATE',
-            'T_PROTECTED',
-            'T_ASSIGN',
-            'T_DOUBLE_COLON',
-            'T_COMMA',
-            'T_STRING',
-            'T_OPEN_BRACE',
-            'T_DOUBLE_ARROW',
-            'T_AS',
-            'T_ECHO',
-            'T_BOOLEAN_AND',
-            'T_BOOLEAN_OR',
-            'T_RETURN',
+        $preVariableIndicators = array_merge(
+            PythoPhant_Grammar::$preVariableIndicators,
+            PythoPhant_Grammar::$controls
         );
-        $preVariableIndicators = array_merge($preVariableIndicators, Parser::$controls);
-        $preCondition = $parser->isTokenIncluded(array($previous), $preVariableIndicators);
+        $preCondition = $tokenList->isTokenIncluded(array($previous), $preVariableIndicators);
         
         /**
          * token after 
          */
         $next = $tokenList->getNextNonWhitespace($this);
-        $postVariableIndicators = array(
-            'T_CLOSE_BRACE',
-            'T_CLOSE_ARRAY',
-            'T_COMMA',
-            'T_ASSIGN',
-            'T_MEMBER',
-            'T_DOUBLE_COLON',
-            'T_AS',
-            'T_DOUBLE_ARROW',
-            'T_OPEN_ARRAY',
-            'T_BOOLEAN_AND',
-            'T_BOOLEAN_OR',
+        
+        $postCondition = $tokenList->isTokenIncluded(
+            array($next),
+            PythoPhant_Grammar::$postVariableIndicators
         );
-        $postCondition = $parser->isTokenIncluded(array($next), $postVariableIndicators);
        
         if(
             ($preCondition && $postCondition) 
@@ -83,7 +58,25 @@ class StringToken extends CustomGenericToken
         ) {
             $this->tokenName = 'T_VARIABLE';
             $this->content = '$'.$this->content;
-        } 
+        }
+        
+        /**
+         * class var declaration 
+         */
+        if (!$previous || $this->tokenName != 'T_VARIABLE') {
+            return;
+        }
+        
+        /**
+         * return type cant be rendered 
+         */
+        $preprevious = $tokenList->getPreviousNonWhitespace($previous);
+        if ($previous instanceof StringToken 
+            && $preprevious instanceof Token
+            && in_array($preprevious->getTokenName(), PythoPhant_Grammar::$modifiers)
+        ) {
+            $preprevious->setContent('');
+        }
     }
     
     /**

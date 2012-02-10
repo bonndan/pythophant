@@ -101,6 +101,28 @@ class TokenList implements Iterator, Countable, ArrayAccess
     }
     
     /**
+     * check if a token of a list is within a list of token names
+     * 
+     * @param array $tokens
+     * @param array $names
+     * 
+     * @return boolean 
+     */
+    public function isTokenIncluded(array $tokens, array $names)
+    {
+        foreach ($tokens as $token) {
+            if (is_null($token)) {
+                return false;
+            }
+            if (in_array($token->getTokenName(), $names)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    /**
      * Iterator methods
      */
     public function rewind()  {$this->position = 0;}

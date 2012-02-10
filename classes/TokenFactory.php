@@ -26,6 +26,8 @@ class TokenFactory
     const T_JSON_OPEN_OBJECT = "{";
     const T_JSON_CLOSE_OBJECT = "}";
     
+    const T_ACCESSIBLE = 'accessible';
+    
     /**
      * @var array
      */
@@ -50,6 +52,8 @@ class TokenFactory
         'T_JSON_OPEN_OBJECT' => self::T_JSON_OPEN_OBJECT,
         'T_JSON_CLOSE_OBJECT' => self::T_JSON_CLOSE_OBJECT,
         
+        'T_ACCESSIBLE' => self::T_ACCESSIBLE,
+        
     );
     
     /**
@@ -58,7 +62,7 @@ class TokenFactory
      * @var array 
      */
     public static $returnValues = array(
-        'string', 'int', 'float', 'bool', 'boolean', 'void'
+        'string', 'int', 'float', 'double', 'bool', 'boolean', 'void'
     );
 
     /**
@@ -79,6 +83,7 @@ class TokenFactory
         'T_COLON' => 'ColonToken',
         'T_JSON_OPEN_OBJECT' => 'JsonToken',
         'T_JSON_CLOSE_OBJECT' => 'JsonToken',
+        'T_ACCESSIBLE' => 'AccessibleToken',
     );
 
     /**
@@ -94,7 +99,7 @@ class TokenFactory
          * if strings instead of arrays were tokenized 
          */
         if (is_string($tokenized)) {
-            $tokenName = 'T_STRING';
+            $tokenName = Token::T_STRING;
             if (in_array($tokenized, self::$tokens)) {
                 $flip = array_flip(self::$tokens);
                 $tokenName = $flip[$tokenized];
@@ -106,7 +111,7 @@ class TokenFactory
         }
         
         $tokenName = token_name($tokenized[0]);
-        if ($tokenName == 'T_STRING') {
+        if ($tokenName == Token::T_STRING) {
             if ($tmp = $this->getTokenName($tokenized[1])) {
                 $tokenName = $tmp;
             }

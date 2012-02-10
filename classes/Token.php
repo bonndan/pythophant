@@ -2,6 +2,7 @@
 
 interface Token
 {
+    const T_STRING = 'T_STRING';
     const T_ASSIGN = 'T_ASSIGN';
     const T_RETURNVALUE = 'T_RETURNVALUE';
     const T_COMMA = 'T_COMMA';

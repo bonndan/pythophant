@@ -1,7 +1,13 @@
 <?php
-
-class SourceFile
+/**
+ * PyhtoPhant_SourceFile
+ */
+class PythoPhant_SourceFile
 {
+    /**
+     * source file suffix
+     * @var string 
+     */
     const EXT = 'pp';
     
     /**
@@ -21,12 +27,12 @@ class SourceFile
      * 
      * @param string $filename 
      * 
-     * @throws PPException
+     * @throws PythoPhant_Exception
      */
     public function __construct($filename)
     {
         if (!is_file($filename) || !is_readable($filename)) {
-            throw new PPException('The file is not accessible');
+            throw new PythoPhant_Exception('The file is not accessible');
         }
         $this->dirname  = dirname($filename);
         $this->filename = basename($filename, self::EXT);

@@ -1,54 +1,41 @@
 <?php
 /**
- * generic token renderer
+ * tokenlist renderer
  *  
+ * @package PythoPhant
  */
-class Renderer
+interface Renderer
 {
     /**
-     * list of tokens of a file
-     * @var TokenList 
+     * inject the tokens
+     * 
+     * @param TokenList $tokenList 
      */
-    private $tokenList;
+    public function setTokenList(TokenList $tokenList);
     
     /**
-     * inject the lines
+     * enable or disable debugging mode
      * 
-     * @param array $lines 
+     * @param bool $debug 
+     * 
+     * @return Renderer
      */
-    public function __construct(TokenList $tokenList)
-    {
-        $this->tokenList = $tokenList;
-    }
+    public function enableDebugging($debug);
     
     /**
      * add a watermark text
      * 
      * @param string $watermarkText 
      * 
-     * @return void
+     * @return Renderer
      */
-    public function addWaterMark($watermarkText)
-    {
-        $openTag = $this->tokenList[0];
-        $openTag->setContent(trim($openTag->getContent()) . " /** $watermarkText */" . PHP_EOL);
-    }
+    public function addWaterMark($watermarkText);
     
     /**
      * turns all tokens into their php equivalent
      * 
      * @return string 
      */
-    public function getPHPSource($debugNames = false)
-    {
-        $buffer = "";
-        foreach ($this->tokenList as $token) {
-            if ($debugNames) {
-                $buffer .= $token->getTokenName();
-            }
-            $buffer .= $token->getContent();
-        }
-        
-        return $buffer;
-    }
+    public function getPHPSource();
+    
 }

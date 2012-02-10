@@ -20,11 +20,18 @@ class ReturnValueToken extends CustomGenericToken
     }
 
     /**
-     *
+     * get the content
+     * 
+     * @param boolean $forceOriginal return original value
+     * 
      * @return string 
      */
-    public function getContent()
+    public function getContent($forceOriginal = false)
     {
+        if ($forceOriginal) {
+            return $this->content;
+        }
+        
         return "";
     }
 
