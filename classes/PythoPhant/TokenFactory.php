@@ -20,7 +20,8 @@ class PythoPhant_TokenFactory implements TokenFactory
     const T_RETURNVALUE = "";
     const T_QUESTION = "?";
     const T_COLON = ":";
-    const T_NOT = "!";
+    const T_NOT = "not";
+    const T_EXCLAMATION = "!";
     
     const T_JSON_OPEN_OBJECT = "{";
     const T_JSON_CLOSE_OBJECT = "}";
@@ -42,6 +43,7 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_RETURNVALUE' => self::T_RETURNVALUE,
         'T_QUESTION' => self::T_QUESTION,
         'T_COLON' => self::T_COLON,
+        'T_EXCLAMATION' => self::T_EXCLAMATION,
         'T_NOT' => self::T_NOT,
         
         'T_OPEN_ARRAY' => self::T_OPEN_ARRAY,
@@ -52,7 +54,6 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_JSON_CLOSE_OBJECT' => self::T_JSON_CLOSE_OBJECT,
         
         'T_ACCESSIBLE' => self::T_ACCESSIBLE,
-        
     );
 
     /**
@@ -76,6 +77,8 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_QUESTION' => 'QuestionToken',
         'T_CONST' => 'ConstToken',
         'T_CONSTANT_ENCAPSED_STRING' => 'ConstToken',
+        'T_EXCLAMATION' => 'ExclamationToken',
+        'T_NOT' => 'ExclamationToken',
     );
 
     /**

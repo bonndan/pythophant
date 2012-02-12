@@ -61,21 +61,20 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
         /**
          * write 
          */
-        $this->tokenName = Token::T_OPEN_BRACE;
-        $this->content = PythoPhant_Grammar::OPEN_BRACE;
+        $this->content = '';
         
         $moved = array_reverse($moved);
-        $offset = 0;
-        foreach ($moved as $token) {
-            $offset++;
-            $index = $tokenList->getTokenIndex($token);
-            $tokenList->offsetUnset($index);
-            $funcIndex = $tokenList->getTokenIndex($function);
-            $tokenList->injectToken($token, $funcIndex + $offset);
-        }
         $tokenList->injectToken(
-            new PHPToken(Token::T_CLOSE_BRACE, ')', 0),
-            $funcIndex + $offset + 1
+            new PHPToken(Token::T_OPEN_BRACE, PythoPhant_Grammar::OPEN_BRACE, $this->getLine()),
+            $tokenList->getTokenIndex($this)
         );
+        
+        $lastIndex = $tokenList->moveTokensBefore($moved, $this);
+        $tokenList->injectToken(
+            new PHPToken(Token::T_CLOSE_BRACE, ')', $this->getLine()),
+            $lastIndex+1
+        );
+        $tokenList->offsetUnset($tokenList->getTokenIndex($this)); //remove question
+        $tokenList->offsetUnset($tokenList->getTokenIndex($function)-1);//remove whitespace
     }
 }

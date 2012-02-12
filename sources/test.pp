@@ -7,11 +7,12 @@ class Test extends StdClass implements Countable
     count()
         switch @someVar
             case true:
-                @someVar.explode(':')
-                return myArray.strtolower().ucfirst()
+                if not 'SomeClass' class_exists? or 'MY_CONST' defined?
+                    result = @someVar explode(':')!
+                return 'myString' strtolower()! ucfirst()!
                 break
             case false:
-                echo "nothing"
+                echo 'nothing'
 
         return @someVar?true:false
 

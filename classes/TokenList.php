@@ -123,6 +123,34 @@ class TokenList implements Iterator, Countable, ArrayAccess
     }
     
     /**
+     * moves tokens around, returns the new index of the last token
+     * 
+     * @param array $tokens      tokens to move
+     * @param int   $destination index
+     * 
+     * @return int
+     */
+    public function moveTokensBefore(array $tokens, Token $destination)
+    {
+        if (count($tokens) == 0) {
+            throw new InvalidArgumentException(
+                'Cannot move empty token list before '
+                . $destination->getTokenName()
+            );
+        }
+        
+        $offset = 0;
+        foreach ($tokens as $token) {
+            $this->offsetUnset($this->getTokenIndex($token));
+            $destIndex = $this->getTokenIndex($destination);
+            $this->injectToken($token, $destIndex + $offset);
+            //$offset++;
+        }
+        
+        return $this->getTokenIndex($token);
+    }
+    
+    /**
      * Iterator methods
      */
     public function rewind()  {$this->position = 0;}
@@ -145,5 +173,16 @@ class TokenList implements Iterator, Countable, ArrayAccess
     public function offsetExists($offset){return isset($this->tokens[$offset]);}
     public function offsetGet($offset) {return $this->tokens[$offset];}
     public function offsetSet($offset, $value){throw new Exception('Use injectToken');}
-    public function offsetUnset($offset){unset($this->tokens[$offset]);}
+    
+    /**
+     * remove a token, rebuild the index
+     * 
+     * @param type $offset 
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->tokens[$offset]);
+        $this->tokens = array_values($this->tokens);
+    }
+    
 }

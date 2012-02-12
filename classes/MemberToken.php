@@ -13,6 +13,21 @@ class MemberToken extends CustomGenericToken
      */
     public function affectTokenList(TokenList $tokenList)
     {
+        if ($this->checkForConcatenation($tokenList)) {
+            return;
+        }
+        
+        $this->setContent("->");
+    }
+    
+    /**
+     * check if the token is just a concatenation
+     * 
+     * @param TokenList $tokenList
+     * @return boolean 
+     */
+    private function checkForConcatenation(TokenList $tokenList)
+    {
         $inhibitors = array(
             Token::T_CONSTANT_ENCAPSED_STRING,
             Token::T_CONST,
@@ -22,9 +37,10 @@ class MemberToken extends CustomGenericToken
         
         if ($tokenList->isTokenIncluded(array($prev, $next), $inhibitors)) {
             $this->tokenName = Token::T_CONCAT;
-            return;
+            return true;
         }
         
-        $this->setContent("->");
+        return false;
     }
+    
 }
