@@ -21,7 +21,7 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
         $token = $this;
         while ($token = $tokenList->getNextNonWhitespace($token)) {
             if ($token->getTokenName() == 'T_COLON') {
-                $this->tokenName = Token::T_STRING;
+                $this->tokenName = Token::T_SHORT_IF;
                 return;
             }
         }

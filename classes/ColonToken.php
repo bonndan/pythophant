@@ -16,7 +16,7 @@ class ColonToken extends CustomGenericToken
     {
         $token = $this;
         while ($token = $tokenList->getPreviousNonWhitespace($token)) {
-            if (in_array($token->getTokenName(), array('T_CASE', 'T_QUESTION'))) {
+            if (in_array($token->getTokenName(), array('T_CASE', Token::T_SHORT_IF))) {
                 return;
             }
         }

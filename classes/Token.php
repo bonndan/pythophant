@@ -15,6 +15,8 @@ interface Token
     const T_CONCAT = 'T_CONCAT';
     const T_MEMBER = 'T_MEMBER';
     const T_CALL = 'T_CALL';
+    const T_IF = 'T_IF';
+    const T_SHORT_IF = 'T_SHORT_IF';
     
     
     /**

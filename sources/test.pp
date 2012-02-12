@@ -11,9 +11,9 @@ class Test extends StdClass implements Countable
             case false:
                 echo "nothing"
 
-        return tmp = (@someVar)?true:false
+        return @someVar?true:false
 
     /**
     private isSomethingContained (something)
-        return something is in_array ['a', 1] or something is ctype_alnum
+        return something is in_array ['a', 1] or something ctype_alnum?
     */
