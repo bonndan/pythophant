@@ -7,6 +7,8 @@ class Test extends StdClass implements Countable
     count()
         switch @someVar
             case true:
+                @someVar.explode(':')
+                return myArray.strtolower().ucfirst()
                 break
             case false:
                 echo "nothing"

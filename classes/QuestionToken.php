@@ -36,8 +36,11 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
     }
     
     /**
+     * replace the question mark with previous tokens of list and add braces
      * 
      * @param TokenList $tokenList 
+     * 
+     * @todo remove one whitespace
      */
     private function replaceQuestionMark(TokenList $tokenList)
     {

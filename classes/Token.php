@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Token interface
+ * 
+ * @package PythoPhant
+ */
 interface Token
 {
     const T_STRING = 'T_STRING';
@@ -18,8 +22,9 @@ interface Token
     const T_IF = 'T_IF';
     const T_SHORT_IF = 'T_SHORT_IF';
     
-    
     /**
+     * constructor requires the name, the content and the line number
+     * 
      * @param string $tokenName
      * @param string $content
      * @param int    $line
@@ -27,7 +32,7 @@ interface Token
     function __construct($tokenName, $content, $line);
 
     /**
-     * get the ontent
+     * get the content
      * 
      * @return string
      */

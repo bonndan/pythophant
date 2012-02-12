@@ -29,9 +29,9 @@ class PHPToken implements Token
     /**
      * constructor
      * 
-     * @param type $tokenName
-     * @param type $content
-     * @param type $line 
+     * @param string $tokenName
+     * @param string $content
+     * @param int    $line 
      */
     public function __construct($tokenName, $content, $line)
     {
