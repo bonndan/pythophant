@@ -7,21 +7,20 @@ without many braces and indentation marking the blocks.
 Rules
 -----
 
-* Indentation counts. Indentation is 4 spaces.
+* Indentation counts, i.e. makes the blocks. Indentation is 4 spaces.
 * The semicolon is not required and should be omitted. A newline (PHP_EOL) ends a statement.
 
-### Variables
+### Variables and Constants
 
-* The leading dollar sign is not required.
-* Variables cannot be named like constants.
-* Uppercase strings are treated like constants.
-* String concatenation can be written as "+" (experimental)
+* The leading dollar sign is not required for normal variables. Write one for dynamic variable access.
+* Variables cannot be named like constants, because uppercase strings are treated like constants.
+* String concatenation is implicit, do not use "." to concatenate string except on newlines.
 
 ### Classes, Methods and Members
 
 * "class" or "interface" declarations have to be placed in the code.
 * "implements" or "extends" must be on the same line as the class declaration (FIXME)
-* The "->" operator can be written as "."
+* The "->" operator should be written as "."
 * "@" is a shortcut for "$this->"
 * The explicit declaration "function" can be omitted if a visibility modifier is used or if the indentation level is one.
 * Opening and closing braces of a function's signature must on the same line.
@@ -30,6 +29,12 @@ Rules
 
 * Write native json using "[]" for arrays and "{}" for objects, ":" assigns values.
 * Json objects are casted from (associative) arrays.
+
+Some Magic
+----------
+* use "!" and "?" for easily readable expressions like "myVar ctype_alnum?" or "myArray explode('.')!
+* "!" can also be written as "not"
+* the keyword "accessible" generates getters and setters for private class vars 
 
 Todo
 ----
