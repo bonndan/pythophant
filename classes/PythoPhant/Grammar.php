@@ -6,6 +6,10 @@
  */
 abstract class PythoPhant_Grammar
 {
+    const INDENTATION_LEVEL = 4;
+    
+    const OPEN_BRACE = '(';
+    
     /**
      * declaration tokens
      * @var array 
@@ -14,6 +18,16 @@ abstract class PythoPhant_Grammar
         'T_FUNCTION',
         'T_CLASS',
         'T_INTERFACE'
+    );
+    
+        
+    /**
+     * return values
+     * 
+     * @var array 
+     */
+    public static $returnValues = array(
+        'string', 'int', 'float', 'double', 'bool', 'boolean', 'void'
     );
     
     /**
@@ -95,7 +109,12 @@ abstract class PythoPhant_Grammar
         'T_ECHO',
         'T_BOOLEAN_AND',
         'T_BOOLEAN_OR',
+        'T_LOGICAL_AND',
+        'T_LOGICAL_OR',
         'T_RETURN',
+        'T_NOT',
+        'T_MEMBER',
+        'T_CONCAT',
     );
     
     /**
@@ -113,6 +132,8 @@ abstract class PythoPhant_Grammar
         'T_OPEN_ARRAY',
         'T_BOOLEAN_AND',
         'T_BOOLEAN_OR',
+        'T_LOGICAL_AND',
+        'T_LOGICAL_OR',
     );
     
     /**
@@ -123,5 +144,19 @@ abstract class PythoPhant_Grammar
         Token::T_CLOSE_BRACE,
         JsonToken::T_JSON_CLOSE_ARRAY,
         JsonToken::T_JSON_CLOSE_OBJECT,
+    );
+    
+    /**
+     *
+     * @var type 
+     */
+    public static $stopsQuestionSubject = array(
+        'T_IF',
+        'T_ELSEIF',
+        'T_NOT',
+        'T_BOOLEAN_AND',
+        'T_BOOLEAN_OR',
+        'T_LOGICAL_AND',
+        'T_LOGICAL_OR',
     );
 }

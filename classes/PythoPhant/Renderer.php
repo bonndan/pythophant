@@ -36,7 +36,7 @@ class PythoPhant_Renderer implements Renderer
      */
     public function enableDebugging($debug)
     {
-        $this->debug = $debug;
+        $this->debug = (bool)$debug;
         return $this;
     }
     

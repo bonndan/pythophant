@@ -2,6 +2,8 @@
 
 class XYZ_Controller extends Zend_Controller_Action
     
+    const MY_CLASS_CONST = 'const'
+
     public addAction(SomeInterface xyz)
         json = [12, 13]
         json[3] = 'somevar'
@@ -14,14 +16,14 @@ class XYZ_Controller extends Zend_Controller_Action
         form = new MyForm
     
         isPost = @getRequest().isPost()
-        if isPost && form.isValid(@getAllParams())
+        if isPost and form.isValid(@getAllParams())
             something.setValues(form.getValues()).save()
             
         foreach json2 as key => value
             echo key
             @$key = value
         
-        if ctype_alnum(json[0])
+        if something.getInt() ctype_alnum?
             dosomething()
         elseif false
             echo MY_CONSTANT
@@ -31,7 +33,10 @@ class XYZ_Controller extends Zend_Controller_Action
      * some other comment 
      */
     public someOtherFunction()
-        donothing()
-        if ctype_alnum(json[0])
+        donothing(self::MY_CLASS_CONST)
+        if ! @json[0] ctype_alnum?
             dosomething()
+        elseif 'my.file' is_file?
+            unlink(dirname(__FILE__) DIRECTORY_SEPARATOR 'my.file')
+            myString = "a string " "b string" myVar
             

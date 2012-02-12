@@ -26,11 +26,7 @@ class StringToken extends CustomGenericToken
      * @param TokenList $tokenList 
      */
     private function checkIfIsVariable(TokenList $tokenList)
-    {
-        if ($this->isConstant()) {
-            return;
-        }
-        
+    {        
         /**
          * token before 
          */
@@ -50,14 +46,16 @@ class StringToken extends CustomGenericToken
             array($next),
             PythoPhant_Grammar::$postVariableIndicators
         );
-       
+
         if(
             ($preCondition && $postCondition) 
             || (is_null($previous) && $postCondition)
             || ($preCondition && is_null($next))
         ) {
             $this->tokenName = 'T_VARIABLE';
-            $this->content = '$'.$this->content;
+            if (!$previous || $previous->getTokenName() != Token::T_MEMBER) {
+                $this->content = '$'.$this->content;
+            }
         }
         
         /**
@@ -77,34 +75,5 @@ class StringToken extends CustomGenericToken
         ) {
             $preprevious->setContent('');
         }
-    }
-    
-    /**
-     * checks if the content might be a constant
-     * @return boolean 
-     */
-    public function isConstant()
-    {
-        if (defined($this->content)) {
-            return true;
-        }
-        
-        if ($this->isUppercase($this->content)) {
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * checks if a string has only uppercase chars except underscores
-     * 
-     * @param string $string 
-     * 
-     * @return boolean
-     */
-    private function isUppercase($string)
-    {
-        return ctype_upper(str_replace('_', '', $string));
     }
 }

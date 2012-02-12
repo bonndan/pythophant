@@ -56,7 +56,7 @@ class PythoPhant_Parser implements Parser
     }
 
     /**
-     * process a token list
+     * process a token list. custom tokens are processed before string tokens
      * 
      * @param TokenList $tokenList
      */
@@ -65,14 +65,20 @@ class PythoPhant_Parser implements Parser
         $this->tokenList = $tokenList;
         
         foreach ($this->tokenList as $token) {
-            if ($token instanceof CustomToken) {
+            if ($token instanceof ParsedEarlyToken) {
                 $token->affectTokenList($this->tokenList);
             }
         }
 
+        foreach ($this->tokenList as $token) {
+            if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
+                $token->affectTokenList($this->tokenList);
+            }
+        }
+        
         $this->makeLines();
         $this->parse1();
-        $this->parseStringTokens();
+        
         
         $this->parseBlocks();
     }
@@ -90,21 +96,6 @@ class PythoPhant_Parser implements Parser
             $this->lines[$currentLine][] = $token;
             if ($token instanceof NewLineToken) {
                 $currentLine++;
-            }
-        }
-    }
-
-    /**
-     * process all string token to turn the into their destinated usage or have 
-     * them modify the token list
-     * 
-     * @return void 
-     */
-    public function parseStringTokens()
-    {
-        foreach ($this->tokenList as $token) {
-            if ($token instanceof StringToken) {
-                $token->affectTokenList($this->tokenList);
             }
         }
     }
@@ -230,7 +221,7 @@ class PythoPhant_Parser implements Parser
             /**
              * return value is a clear sign to inject the function token
              */
-            if (in_array(trim($token->getContent()), TokenFactory::$returnValues)) {
+            if (in_array(trim($token->getContent()), PythoPhant_Grammar::$returnValues)) {
                 $this->injectTokenAfter($function, $token);
                 break;
             }

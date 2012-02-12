@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * token that triggers getter-setter generation on class members
+ * 
+ * @package PythoPhant 
+ */
 class AccessibleToken extends CustomGenericToken
 {
     /**
@@ -26,11 +30,12 @@ class AccessibleToken extends CustomGenericToken
         $nextToken = $tokenList->getNextNonWhitespace($typeToken);
         if (!$nextToken instanceof StringToken) {
             throw new LogicException (
-                'accessible must be followed by areturn type and then variable name, not ' . $nextToken->getContent()
+                'accessible must be followed by  return type and then variable name, not ' . $nextToken->getContent()
             );
         }
         
         $varName = $nextToken->getContent();
+        $typeToken->setContent('');
         $type = $typeToken->getContent(true);
         
         $this->generateGetterAndSetter($tokenList, $type, $varName);
@@ -45,7 +50,7 @@ class AccessibleToken extends CustomGenericToken
      */
     private function generateGetterAndSetter(TokenList $tokenList, $type, $varName)
     {
-        $tokenFactory = new TokenFactory();
+        $tokenFactory = new PythoPhant_TokenFactory();
         
         $getter = array(
             IndentationToken::create(1),
@@ -54,12 +59,12 @@ class AccessibleToken extends CustomGenericToken
             $tokenFactory->createToken('T_PUBLIC', 'public '),
             $tokenFactory->createToken('T_FUNCTION', 'function '),
             $tokenFactory->createToken('T_FUNCTION', 'get'.ucfirst($varName)),
-            $tokenFactory->createToken('T_OPEN_BRACE', TokenFactory::T_OPEN_BRACE),
-            $tokenFactory->createToken('T_CLOSE_BRACE', TokenFactory::T_CLOSE_BRACE),
+            $tokenFactory->createToken(Token::T_OPEN_BRACE),
+            $tokenFactory->createToken(Token::T_CLOSE_BRACE),
             $tokenFactory->createToken('T_NEWLINE'),
             IndentationToken::create(2),
             $tokenFactory->createToken('T_RETURN', 'return'),
-            $tmp = in_array($type, TokenFactory::$returnValues)?
+            $tmp = in_array($type, PythoPhant_Grammar::$returnValues)?
                 $tokenFactory->createToken('T_STRING', ' (' . $type.')'):
                 $tokenFactory->createToken('T_WHITESPACE', ' ')
                 ,
@@ -78,13 +83,13 @@ class AccessibleToken extends CustomGenericToken
             $tokenFactory->createToken('T_PUBLIC', 'public '),
             $tokenFactory->createToken('T_FUNCTION', 'function '),
             $tokenFactory->createToken('T_FUNCTION', 'set'.ucfirst($varName)),
-            $tokenFactory->createToken('T_OPEN_BRACE', TokenFactory::T_OPEN_BRACE),
-            $tmp = !in_array($type, TokenFactory::$returnValues)?
+            $tokenFactory->createToken(Token::T_OPEN_BRACE),
+            $tmp = !in_array($type, PythoPhant_Grammar::$returnValues)?
                 $tokenFactory->createToken('T_STRING', $type.' '):
                 $tokenFactory->createToken('T_WHITESPACE', '')
                 ,
             $tokenFactory->createToken('T_STRING', $varName),
-            $tokenFactory->createToken('T_CLOSE_BRACE', TokenFactory::T_CLOSE_BRACE),
+            $tokenFactory->createToken(Token::T_CLOSE_BRACE),
             $tokenFactory->createToken('T_NEWLINE'),
             IndentationToken::create(2),
             $tokenFactory->createToken('T_THIS', 'this->'),
@@ -92,7 +97,7 @@ class AccessibleToken extends CustomGenericToken
             $tokenFactory->createToken('T_WHITESPACE', ' '),
             $tokenFactory->createToken('T_ASSIGN', '='),
             $tokenFactory->createToken('T_WHITESPACE', ' '),
-            $tmp = in_array($type, TokenFactory::$returnValues)?
+            $tmp = in_array($type, PythoPhant_Grammar::$returnValues)?
                 $tokenFactory->createToken('T_STRING',  '(' . $type . ')'):
                 $tokenFactory->createToken('T_WHITESPACE', '')
                 ,

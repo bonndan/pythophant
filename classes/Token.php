@@ -10,6 +10,12 @@ interface Token
     const T_INDENT= 'T_INDENT';
     const T_OPEN_BRACE = 'T_OPEN_BRACE';
     const T_CLOSE_BRACE = 'T_CLOSE_BRACE';
+    const T_CONST = 'T_CONST';
+    const T_CONSTANT_ENCAPSED_STRING = 'T_CONSTANT_ENCAPSED_STRING';
+    const T_CONCAT = 'T_CONCAT';
+    const T_MEMBER = 'T_MEMBER';
+    const T_CALL = 'T_CALL';
+    
     
     /**
      * @param string $tokenName

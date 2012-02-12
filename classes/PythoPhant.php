@@ -46,6 +46,8 @@ class PythoPhant
      * 
      * @param string $filename 
      * @param bool   $debug 
+     * 
+     * @return string
      */
     public function convert($filename, $debug = false)
     {
@@ -65,6 +67,8 @@ class PythoPhant
         );
         $content = $this->renderer->getPHPSource();
         $source->writeTarget($content);
+        
+        return $content;
     }
 
 }

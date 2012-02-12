@@ -17,7 +17,7 @@ class TokenFactoryTest extends PHPUnit_Framework_TestCase
     public function setup()
     {
         parent::setup();
-        $this->factory = new TokenFactory();
+        $this->factory = new PythoPhant_TokenFactory();
     }
     
     /**
@@ -76,5 +76,16 @@ class TokenFactoryTest extends PHPUnit_Framework_TestCase
             array('T_THIS', 'ThisToken'),
             array('T_RETURNVALUE', 'ReturnValueToken'),
         );
+    }
+    
+    public function testDetectConstant()
+    {
+        $string = '<?php 
+            echo MY_CONST
+            ';
+        $tokens = token_get_all($string);
+        $last = $tokens[count($tokens)-2];
+        $tokenName = $this->factory->getTokenName($last);
+        $this->assertEquals('T_CONST', $tokenName);
     }
 }

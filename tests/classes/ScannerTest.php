@@ -23,8 +23,8 @@ class ScannerTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->tokenFactory = $this->getMock('TokenFactory');
-        $this->object = new Scanner(
+        $this->tokenFactory = $this->getMock('PythoPhant_TokenFactory');
+        $this->object = new PythoPhant_Scanner(
             $this->tokenFactory
         );
     }
@@ -39,7 +39,7 @@ class ScannerTest extends PHPUnit_Framework_TestCase
      */
     public function testScanSource()
     {
-        $this->object = new Scanner(new TokenFactory);
+        $this->object = new PythoPhant_Scanner(new PythoPhant_TokenFactory);
             
         $source = "<?php \necho 'Hello World';";
         $res = $this->object->scanSource($source);
@@ -59,7 +59,7 @@ class ScannerTest extends PHPUnit_Framework_TestCase
      */
     public function testScanJsonSource()
     {
-        $this->object = new Scanner(new TokenFactory);
+        $this->object = new PythoPhant_Scanner(new PythoPhant_TokenFactory);
             
         $source = "<?php \nmyVar = {'uncle': ['bob', 'joe']}\n";
         $res = $this->object->scanSource($source);

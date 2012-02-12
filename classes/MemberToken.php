@@ -5,11 +5,26 @@
 class MemberToken extends CustomGenericToken
 {
     /**
-     * T_OBJECT_OPERATOR
-     * @return string 
+     * this generic implementation does not affect the token list
+     * 
+     * @param TokenList $tokenList
+     * 
+     * @return void 
      */
-    public function getContent()
+    public function affectTokenList(TokenList $tokenList)
     {
-        return "->";
+        $inhibitors = array(
+            Token::T_CONSTANT_ENCAPSED_STRING,
+            Token::T_CONST,
+        );
+        $prev = $tokenList->getPreviousNonWhitespace($this);
+        $next = $tokenList->getNextNonWhitespace($this);
+        
+        if ($tokenList->isTokenIncluded(array($prev, $next), $inhibitors)) {
+            $this->tokenName = Token::T_CONCAT;
+            return;
+        }
+        
+        $this->setContent("->");
     }
 }

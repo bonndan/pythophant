@@ -45,7 +45,7 @@ class Schinken extends Wurst
     final someFunction ()
         this.hanswurst(1, "hanswurst")
         a = ['b', var1, var2]
-        return this.hans + " " + self::wurst
+        return this.hans " " self::wurst
     
     anotherMethod()
         if true
