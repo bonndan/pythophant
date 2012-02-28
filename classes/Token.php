@@ -21,6 +21,7 @@ interface Token
     const T_CALL = 'T_CALL';
     const T_IF = 'T_IF';
     const T_SHORT_IF = 'T_SHORT_IF';
+    const T_VARIABLE = 'T_VARIABLE';
     
     /**
      * constructor requires the name, the content and the line number

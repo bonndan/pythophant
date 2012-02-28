@@ -9,6 +9,7 @@ abstract class PythoPhant_Grammar
     const INDENTATION_LEVEL = 4;
     
     const OPEN_BRACE = '(';
+    const CLOSE_BRACE = ')';
     
     /**
      * declaration tokens
@@ -115,6 +116,7 @@ abstract class PythoPhant_Grammar
         'T_NOT',
         'T_MEMBER',
         'T_CONCAT',
+        'T_ARRAY',
     );
     
     /**
@@ -126,7 +128,6 @@ abstract class PythoPhant_Grammar
         'T_COMMA',
         'T_ASSIGN',
         'T_MEMBER',
-        'T_DOUBLE_COLON',
         'T_AS',
         'T_DOUBLE_ARROW',
         'T_OPEN_ARRAY',
@@ -134,6 +135,8 @@ abstract class PythoPhant_Grammar
         'T_BOOLEAN_OR',
         'T_LOGICAL_AND',
         'T_LOGICAL_OR',
+        'T_CONST',
+        'T_CONSTANT_ENCAPSED_STRING',
     );
     
     /**
@@ -146,6 +149,15 @@ abstract class PythoPhant_Grammar
         JsonToken::T_JSON_CLOSE_OBJECT,
     );
     
+    /**
+     * not functions, but require braces
+     * @var array 
+     */
+    public static $constructsWithBraces = array(
+        'T_UNSET',
+        'T_ISSET',
+        'T_EMPTY',
+    );
     /**
      *
      * @var type 

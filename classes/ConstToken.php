@@ -17,6 +17,7 @@ class ConstToken extends CustomGenericToken
             Token::T_CLOSE_BRACE,
             Token::T_CONSTANT_ENCAPSED_STRING,
             Token::T_NEWLINE,
+            Token::T_VARIABLE,
             Token::T_STRING, /** @todo $this->var ... var is T_STRING*/
         );
         $prev = $tokenList->getPreviousNonWhitespace($this);

@@ -368,6 +368,11 @@ class PythoPhant_Parser implements Parser
         while ($currentLevel > 0) {
             $currentLevel--;
             $lastToken = $this->tokenList[count($this->tokenList) - 1];
+            $lastNonWhiteSpace = $this->tokenList->getPreviousNonWhitespace($lastToken, false);
+            //var_dump($lastNonWhiteSpace->getTokenName()); die();
+            if ($lastNonWhiteSpace->getTokenName() == Token::T_CLOSE_BRACE) {
+                $lastToken->setAuxValue(';');
+            }
             $this->injectBlockClosingAfter(
                 $lastToken, $currentLevel
             );
