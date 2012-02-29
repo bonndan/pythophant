@@ -18,6 +18,8 @@ abstract class PythoPhant_Grammar
     public static $declarations = array(
         'T_FUNCTION',
         'T_CLASS',
+        'T_EXTENDS',
+        'T_IMPLEMENTS',
         'T_INTERFACE'
     );
     

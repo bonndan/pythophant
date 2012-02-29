@@ -2,7 +2,8 @@
 /**
  * StringToken can render itself as a variable with leading dollar sign
  * 
- * 
+ * @todo check if variable checking is useful if only lowercase string were
+ * treated as variables
  */
 class StringToken extends CustomGenericToken
 {
@@ -15,7 +16,7 @@ class StringToken extends CustomGenericToken
      */
     public function affectTokenList(TokenList $tokenList)
     {
-        if ($this->getTokenName() == 'T_STRING') {
+        if ($this->getTokenName() == Token::T_STRING) {
             $this->checkIfIsVariable($tokenList);
         }
     }
@@ -26,7 +27,19 @@ class StringToken extends CustomGenericToken
      * @param TokenList $tokenList 
      */
     private function checkIfIsVariable(TokenList $tokenList)
-    {        
+    {
+        /**
+         * check for implements, then its just a class name
+         * @todo move code 
+         */
+        $first = $this;
+        while($token = $tokenList->getPreviousNonWhitespace($first)) {
+            $first = $token;
+        }
+        if ($first->getTokenName() == 'T_IMPLEMENTS') {
+            return;
+        }
+        
         /**
          * token before 
          */
@@ -52,7 +65,7 @@ class StringToken extends CustomGenericToken
             || (is_null($previous) && $postCondition)
             || ($preCondition && is_null($next))
         ) {
-            $this->tokenName = 'T_VARIABLE';
+            $this->tokenName = Token::T_VARIABLE;
             if (!$previous || $previous->getTokenName() != Token::T_MEMBER) {
                 $this->content = '$'.$this->content;
             }
@@ -61,7 +74,7 @@ class StringToken extends CustomGenericToken
         /**
          * class var declaration 
          */
-        if (!$previous || $this->tokenName != 'T_VARIABLE') {
+        if (!$previous || $this->tokenName != Token::T_VARIABLE) {
             return;
         }
         

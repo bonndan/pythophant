@@ -134,6 +134,12 @@ class PythoPhant_Parser implements Parser
 
             $opened = $this->isDeclarationOpened($line);
             if ($opened != false) {
+                $nextOpened = $this->isDeclarationOpened($this->lines[$index+1]);
+                if ($nextOpened === self::EXPLICITLY_OPENED) {
+                    $line[count($line)-1]->setAuxValue('');
+                    continue;
+                }
+                
                 $blockOpen = $this->tokenFactory->createToken(
                     'T_DECLARATION_BLOCK_OPEN',
                     self::T_DECLARATION_BLOCK_OPEN,

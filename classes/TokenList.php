@@ -67,9 +67,11 @@ class TokenList implements Iterator, Countable, ArrayAccess
     }
     
     /**
-     * get the next oken whihc is not a whitespace
+     * get the next token whihc is not a whitespace
      * 
      * @param Token $token
+     * @param bool  $newLineEnds flag whether the newline token ends search
+     * @param int   $incrementor search direction and step
      * 
      * @return Token|Null 
      */
@@ -81,7 +83,7 @@ class TokenList implements Iterator, Countable, ArrayAccess
             if ($newLineEnds && $next instanceof NewLineToken) {
                 break;
             }
-            if (!in_array($next->getTokenName(), array('T_WHITESPACE', 'T_INDENT'))) {
+            if (!in_array($next->getTokenName(), array('T_WHITESPACE', Token::T_INDENT))) {
                 return $next;
             }
             $index = $index + $incrementor;
