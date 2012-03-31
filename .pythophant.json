@@ -1,0 +1,11 @@
+{
+    "project": "PythoPhant",
+    
+    "watch": [
+        './classes',
+        './tests',
+        './sources',
+    ],
+    
+    'testAfterConversion': true
+}
