@@ -28,7 +28,11 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
         
         $token = $this;
         while ($token = $tokenList->getPreviousNonWhitespace($token)) {
-            if ($tokenList->isTokenIncluded(array($token), PythoPhant_Grammar::$controls)) {
+            $indicators = array_merge(
+                PythoPhant_Grammar::$controls,
+                array(Token::T_RETURN,  'T_ASSIGN')
+            );
+            if ($tokenList->isTokenIncluded(array($token), $indicators)) {
                 $this->replaceQuestionMark($tokenList);
                 return;
             }
@@ -65,13 +69,13 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
         
         $moved = array_reverse($moved);
         $tokenList->injectToken(
-            new PHPToken(Token::T_OPEN_BRACE, PythoPhant_Grammar::OPEN_BRACE, $this->getLine()),
+            new PHPToken(Token::T_OPEN_BRACE, PythoPhant_Grammar::T_OPEN_BRACE, $this->getLine()),
             $tokenList->getTokenIndex($this)
         );
         
         $lastIndex = $tokenList->moveTokensBefore($moved, $this);
         $tokenList->injectToken(
-            new PHPToken(Token::T_CLOSE_BRACE, ')', $this->getLine()),
+            new PHPToken(Token::T_CLOSE_BRACE, PythoPhant_Grammar::T_CLOSE_BRACE, $this->getLine()),
             $lastIndex+1
         );
         $tokenList->offsetUnset($tokenList->getTokenIndex($this)); //remove question

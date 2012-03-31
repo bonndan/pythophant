@@ -1,13 +1,11 @@
 <?php
-
+/**
+ * array / object notation using json syntax
+ * 
+ *  
+ */
 class JsonToken extends PHPToken implements CustomToken
 {
-    const T_JSON_OPEN_ARRAY = "T_JSON_OPEN_ARRAY";
-    const T_JSON_CLOSE_ARRAY = "T_JSON_CLOSE_ARRAY";
-    const T_JSON_OPEN_OBJECT = "T_JSON_OPEN_OBJECT";
-    const T_JSON_CLOSE_OBJECT = "T_JSON_CLOSE_OBJECT";
-    const T_JSON_ASSIGN = "T_JSON_ASSIGN";
-    
     const JSON_OPEN_ARRAY = "[";
     const JSON_CLOSE_ARRAY = "]";
     const JSON_OPEN_OBJECT = "{";
@@ -26,7 +24,7 @@ class JsonToken extends PHPToken implements CustomToken
         if ($this->content == self::JSON_OPEN_ARRAY) {
             $tokenName = $tokenList->getPreviousNonWhitespace($this)
                 ->getTokenName();
-            $indicators = array(Token::T_ASSIGN, Token::T_JSON_TOKEN, 'T_IN');
+            $indicators = array(Token::T_ASSIGN, Token::T_JSON_TOKEN, Token::T_OPEN_BRACE, 'T_IN');
             if (in_array($tokenName, $indicators)) {
                 $this->content = 'array(';
             }
@@ -42,11 +40,13 @@ class JsonToken extends PHPToken implements CustomToken
         }
         
         if ($this->content == self::JSON_CLOSE_OBJECT) {
-                $this->content = ')';
+            $this->content = ')';
         }
     }
     
-    public function setAuxValue($value)
-    {
-    }
+    /**
+     * required method
+     * @param type $value 
+     */
+    public function setAuxValue($value){}
 }

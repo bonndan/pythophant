@@ -5,7 +5,7 @@ require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
 /**
  * Test class for Scanner.
  */
-class ScannerTest extends PHPUnit_Framework_TestCase
+class PythoPhant_ScannerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var Scanner

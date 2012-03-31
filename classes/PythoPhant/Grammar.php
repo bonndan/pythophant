@@ -6,10 +6,39 @@
  */
 abstract class PythoPhant_Grammar
 {
+    /**
+     * indentation is four spaces 
+     */
     const INDENTATION_LEVEL = 4;
     
-    const OPEN_BRACE = '(';
-    const CLOSE_BRACE = ')';
+    const T_ASSIGN = '=';
+    const T_OPEN_BRACE = '(';
+    const T_CLOSE_BRACE = ')';
+    const T_OPEN_ARRAY = '[';
+    const T_CLOSE_ARRAY = ']';
+    const T_THIS = 'this';
+    const T_THIS_MEMBER = '@';
+    const T_SELF = 'self';
+    const T_MEMBER = '.';
+    const T_COMMA = ',';
+    const T_NEWLINE = "\n";
+    const T_RETURNVALUE = "";
+    const T_QUESTION = "?";
+    const T_COLON = ":";
+    const T_NOT = "not";
+    const T_EXCLAMATION = "!";
+    
+    const T_BIT_AND = "&";
+    const T_BIT_OR = "|";
+    const T_BIT_XOR = "^";
+    const T_BIT_NOT = "~";
+    const T_BIT_SHIFTLEFT = "<<";
+    const T_BIT_SHIFTRIGHT = ">>";
+    
+    const T_JSON_OPEN_OBJECT = "{";
+    const T_JSON_CLOSE_OBJECT = "}";
+    
+    const T_ACCESSIBLE = 'accessible';
     
     /**
      * declaration tokens
@@ -109,7 +138,7 @@ abstract class PythoPhant_Grammar
         'T_DOUBLE_COLON',
         'T_COMMA',
         'T_STRING',
-        'T_OPEN_BRACE',
+        Token::T_OPEN_BRACE,
         'T_DOUBLE_ARROW',
         'T_AS',
         'T_ECHO',
@@ -122,6 +151,9 @@ abstract class PythoPhant_Grammar
         'T_MEMBER',
         'T_CONCAT',
         'T_ARRAY',
+        'T_OPEN_ARRAY',
+        'T_COLON',
+        Token::T_JSON_OPEN_ARRAY,
     );
     
     /**
@@ -140,8 +172,12 @@ abstract class PythoPhant_Grammar
         'T_BOOLEAN_OR',
         'T_LOGICAL_AND',
         'T_LOGICAL_OR',
+        'T_IS_IDENTICAL',
+        'T_IS_NOT_IDENTICAL',
         'T_CONST',
         'T_CONSTANT_ENCAPSED_STRING',
+        'T_CLOSE_ARRAY',
+        Token::T_JSON_ASSIGN,
     );
     
     /**
@@ -150,8 +186,8 @@ abstract class PythoPhant_Grammar
      */
     public static $blockClosers = array(
         Token::T_CLOSE_BRACE,
-        JsonToken::T_JSON_CLOSE_ARRAY,
-        JsonToken::T_JSON_CLOSE_OBJECT,
+        Token::T_JSON_CLOSE_ARRAY,
+        Token::T_JSON_CLOSE_OBJECT,
     );
     
     /**

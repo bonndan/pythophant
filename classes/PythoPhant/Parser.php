@@ -39,13 +39,6 @@ class PythoPhant_Parser implements Parser
     private $lines = array();
 
     /**
-     * status: inside a function?
-     * @var type 
-     */
-    private $nestingLevel = 0;
-
-
-    /**
      * pass a filename and a token factory
      * 
      * @param TokenFactory $factory factory instance
@@ -56,14 +49,37 @@ class PythoPhant_Parser implements Parser
     }
 
     /**
+     * set the tokenlist to use
+     * 
+     * @param TokenList $tokenList
+     * 
+     * @return \PythoPhant_Parser 
+     */
+    public function setTokenList(TokenList $tokenList)
+    {
+        $this->tokenList = $tokenList;
+        return $this;
+    }
+    
+    /**
      * process a token list. custom tokens are processed before string tokens
      * 
      * @param TokenList $tokenList
      */
     public function processTokenList(TokenList $tokenList)
     {
-        $this->tokenList = $tokenList;
+        $this->setTokenList($tokenList);
         
+        $this->parseListAffections();
+        $this->parseLineEnds();
+        $this->parseBlocks();
+    }
+
+    /**
+     * the "magic" 
+     */
+    public function parseListAffections()
+    {
         foreach ($this->tokenList as $token) {
             if ($token instanceof ParsedEarlyToken) {
                 $token->affectTokenList($this->tokenList);
@@ -75,12 +91,6 @@ class PythoPhant_Parser implements Parser
                 $token->affectTokenList($this->tokenList);
             }
         }
-        
-        $this->makeLines();
-        $this->parse1();
-        
-        
-        $this->parseBlocks();
     }
 
     /**
@@ -105,14 +115,10 @@ class PythoPhant_Parser implements Parser
      * - inject opening braces
      * - inject function declarations
      */
-    public function parse1()
+    public function parseLineEnds()
     {
+        $this->makeLines();
         foreach ($this->lines as $index => $line) {
-            $nestingLevel = 0;
-            $indentToken = $line[0];
-            if ($indentToken instanceof IndentationToken) {
-                $nestingLevel = $indentToken->getNestingLevel();
-            }
             $newlineToken = $line[count($line) - 1];
             if (!$newlineToken instanceof NewLineToken) {
                 continue;
@@ -134,41 +140,71 @@ class PythoPhant_Parser implements Parser
 
             $opened = $this->isDeclarationOpened($line);
             if ($opened != false) {
-                $nextOpened = $this->isDeclarationOpened($this->lines[$index+1]);
-                if ($nextOpened === self::EXPLICITLY_OPENED) {
-                    $line[count($line)-1]->setAuxValue('');
-                    continue;
-                }
-                
-                $blockOpen = $this->tokenFactory->createToken(
-                    'T_DECLARATION_BLOCK_OPEN',
-                    self::T_DECLARATION_BLOCK_OPEN,
-                    $newlineToken->getLine()
-                );
-                $this->tokenList->injectToken($blockOpen, $currentPos + 1);
-                $nl = $this->tokenFactory->createToken(
-                    'T_NEWLINE',
-                    PHP_EOL,
-                    $newlineToken->getLine() +1
-                );
-                $nl->setAuxValue('');
-                $this->tokenList->injectToken($nl, $currentPos + 2);
-                $this->injectIndentationBefore($nestingLevel, $blockOpen);
-                $newlineToken->setAuxValue("");
-                $newlineToken->setContent(PHP_EOL);
-                if ($opened !== self::EXPLICITLY_OPENED) {
-                    $this->injectFunctionInLine($line);
-                }
-                $this->nestingLevel++;
-            } elseif ($this->isBlock($line)) {
+                $this->handleDeclaration($index, $opened);
+            } elseif ($this->isBlockOpened($line)) {
                 $newlineToken->setAuxValue(self::T_BLOCK_OPEN);
-                $this->nestingLevel++;
             }
         }
-        
-        
     }
 
+    /**
+     * get the nesting level (indentation depth) of a line
+     * 
+     * @param array $line
+     * 
+     * @return int 
+     */
+    private function getLineNestingLevel(array $line)
+    {
+        $nestingLevel = 0;
+        $indentToken = $line[0];
+        if ($indentToken instanceof IndentationToken) {
+            $nestingLevel = $indentToken->getNestingLevel();
+        }
+        
+        return $nestingLevel;
+    }
+    
+    /**
+     * handle class or function declarations on a line
+     * 
+     * @param int $lineNumber
+     * @param int $opened
+     * 
+     * @return void 
+     */
+    private function handleDeclaration($lineNumber, $opened)
+    {
+        $line = $this->lines[$lineNumber];
+        
+        $newlineToken = $line[count($line)-1];
+        $currentPos = $this->tokenList->getTokenIndex($newlineToken);
+        
+        if(isset($this->lines[$lineNumber+1])) {
+            $nextOpened = $this->isDeclarationOpened($this->lines[$lineNumber+1]);
+            if ($nextOpened === self::EXPLICITLY_OPENED) {
+                $newlineToken->setAuxValue('');
+                return;
+            }
+        }
+
+        $blockOpen = $this->tokenFactory->createToken(
+            'T_DECLARATION_BLOCK_OPEN',
+            self::T_DECLARATION_BLOCK_OPEN,
+            $newlineToken->getLine()
+        );
+        $this->tokenList->injectToken($blockOpen, $currentPos + 1);
+        $this->tokenList->injectToken(NewLineToken::createEmpty(), $currentPos + 2);
+        
+        $nestingLevel = $this->getLineNestingLevel($line);
+        $this->injectIndentationBefore($nestingLevel, $blockOpen);
+        $newlineToken->setAuxValue("");
+        $newlineToken->setContent(PHP_EOL);
+        if ($opened !== self::EXPLICITLY_OPENED) {
+            $this->injectFunctionInLine($line);
+        }
+    }
+    
     /**
      *
      * @param Token $injected
@@ -217,11 +253,11 @@ class PythoPhant_Parser implements Parser
     private function injectFunctionInLine(array $line)
     {
         $visibilitySet = false;
-        $function = new PHPToken('T_FUNCTION', 'function ', 0);
+        $function = $this->tokenFactory->createToken('T_FUNCTION', 'function ', 0);
+            
         foreach ($line as $token) {
             if ($this->tokenList->isTokenIncluded(array($token), PythoPhant_Grammar::$modifiers)) {
                 $visibilitySet = in_array($token->getTokenName(), PythoPhant_Grammar::$visibilities);
-                continue;
             }
 
             /**
@@ -232,8 +268,11 @@ class PythoPhant_Parser implements Parser
                 break;
             }
 
+            /**
+             * T_STRING is the function name 
+             */
             if ($next = $this->tokenList->getNextNonWhitespace($token)) {
-                if ($next->getTokenName() == 'T_STRING') {
+                if ($next->getTokenName() == Token::T_STRING) {
                     $this->injectTokenBefore($function, $next);
                     break;
                 }
@@ -269,7 +308,9 @@ class PythoPhant_Parser implements Parser
          */
         $hasLead = in_array($line[1]->getTokenName(), PythoPhant_Grammar::$modifiers);
         if (!$hasLead && $line[0] instanceof IndentationToken) {
-            $hasLead = $line[0]->getNestingLevel() == 1;
+            $hasLead = $line[0]->getNestingLevel() == 1 
+                && 
+                !$this->tokenList->isTokenIncluded(array($line[1]), PythoPhant_Grammar::$controls);
         }
         $openBrace = $this->tokenList->isTokenIncluded($line, array(Token::T_OPEN_BRACE));
         $closeBrace = $this->tokenList->isTokenIncluded($line, array(Token::T_CLOSE_BRACE));
@@ -286,7 +327,7 @@ class PythoPhant_Parser implements Parser
      * 
      * @return boolean 
      */
-    private function isBlock(array $line)
+    private function isBlockOpened(array $line)
     {
         $found = false;
         foreach ($line as $token) {
@@ -317,7 +358,7 @@ class PythoPhant_Parser implements Parser
      * parses blocks based on indentation
      * 
      */
-    private function parseBlocks()
+    public function parseBlocks()
     {
         /**
          * the last token has to be a newline 
@@ -375,7 +416,7 @@ class PythoPhant_Parser implements Parser
             $currentLevel--;
             $lastToken = $this->tokenList[count($this->tokenList) - 1];
             $lastNonWhiteSpace = $this->tokenList->getPreviousNonWhitespace($lastToken, false);
-            //var_dump($lastNonWhiteSpace->getTokenName()); die();
+            
             if ($lastNonWhiteSpace->getTokenName() == Token::T_CLOSE_BRACE) {
                 $lastToken->setAuxValue(';');
             }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * string concatenation if previous or next are T_CONSTANT_ENCAPSED_STRING
+ * colon is assignment in json context 
  */
 class ColonToken extends CustomGenericToken implements ParsedEarlyToken
 {
@@ -28,8 +28,14 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
         if ($prev->getTokenName() == Token::T_CONSTANT_ENCAPSED_STRING) {
             return $this->makeJsonAssign();
         }
+        $firstPrev = $prev;
+        while($prev = $tokenList->getPreviousNonWhitespace($prev)) {
+            if ($prev->getTokenName() == Token::T_JSON_OPEN_ARRAY) {
+                return $this->makeJsonAssign();
+            }
+        }
         
-        if ($this->isPreviousFunctionOrControl($prev, $tokenList)) {
+        if ($this->isPreviousFunctionOrControl($firstPrev, $tokenList)) {
             return $this->makeFunctionCallBraces($tokenList);
         }
         
@@ -44,7 +50,7 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
      */
     private function makeJsonAssign()
     {
-        $this->tokenName = JsonToken::T_JSON_ASSIGN;
+        $this->tokenName = Token::T_JSON_ASSIGN;
         $this->content   = '=>';
     }
     
@@ -77,7 +83,7 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
      */
     private function makeFunctionCallBraces(TokenList $tokenList)
     {
-        $this->setContent(PythoPhant_Grammar::OPEN_BRACE);
+        $this->setContent(PythoPhant_Grammar::T_OPEN_BRACE);
         $this->tokenName = Token::T_OPEN_BRACE;
         
         $token = $this;
@@ -87,7 +93,7 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
         
         $closeBrace = new PHPToken(
             Token::T_CLOSE_BRACE,
-            PythoPhant_Grammar::CLOSE_BRACE,
+            PythoPhant_Grammar::T_CLOSE_BRACE,
             $this->getLine()
         );
         

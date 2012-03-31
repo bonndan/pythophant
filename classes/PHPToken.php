@@ -36,6 +36,9 @@ class PHPToken implements Token
     public function __construct($tokenName, $content, $line)
     {
         $this->tokenName = (string) $tokenName;
+        if (trim($this->tokenName) == '') {
+            throw new InvalidArgumentException('Token name cannot be emtpy.');
+        }
         $this->setContent($content);
         $this->setLine((int) $line);
     }

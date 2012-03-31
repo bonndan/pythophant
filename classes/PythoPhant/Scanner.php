@@ -1,9 +1,9 @@
 <?php
 
 /**
- * File scanner, uses php tokenizer
+ * File scanner, uses the php tokenizer
  * 
- *  
+ * @category PythoPhant 
  */
 class PythoPhant_Scanner implements Scanner
 {

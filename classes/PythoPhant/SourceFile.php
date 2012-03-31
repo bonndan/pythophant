@@ -65,4 +65,14 @@ class PythoPhant_SourceFile
             echo $source; 
         }
     }
+    
+    /**
+     * returns the path and file name of the source file
+     * 
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
 }
