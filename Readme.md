@@ -19,7 +19,6 @@ Rules
 ### Classes, Methods and Members
 
 * "class" or "interface" declarations have to be placed in the code.
-* "implements" or "extends" must be on the same line as the class declaration (FIXME)
 * The "->" operator should be written as "."
 * "@" is a shortcut for "$this->"
 * The explicit declaration "function" can be omitted if a visibility modifier is used or if the indentation level is one.
@@ -32,6 +31,7 @@ Rules
 
 Some Magic
 ----------
+* the colon ":" following a string is treated as an opening brace, the closing brace is inserted at eol
 * use "!" and "?" for easily readable expressions like "myVar ctype_alnum?" or "myArray explode('.')!
 * "!" can also be written as "not"
 * the keyword "accessible" generates getters and setters for private class vars 
@@ -40,4 +40,3 @@ Todo
 ----
 
 * multi-line args for if and similar conditionals 
-* "implements" or "extends" can be on the different line as the class declaration

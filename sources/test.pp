@@ -16,7 +16,7 @@ class Test extends StdClass implements Countable
 
         return @someVar?true:false
 
-    /**
+    
     private isSomethingContained (something)
-        return something is in_array ['a', 1] or something ctype_alnum?
-    */
+        return  in_array(something, ['a', 1]) or something ctype_alnum?
+    
