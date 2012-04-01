@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * CustomToken
+ * 
+ * A token which affects the surrounding tokens. Tokens are handled from left to
+ * right. CustomTokens can affect any token in the list as well as remove or 
+ * insert new ones.
+ * 
+ * 
+ */
 interface CustomToken extends Token
 {
     /**

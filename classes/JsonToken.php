@@ -17,6 +17,7 @@ class JsonToken extends PHPToken implements CustomToken
      * 
      * @param TokenList $tokenList
      * 
+     * @todo myArray[ myVar : somefunc(myVar)]
      * @return void 
      */
     public function affectTokenList(TokenList $tokenList)

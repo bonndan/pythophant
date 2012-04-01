@@ -1,6 +1,8 @@
 <?php
 /**
+ * Parser interface
  * 
+ * @package PythoPhant
  */
 interface Parser
 {

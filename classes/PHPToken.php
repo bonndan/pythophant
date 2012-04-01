@@ -1,9 +1,11 @@
 <?php
 
 /**
+ * PHPToken
+ * 
  * a regular php token 
  * 
- * 
+ * @package PythoPhant
  */
 class PHPToken implements Token
 {

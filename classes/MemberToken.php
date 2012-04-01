@@ -1,6 +1,11 @@
 <?php
 /**
- * the content of this always T_OBJECT_OPERATOR 
+ * MemberToken
+ * 
+ * The content of this token is always T_OBJECT_OPERATOR. Member function calls
+ * can be written as in Java using the dot "."
+ * 
+ * 
  */
 class MemberToken extends CustomGenericToken
 {
