@@ -33,4 +33,35 @@ class PythoPhant_Event_ProxyTest extends PHPUnit_Framework_TestCase
         $mock->expects($this->once())->method('update')->with($event);
         $this->proxy->update($event);
     }
+    
+    
+    public function testAddLoggerWithFullClassname()
+    {
+        $res = $this->proxy->addLogger('PythoPhant_Logger_Console');
+        $this->assertInstanceOf('PythoPhant_Observer', $res);
+    }
+    
+    public function testAddLoggerWithAbbrevClassname()
+    {
+        $res = $this->proxy->addLogger('Console');
+        $this->assertInstanceOf('PythoPhant_Observer', $res);
+    }
+    
+    public function testAddLoggerWithObserver()
+    {
+        $res = $this->proxy->addLogger($this->getMock('PythoPhant_Observer'));
+        $this->assertInstanceOf('PythoPhant_Observer', $res);
+    }
+    
+    public function testAddLoggerWithOtherInstance()
+    {
+        $res = $this->proxy->addLogger('PythoPhant_PHPToken');
+        $this->assertNull($res);
+    }
+    
+    public function testAddLoggerWithArray()
+    {
+        $res = $this->proxy->addLogger(array());
+        $this->assertNull($res);
+    }
 }

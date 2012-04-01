@@ -10,7 +10,7 @@ function __autoload($class)
         return;
     }
     $class = str_replace('_', DIRECTORY_SEPARATOR, $class);
-    require_once dirname(__FILE__)  . DIRECTORY_SEPARATOR  . $class .'.php';
+    include_once dirname(__FILE__)  . DIRECTORY_SEPARATOR  . $class .'.php';
 }
 
 spl_autoload_register('__autoload');
