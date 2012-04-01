@@ -29,6 +29,27 @@ class PythoPhant_ProjectTest extends PHPUnit_Framework_TestCase
         $this->project->readConfigurationFile('test');
     }
     
+    /**
+     * 
+     */
+    public function testReadsConfigFileWithNull()
+    {
+        $this->assertTrue($this->project->getTestAfterConversion());
+        chdir(dirname(dirname(dirname(__DIR__))));
+        $this->project->readConfigurationFile();
+    }
+    
+    /**
+     * 
+     */
+    public function testReadConfigFileWithNullIfNotConfigFilePresent()
+    {
+        $this->assertTrue($this->project->getTestAfterConversion());
+        chdir(__DIR__);
+        $this->setExpectedException('InvalidArgumentException');
+        $this->project->readConfigurationFile();
+    }
+    
     
     /**
      * 
@@ -82,5 +103,25 @@ class PythoPhant_ProjectTest extends PHPUnit_Framework_TestCase
         $string = '{"watch": false}';
         $this->project->readConfiguration($string);
         $this->assertEmpty($this->project->getWatchedDirectories());
+    }
+    
+    /**
+     * 
+     */
+    public function testGetLoggers()
+    {
+        $string = '{"loggers": ["Console"]}';
+        $this->project->readConfiguration($string);
+        $this->assertContains("Console", $this->project->getLoggers());
+    }
+    
+    /**
+     * 
+     */
+    public function testGetLoggersFalseReturnsArray()
+    {
+        $string = '{"loggers": false}';
+        $this->project->readConfiguration($string);
+        $this->assertEmpty($this->project->getLoggers());
     }
 }

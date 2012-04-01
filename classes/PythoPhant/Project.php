@@ -16,20 +16,31 @@ class PythoPhant_Project
      * directories to watch
      * @var array
      */
-    private $watch = array('.');
+    private $watch = array();
     
     /**
      * @var boolean 
      */
     private $testAfterConversion = true;
+    
+    /**
+     * observer-loggers
+     * @var array
+     */
+    private $loggers = array();
 
     /**
      * read the project config json file
      * 
      * @param string $filename 
+     * 
+     * @throws InvalidArgumentException
      */
-    public function readConfigurationFile($filename = self::DEFAULT_CONFIG_FILE)
+    public function readConfigurationFile($filename = null)
     {
+        if ($filename === null) {
+            $filename = getcwd() . DIRECTORY_SEPARATOR . self::DEFAULT_CONFIG_FILE;
+        }
         if (!is_file($filename) || !is_readable($filename)) {
             throw new InvalidArgumentException('Config file not accessible: '. $filename);
         }
@@ -78,6 +89,20 @@ class PythoPhant_Project
         }
         
         return $this->watch;
+    }
+    
+    /**
+     * get loggers
+     * 
+     * @return array 
+     */
+    public function getLoggers()
+    {
+        if (!is_array($this->loggers)) {
+            return array();
+        }
+        
+        return $this->loggers;
     }
     
     /**
