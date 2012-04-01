@@ -13,13 +13,6 @@ class PythoPhant_Parser implements Parser
      * @var int
      */
     const EXPLICITLY_OPENED = 2;
-    
-    /**
-     * @todo move to grammer or style 
-     */
-    const T_DECLARATION_BLOCK_OPEN = "{";
-    const T_BLOCK_OPEN = " {";
-    const T_BLOCK_CLOSE = "}\n\n";
 
     /**
      * @var TokenList
@@ -142,7 +135,7 @@ class PythoPhant_Parser implements Parser
             if ($opened != false) {
                 $this->handleDeclaration($index, $opened);
             } elseif ($this->isBlockOpened($line)) {
-                $newlineToken->setAuxValue(self::T_BLOCK_OPEN);
+                $newlineToken->setAuxValue(' ' . PythoPhant_Grammar::T_OPEN_BLOCK);
             }
         }
     }
@@ -190,7 +183,7 @@ class PythoPhant_Parser implements Parser
 
         $blockOpen = $this->tokenFactory->createToken(
             'T_DECLARATION_BLOCK_OPEN',
-            self::T_DECLARATION_BLOCK_OPEN,
+            PythoPhant_Grammar::T_OPEN_BLOCK,
             $newlineToken->getLine()
         );
         $this->tokenList->injectToken($blockOpen, $currentPos + 1);
@@ -441,7 +434,7 @@ class PythoPhant_Parser implements Parser
         $content = NULL
     ) {
         if ($content === NULL) {
-            $content = self::T_BLOCK_CLOSE;
+            $content = PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL . PHP_EOL;
         }
 
         $index = $this->tokenList->getTokenIndex($token);

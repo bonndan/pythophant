@@ -16,6 +16,8 @@ abstract class PythoPhant_Grammar
     const T_CLOSE_BRACE = ')';
     const T_OPEN_ARRAY = '[';
     const T_CLOSE_ARRAY = ']';
+    const T_OPEN_BLOCK = "{";
+    const T_CLOSE_BLOCK = "}";
     const T_THIS = 'this';
     const T_THIS_MEMBER = '@';
     const T_SELF = 'self';

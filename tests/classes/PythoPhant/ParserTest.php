@@ -186,7 +186,7 @@ class PythoPhant_ParserTest extends PHPUnit_Framework_TestCase
         
         $nlToken->expects($this->once())
             ->method('setAuxValue')
-            ->with(PythoPhant_Parser::T_BLOCK_OPEN);
+            ->with(' ' . PythoPhant_Grammar::T_OPEN_BLOCK);
         $nlToken->expects($this->never())
             ->method('setContent');
         $this->object->parseLineEnds();

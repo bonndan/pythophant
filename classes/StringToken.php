@@ -2,8 +2,6 @@
 /**
  * StringToken can render itself as a variable with leading dollar sign
  * 
- * @todo check if variable checking is useful if only lowercase string were
- * treated as variables
  */
 class StringToken extends CustomGenericToken
 {
@@ -30,7 +28,7 @@ class StringToken extends CustomGenericToken
     {
         /**
          * check for implements, then its just a class name
-         * @todo move code 
+         * @todo move code, remove special "implements" rule
          */
         $first = $this;
         while($token = $tokenList->getPreviousNonWhitespace($first)) {
