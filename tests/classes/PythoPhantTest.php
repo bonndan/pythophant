@@ -25,4 +25,69 @@ class PythoPhantTest extends PHPUnit_Framework_TestCase
         $this->assertAttributeInstanceOf('PythoPhant_Converter', 'converter', $this->pp);
     }
     
+    public function testMainWithNothingFindsProject()
+    {
+        $proxy = $this->getMock('PythoPhant_Event_Proxy');
+        
+        $watcher = $this->getMock('PythoPhant_DirectoryWatcher');
+        $watcher->expects($this->once())->method('attach');
+        $this->pp = new PythoPhant(null, $watcher, $proxy);
+        
+        $cwd = dirname(dirname(__DIR__));
+        chdir($cwd);
+        $proxy->expects($this->once())->method('addLogger')->with('Console');
+        
+        $watcher->expects($this->exactly(3))->method('addDirectory');
+        $watcher->expects($this->once())->method('run');
+        $this->pp->main(array());
+        
+        $project = $this->pp->getProject();
+        
+        $this->assertInstanceOf('PythoPhant_Project', $project);
+        $this->assertContains('Console', $project->getLoggers(), serialize($project->getLoggers()));
+    }
+    
+    public function testMainWithNothingLooksForProjectAndStartsWatching()
+    {
+        $watcher = $this->getMock('PythoPhant_DirectoryWatcher');
+        $watcher->expects($this->once())->method('attach');
+        $this->pp = new PythoPhant(null, $watcher);
+        
+        chdir(__DIR__);
+        
+        $watcher->expects($this->once())->method('addDirectory');
+        $watcher->expects($this->once())->method('run');
+        $this->pp->main(array());
+        
+        $project = $this->pp->getProject();
+        $this->assertInstanceOf('PythoPhant_Project', $project);
+    }
+    
+    public function testMainWithFileConvertsFile()
+    {
+        $converter = $this->getMockBuilder('PythoPhant_Converter')
+            ->disableOriginalConstructor()->getMock();
+        $converter->expects($this->once())->method('convert');
+        $this->pp = new PythoPhant($converter);
+        
+        $cwd = dirname(dirname(__DIR__));
+        $this->pp->main(array(0, $cwd . DIRECTORY_SEPARATOR . 'sources/test.pp'));
+    }
+    
+    public function testMainWithDirStartsWatchingOnlyDir()
+    {
+        $watcher = $this->getMock('PythoPhant_DirectoryWatcher');
+        $dir = 'sources';
+        $watcher->expects($this->once())->method('addDirectory')->with($dir);
+        $this->pp = new PythoPhant(null, $watcher);
+        
+        $cwd = dirname(dirname(__DIR__));
+        chdir($cwd);
+        $this->pp->main(array(0, $dir));
+    }
+    
+    public function _testMainWithUnreadableArg()
+    {
+        
+    }
 }

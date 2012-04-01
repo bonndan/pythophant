@@ -35,6 +35,7 @@ class PythoPhant_Project
      * @param string $filename 
      * 
      * @throws InvalidArgumentException
+     * @return boolean
      */
     public function readConfigurationFile($filename = null)
     {
@@ -46,13 +47,16 @@ class PythoPhant_Project
         }
         
         $config = json_decode(file_get_contents($filename));
-        $this->readConfiguration($config);
+        return $this->readConfiguration($config);
     }
     
     /**
      * read the project config json file
      * 
      * @param stdClass $filename 
+     * 
+     * @return boolean
+     * @throws RuntimeException
      */
     public function readConfiguration($config)
     {
@@ -60,11 +64,13 @@ class PythoPhant_Project
             $config = json_decode($config);
         }
         if (!is_object($config)) {
-            return;
+            throw new RuntimeException('Config broken: ' . serialize($config));
         }
         foreach ($config as $key => $value) {
             $this->$key = $value;
         }
+        
+        return true;
     }
     
     /**

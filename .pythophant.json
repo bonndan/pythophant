@@ -2,10 +2,14 @@
     "project": "PythoPhant",
     
     "watch": [
-        './classes',
-        './tests',
-        './sources',
+        "./classes",
+        "./tests",
+        "./sources"
     ],
     
-    'testAfterConversion': true
+    "testAfterConversion": true,
+
+    "loggers": [
+        "Console"
+    ]
 }
