@@ -74,9 +74,9 @@ class PythoPhant_Event_Proxy extends PythoPhant_AbstractSubject implements Pytho
      */
     private function tryLoadLoggerClass($classname, $requireClass = null)
     {
-
         $result = false;
         try {
+            set_error_handler(array($this, 'silentErrorHandler'));
             if (class_exists($classname)) {
                 $logger = new $classname();
                 if (!$logger instanceof PythoPhant_Observer) {
@@ -93,9 +93,17 @@ class PythoPhant_Event_Proxy extends PythoPhant_AbstractSubject implements Pytho
         } catch (Exception $exc) {
             
         }
-
-
+        restore_error_handler();
         return $result;
     }
 
+    /**
+     * does nothing
+     * 
+     * @param type $null 
+     */
+    public function silentErrorHandler($null)
+    {
+        
+    }
 }
