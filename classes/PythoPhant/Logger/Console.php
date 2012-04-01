@@ -1,8 +1,10 @@
 <?php
 /**
+ * PythoPhant_Logger_Console
  * 
+ * logger which prints events on the console
  */
-class PythoPhant_ConsoleLoggerObserver implements PythoPhant_Observer
+class PythoPhant_Logger_Console implements PythoPhant_Observer
 {
     /**
      * receives and logs events
