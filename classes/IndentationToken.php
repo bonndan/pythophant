@@ -1,5 +1,7 @@
 <?php
 /**
+ * IndentationToken
+ * 
  * token representing indentation
  *  
  */
@@ -65,8 +67,15 @@ class IndentationToken extends CustomGenericToken
         return strlen($this->getContent()) / self::INDENTATION_SPACES;
     }
 
+    /**
+     * set indentation depth
+     * 
+     * @param int $nestingLevel
+     * 
+     * @return void
+     */
     public function setNestingLevel($nestingLevel)
     {
-        $this->content = str_repeat(' ', self::INDENTATION_SPACES * $nestingLevel);
+        $this->content = str_repeat(' ', self::INDENTATION_SPACES * (int)$nestingLevel);
     }
 }
