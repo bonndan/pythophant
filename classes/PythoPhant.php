@@ -124,7 +124,8 @@ class PythoPhant
         elseif ($configFound == false) {
             $this->dirWatcher->addDirectory(getcwd());
         }
-        $this->dirWatcher->run();
+        
+        $this->dirWatcher->run($this->project->getPollingInterval());
     }
 
     /**

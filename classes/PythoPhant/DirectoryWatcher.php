@@ -48,16 +48,10 @@ implements PythoPhant_Subject
     /**
      * loop over the directories, store file mtime for all watched files 
      * 
-     * @param int pollingInterval
-     * 
      * @return void
      */
-    public function run($pollingInterval = null)
+    public function run($pollingInterval = 0)
     {
-        if ($pollingInterval !== null) {
-            $this->pollingInterval = $pollingInterval;
-        }
-
         $files = array();
         foreach ($this->directories as $dir) {
             $files = array_merge($files, $this->scanRecursive($dir));
@@ -78,12 +72,11 @@ implements PythoPhant_Subject
             }
 
         }
-
-        if ($this->pollingInterval > -1) {
-            sleep($this->pollingInterval / 1000);
-            call_user_func(array($this, 'run'));
+        
+        while (true && $pollingInterval > 0) {
+            $this>run();
+            sleep($pollingInterval / 1000);
         }
-
     }
 
     /**

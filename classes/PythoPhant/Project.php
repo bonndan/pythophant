@@ -30,6 +30,12 @@ class PythoPhant_Project
     private $loggers = array();
 
     /**
+     * interval between directory watcher runs
+     * @var int 
+     */
+    private $pollingInterval = 1000;
+    
+    /**
      * read the project config json file
      * 
      * @param string $filename 
@@ -118,5 +124,15 @@ class PythoPhant_Project
     public function getTestAfterConversion()
     {
         return (bool)$this->testAfterConversion;
+    }
+    
+    /**
+     * interval between directory watcher runs
+     * 
+     * @return int
+     */
+    public function getPollingInterval()
+    {
+        return $this->pollingInterval;
     }
 }
