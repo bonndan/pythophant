@@ -36,7 +36,8 @@ abstract class PythoPhant_AbstractSubject
     /**
      *
      * @param PythoPhant_Observer $observer
-     * @return \PythoPhant_DirectoryWatcher 
+     * 
+     * @return PythoPhant_AbstractSubject
      */
     public function detach(PythoPhant_Observer $observer)
     {

@@ -28,15 +28,23 @@ class PythoPhant_AbstractSubjectTest extends PHPUnit_Framework_TestCase
     {
         $mock = $this->getMock('PythoPhant_Observer');
         $this->subject->attach($mock);
-        $this->assertAttributeNotContains($mock, 'observers', $this->subject);
+        $this->assertAttributeContains($mock, 'observers', $this->subject);
     }
     
     public function testDetach()
     {
         $mock = $this->getMock('PythoPhant_Observer');
+        $this->assertFalse(
+            $this->subject->getObservers()->contains($mock)
+        );
         $this->subject->attach($mock);
+        $this->assertTrue(
+            $this->subject->getObservers()->contains($mock)
+        );
         $this->subject->detach($mock);
-        
+        $this->assertFalse(
+            $this->subject->getObservers()->contains($mock)
+        );
         $this->assertAttributeNotContains($mock, 'observers', $this->subject);
     }
     
@@ -56,5 +64,14 @@ class TestSubject extends PythoPhant_AbstractSubject
     public function testNotification(PythoPhant_Event $event)
     {
         $this->notify($event);
+    }
+    
+    /**
+     * get the observer storage
+     * @return SplObjectStorage 
+     */
+    public function getObservers()
+    {
+        return parent::getObservers();
     }
 }
