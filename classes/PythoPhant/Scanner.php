@@ -41,7 +41,7 @@ class PythoPhant_Scanner implements Scanner
         $tokens = token_get_all($source);
         $currentLine = 1;
 
-        foreach ($tokens as $token) {
+        foreach ($tokens as $index => $token) {
 
             $currentLine = (is_array($token) && isset($token[2])) ?
                 $token[2] : $currentLine;
@@ -58,9 +58,20 @@ class PythoPhant_Scanner implements Scanner
             }
 
             foreach ($tokenNames as $tokenName) {
-                $tokenInstance = $this->tokenFactory->createToken(
-                    $tokenName, $content, $currentLine
-                );
+                try {
+                    $tokenInstance = $this->tokenFactory->createToken(
+                        $tokenName, $content, $currentLine
+                    );
+                } catch (PythoPhant_Exception $exc) {
+                    $message = $exc->getMessage() . ' in line ' . $currentLine;
+                    if (isset($tokens[$index-1])) {
+                        $message .= ' after ' . @$tokens[$index-3][1] . @$tokens[$index-2][1] . @$tokens[$index-1][1];
+                    } else {
+                        $message .= ' before ' . @$tokens[$index+1][1];
+                    }
+                        
+                    throw new PythoPhant_Exception($message);
+                }
                 $this->tokenList->pushToken($tokenInstance);
             }
         }
