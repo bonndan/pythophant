@@ -21,5 +21,7 @@ class ColonTest
     private aTest: array data
         if not empty: data
             @aFunc:
-        foreach data as key => val
+        foreach data as akey => val
+            somearray[] = [akey : strlen(val)]
             echo key PHP_EOL
+

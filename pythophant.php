@@ -8,4 +8,7 @@ require_once dirname(__FILE__) . '/classes/autoload.php';
 
 
 $pp = new PythoPhant();
-$pp->main($argv);
+$res = $pp->main($argv);
+if (!$res) {
+    exit(1);
+}
