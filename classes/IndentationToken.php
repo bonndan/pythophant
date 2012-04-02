@@ -27,17 +27,20 @@ class IndentationToken extends CustomGenericToken
     }
 
     /**
-     * set the content. indentation is computed by strlen
+     * set the content. indentation is computed by strlen. tabs are replaced by 
+     * indentation spaces
      * 
      * @param type $content
      * @throws InvalidArgumentException 
      */
     public function setContent($content)
     {
+        $content = str_replace("\t", str_repeat(' ', self::INDENTATION_SPACES), $content);
         parent::setContent($content);
+        
         $level = $this->getNestingLevel();
         if (($level - (int) $level) != 0) {
-            throw new InvalidArgumentException('Malformed indentation of ' . $level);
+            throw new PythoPhant_Exception('Malformed indentation of ' . $level);
         }
     }
 
