@@ -53,4 +53,30 @@ class PythoPhant_SourceFileTest extends PHPUnit_Framework_TestCase
         $this->source = $this->getSourceFile($mock);
         
     }
+    
+    public function testGetContents()
+    {
+        $this->source = $this->getSourceFile();
+        $res = $this->source->getContents();
+        $filename = dirname(PATH_TEST) . DIRECTORY_SEPARATOR . 'sources'
+                . DIRECTORY_SEPARATOR . 'test.pp';
+        $this->assertEquals(file_get_contents($filename), $res);
+    }
+    
+    public function testWriteTarget()
+    {
+        $this->source = $this->getSourceFile();
+        $destination = tempnam(sys_get_temp_dir(), 'test');
+        $res = $this->source->writeTarget('<?php exit();', $destination);
+        $this->assertEquals('<?php exit();', file_get_contents($destination));
+    }
+    
+    public function testWriteTargetWithInvalidcontent()
+    {
+        $this->source = $this->getSourceFile();
+        $destination = tempnam(sys_get_temp_dir(), 'test');
+        $res = $this->source->writeTarget('<?php does not compute );', $destination);
+        $this->assertGreaterThan(1, $res);
+        $this->assertEquals(1, $this->source->getErrorLine());
+    }
 }

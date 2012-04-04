@@ -1,6 +1,8 @@
 <?php
 /**
  * PyhtoPhant_SourceFile
+ * 
+ * represents a pp source file
  */
 class PythoPhant_SourceFile
 {
@@ -23,6 +25,18 @@ class PythoPhant_SourceFile
     private $filename = '';
     
     /**
+     * source file
+     * @var SplFileObject
+     */
+    private $file = null;
+    
+    /**
+     * line number (php target file) where the last error occurred
+     * @var int|null
+     */
+    private $errorLine = null;
+    
+    /**
      * pass a filename
      * 
      * @param SplFileObject $file
@@ -37,6 +51,7 @@ class PythoPhant_SourceFile
         
         $this->dirname  = $file->getPath();
         $this->filename = $file->getBasename(self::EXT);
+        $this->file     = $file;
     }
     
     /**
@@ -46,25 +61,41 @@ class PythoPhant_SourceFile
      */
     public function getContents()
     {
-        return file_get_contents(
-            $this->dirname . DIRECTORY_SEPARATOR . $this->filename . self::EXT
-        );
+        return file_get_contents($this->file->getPathname());
     }
     
     /**
-     * write php source to a target, lint the produced file while discarding 
+     * write php source to a target, lint the produced file
      * 
-     * @param type $source 
+     * @param string $content     php content
+     * @param string $destination optional file destination path
+     * 
+     * @return int
      */
-    public function writeTarget($source)
+    public function writeTarget($content, $destination = null)
     {
-        $targetFilename = $this->dirname . DIRECTORY_SEPARATOR . $this->filename . 'php';
-        file_put_contents($targetFilename, $source);
-        exec('php -l ' . $targetFilename, $output, $returnVal);
+        if ($destination === null) {
+            $destination = $this->dirname . DIRECTORY_SEPARATOR . $this->filename . 'php';
+        }
+        
+        file_put_contents($destination, $content);
+        
+        ob_start();
+        passthru('php -l ' . $destination . ' 2>&1', $returnVal);
+        $output = ob_get_contents();
+        ob_end_clean();
         
         if ($returnVal) {
-            echo $output; 
+            //$output = implode('', $output);
+            preg_match('/on\sline\s([0-9]+)/i', $output, $matches);
+            if (isset($matches[1])) {
+                $this->errorLine = $matches[1];
+            } else {
+                $this->errorLine = null;
+            }
         }
+        
+        return $returnVal;
     }
     
     /**
@@ -75,5 +106,15 @@ class PythoPhant_SourceFile
     public function getFilename()
     {
         return $this->filename;
+    }
+    
+    /**
+     * get the line number of the last lint error
+     * 
+     * @return int|null 
+     */
+    public function getErrorLine()
+    {
+        return $this->errorLine;
     }
 }
