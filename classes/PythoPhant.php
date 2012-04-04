@@ -133,10 +133,13 @@ class PythoPhant
      * 
      * @param string $filename
      * @param bool   $debug 
+     * 
+     * @throws RuntimeException
      */
     public function convert($filename, $debug = false)
     {
-        $this->converter->convert(new PythoPhant_SourceFile($filename), $debug);
+        $file = new SplFileObject($filename);
+        $this->converter->convert(new PythoPhant_SourceFile($file), $debug);
     }
 
     /**

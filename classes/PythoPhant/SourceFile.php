@@ -25,17 +25,18 @@ class PythoPhant_SourceFile
     /**
      * pass a filename
      * 
-     * @param string $filename 
+     * @param SplFileObject $file
      * 
      * @throws PythoPhant_Exception
      */
-    public function __construct($filename)
+    public function __construct(SplFileObject $file)
     {
-        if (!is_file($filename) || !is_readable($filename)) {
+        if (!$file->isReadable()) {
             throw new PythoPhant_Exception('The file is not accessible');
         }
-        $this->dirname  = dirname($filename);
-        $this->filename = basename($filename, self::EXT);
+        
+        $this->dirname  = $file->getPath();
+        $this->filename = $file->getBasename(self::EXT);
     }
     
     /**
@@ -51,7 +52,7 @@ class PythoPhant_SourceFile
     }
     
     /**
-     * write php source to a target
+     * write php source to a target, lint the produced file while discarding 
      * 
      * @param type $source 
      */
@@ -62,7 +63,7 @@ class PythoPhant_SourceFile
         exec('php -l ' . $targetFilename, $output, $returnVal);
         
         if ($returnVal) {
-            echo $source; 
+            echo $output; 
         }
     }
     

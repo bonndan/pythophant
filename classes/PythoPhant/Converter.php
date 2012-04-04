@@ -55,7 +55,9 @@ implements PythoPhant_Observer, PythoPhant_Subject
     public function update(PythoPhant_Event $event)
     {
         if ($event instanceof PythoPhant_Event_FileChanged) {
-            $source = new PythoPhant_SourceFile($event->getPath());
+            $source = new PythoPhant_SourceFile(
+                new SplFileObject($event->getPath())
+            );
             $this->convert($source);
         }
         

@@ -52,9 +52,14 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $mock = $this->getMockBuilder('PythoPhant_Event_FileChanged')->disableOriginalConstructor()->getMock();
-        $mock->expects($this->once())->method('getPath');
+        $mock->expects($this->once())->method('getPath')
+            ->will($this->returnValue(dirname(PATH_TEST) . '/sources/test.pp'));
         
-        $this->setExpectedException('PythoPhant_Exception');
-        $this->converter->update($mock);
+        $this->scanner->expects($this->once())
+            ->method('getTokenList')
+            ->will($this->returnValue($this->getMock('TokenList')));
+        
+        $res = $this->converter->update($mock);
+        $this->assertEquals($this->converter, $res);
     }
 }
