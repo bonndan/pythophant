@@ -135,9 +135,11 @@ class TokenList implements Iterator, Countable, ArrayAccess
     public function moveTokensBefore(array $tokens, Token $destination)
     {
         if (count($tokens) == 0) {
-            throw new InvalidArgumentException(
-                'Cannot move empty token list before '
-                . $destination->getTokenName()
+            throw new PythoPhant_Exception(
+                'Cannot move empty token list before token '
+                . $destination->getTokenName() 
+                . ' (' . $destination->getContent().', line ' 
+                . $destination->getLine(). ')'
             );
         }
         

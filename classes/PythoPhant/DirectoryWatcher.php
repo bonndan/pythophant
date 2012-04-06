@@ -74,7 +74,7 @@ implements PythoPhant_Subject
         }
         
         while (true && $pollingInterval > 0) {
-            $this>run();
+            $this->run();
             sleep($pollingInterval / 1000);
         }
     }

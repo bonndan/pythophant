@@ -93,6 +93,8 @@ class PythoPhant
                 foreach ($this->project->getLoggers() as $logger) {
                     $this->eventProxy->addLogger($logger);
                 }
+            } else {
+                $this->eventProxy->addLogger(new PythoPhant_Logger_Console());
             }
         } catch (InvalidArgumentException $exc) {
             $this->eventProxy->update(new PythoPhant_Event_Info($exc->getMessage()));
@@ -115,8 +117,8 @@ class PythoPhant
             $this->dirWatcher->addDirectory($dir);
         } elseif ($configFound) {
             foreach ($this->project->getWatchedDirectories() as $dir) {
-                    $this->dirWatcher->addDirectory($dir);
-                }
+                $this->dirWatcher->addDirectory($dir);
+            }
         }
         /**
          * fallback: start watching cwd 
@@ -139,7 +141,7 @@ class PythoPhant
     public function convert($filename, $debug = false)
     {
         $file = new SplFileObject($filename);
-        $this->converter->convert(new PythoPhant_SourceFile($file), $debug);
+        return $this->converter->convert(new PythoPhant_SourceFile($file), $debug);
     }
 
     /**

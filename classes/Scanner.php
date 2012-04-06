@@ -21,4 +21,11 @@ interface Scanner
      * @return TokenList 
      */
     public function getTokenList();
+    
+    /**
+     * returns the line number where the error occurred
+     * 
+     * @return int 
+     */
+    public function getErrorLine();
 }

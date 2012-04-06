@@ -75,10 +75,30 @@ implements PythoPhant_Observer, PythoPhant_Subject
     public function convert(PythoPhant_SourceFile $source, $debug = false)
     {
         $contents = $source->getContents();
-        $this->scanner->scanSource($contents);
+        try {
+            $this->scanner->scanSource($contents);
+        } catch (PythoPhant_Exception $exc) {
+            $event = new PythoPhant_Event_Error(
+                'Error scanning the source: ' .$exc->getMessage(),
+                $source->getFilename()
+            );
+            return $this->notify($event);
+        }
         $tokenList = $this->scanner->getTokenList();
-        $this->parser->processTokenList($tokenList);
-
+        try {
+            $this->parser->processTokenList($tokenList);
+        } catch (PythoPhant_Exception $exc) {
+            $event = new PythoPhant_Event_Error(
+                'Error parsing the token list: ' . $exc->getMessage(),
+                $source->getFilename()
+            );
+            $this->notify($event);
+            if (!$debug) {
+                return false;
+            }
+            
+        }
+        
         $this->renderer->enableDebugging($debug);
         $this->renderer->setTokenList($tokenList);
         $date = date('Y/m/d H:i:s');
@@ -87,10 +107,8 @@ implements PythoPhant_Observer, PythoPhant_Subject
             . ' from ' . $source->getFilename() 
             . ' #' . md5($contents)
         );
-        $content = $this->renderer->getPHPSource();
-        $source->writeTarget($content);
-        
-        return $content;
+        $content = $this->renderer->getPHPSource();echo $content;
+        return $source->writeTarget($content);
     }
 
 }

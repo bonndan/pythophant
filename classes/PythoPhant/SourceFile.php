@@ -70,7 +70,7 @@ class PythoPhant_SourceFile
      * @param string $content     php content
      * @param string $destination optional file destination path
      * 
-     * @return int
+     * @return boolean success status
      */
     public function writeTarget($content, $destination = null)
     {
@@ -93,9 +93,10 @@ class PythoPhant_SourceFile
             } else {
                 $this->errorLine = null;
             }
+            return false;
+        } else {
+            return true;
         }
-        
-        return $returnVal;
     }
     
     /**

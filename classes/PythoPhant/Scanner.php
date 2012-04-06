@@ -19,7 +19,13 @@ class PythoPhant_Scanner implements Scanner
     private $tokenFactory;
 
     /**
-     * token factory
+     * error line number in source
+     * @var int|null
+     */
+    private $errorLine = null;
+    
+    /**
+     * token factory must be injected
      * 
      * @param TokenFactory $factory  factory instance
      */
@@ -34,7 +40,8 @@ class PythoPhant_Scanner implements Scanner
      * 
      * @param string $source
      * 
-     * @return void 
+     * @return void
+     * @throws PythoPhant_Exception
      */
     public function scanSource($source)
     {
@@ -50,11 +57,11 @@ class PythoPhant_Scanner implements Scanner
             try {
                 $tokenNames = (array) $this->tokenFactory->getTokenName($token);
             } catch (LogicException $exception) {
-                print(
+                $this->errorLine = $currentLine;
+                throw new PythoPhant_Exception(
                     $exception->getMessage() . ' in line ' . $currentLine . ': '
                     . serialize($content)
                 );
-                return;
             }
 
             foreach ($tokenNames as $tokenName) {
@@ -87,4 +94,13 @@ class PythoPhant_Scanner implements Scanner
         return $this->tokenList;
     }
 
+    /**
+     * returns the line number where the error occurred
+     * 
+     * @return int 
+     */
+    public function getErrorLine()
+    {
+        return $this->errorLine;
+    }
 }

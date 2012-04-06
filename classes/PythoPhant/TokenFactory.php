@@ -39,7 +39,6 @@ class PythoPhant_TokenFactory implements TokenFactory
         
         'T_OPEN_ARRAY' => PythoPhant_Grammar::T_OPEN_ARRAY,
         'T_CLOSE_ARRAY' => PythoPhant_Grammar::T_CLOSE_ARRAY,
-        'T_CLOSE_ARRAY' => PythoPhant_Grammar::T_CLOSE_ARRAY,
         
         'T_JSON_OPEN_OBJECT' => PythoPhant_Grammar::T_JSON_OPEN_OBJECT,
         'T_JSON_CLOSE_OBJECT' => PythoPhant_Grammar::T_JSON_CLOSE_OBJECT,
@@ -67,8 +66,8 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_INDENT' => 'IndentationToken',
         'T_STRING' => 'StringToken',
         'T_IN' => 'InToken',
-        'T_OPEN_ARRAY' => 'OpenArrayToken',
-        'T_CLOSE_ARRAY' => 'CloseArrayToken',
+        'T_OPEN_ARRAY' => 'JsonToken',
+        'T_CLOSE_ARRAY' => 'JsonToken',
         'T_COLON' => 'ColonToken',
         'T_JSON_OPEN_OBJECT' => 'JsonToken',
         'T_JSON_CLOSE_OBJECT' => 'JsonToken',

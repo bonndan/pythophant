@@ -76,7 +76,7 @@ class PythoPhant_SourceFileTest extends PHPUnit_Framework_TestCase
         $this->source = $this->getSourceFile();
         $destination = tempnam(sys_get_temp_dir(), 'test');
         $res = $this->source->writeTarget('<?php does not compute );', $destination);
-        $this->assertGreaterThan(1, $res);
+        $this->assertFalse($res);
         $this->assertEquals(1, $this->source->getErrorLine());
     }
 }

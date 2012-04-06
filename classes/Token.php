@@ -23,6 +23,7 @@ interface Token
     const T_JSON_ASSIGN = "T_JSON_ASSIGN";
     const T_MEMBER = 'T_MEMBER';
     const T_NEWLINE = 'T_NEWLINE';
+    const T_OPEN_ARRAY = "T_OPEN_ARRAY";
     const T_OPEN_BRACE = 'T_OPEN_BRACE';
     const T_RETURN = 'T_RETURN';
     const T_RETURNVALUE = 'T_RETURNVALUE';

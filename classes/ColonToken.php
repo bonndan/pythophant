@@ -28,9 +28,13 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
         if ($prev->getTokenName() == Token::T_CONSTANT_ENCAPSED_STRING) {
             return $this->makeJsonAssign();
         }
+        
         $firstPrev = $prev;
         while($prev = $tokenList->getPreviousNonWhitespace($prev)) {
             if ($prev->getTokenName() == Token::T_JSON_OPEN_ARRAY) {
+                return $this->makeJsonAssign();
+            }
+            if ($prev->getTokenName() == Token::T_OPEN_ARRAY) {
                 return $this->makeJsonAssign();
             }
         }

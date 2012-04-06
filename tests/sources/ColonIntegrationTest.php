@@ -6,7 +6,7 @@ require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
  * conversion test
  * 
  */
-class ColonTest extends PHPUnit_Framework_TestCase
+class ColonIntegrationTest extends PHPUnit_Framework_TestCase
 {
     public function testConversion()
     {
@@ -15,8 +15,9 @@ class ColonTest extends PHPUnit_Framework_TestCase
         $file = $cwd . '/sources/colonTest.pp';
         
         ob_start();
-        system('php pythophant.php ' . $file, $res);
+        passthru('php pythophant.php ' . $file, $res);
+        $output = ob_get_contents();
         ob_end_clean();
-        $this->assertEquals(0, $res);
+        $this->assertEquals(0, $res, $output);
     }
 }
