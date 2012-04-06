@@ -20,7 +20,7 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
     {
         $token = $this;
         while ($token = $tokenList->getNextNonWhitespace($token)) {
-            if ($token->getTokenName() == 'T_COLON') {
+            if ($token->getTokenName() == Token::T_COLON) {
                 $this->tokenName = Token::T_SHORT_IF;
                 return;
             }
@@ -28,10 +28,7 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
         
         $token = $this;
         while ($token = $tokenList->getPreviousNonWhitespace($token)) {
-            $indicators = array_merge(
-                PythoPhant_Grammar::$controls,
-                array(Token::T_RETURN,  'T_ASSIGN')
-            );
+            $indicators = PythoPhant_Grammar::getExpressionDelimiters();
             if ($tokenList->isTokenIncluded(array($token), $indicators)) {
                 $this->replaceQuestionMark($tokenList);
                 return;
@@ -53,9 +50,10 @@ class QuestionToken extends CustomGenericToken implements ParsedEarlyToken
         $moved = array();
         $prev = $tokenList->getPreviousNonWhitespace($function);
         $stop = false;
+        $delimiters = PythoPhant_Grammar::getExpressionDelimiters();
         while($prev instanceof Token && !$stop) {
             
-            $stop = $tokenList->isTokenIncluded(array($prev), PythoPhant_Grammar::$stopsQuestionSubject);
+            $stop = $tokenList->isTokenIncluded(array($prev), $delimiters);
             if (!$stop) {
                 $moved[] = $prev;
             }

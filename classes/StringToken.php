@@ -1,6 +1,8 @@
 <?php
 /**
- * StringToken can render itself as a variable with leading dollar sign
+ * StringToken 
+ * 
+ * can render itself as a variable with leading dollar sign
  * 
  */
 class StringToken extends CustomGenericToken

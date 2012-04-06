@@ -3,7 +3,16 @@
 /**
  * replacement for in_array
  * 
- *  
+ * <code>
+ * if myVar is in ['a', 'b']
+ * if ['a', 'b'] contains myVar
+ * 
+ * if someVar is emtpy?
+ * if someVar is null?
+ * =>
+ * 
+ * in_array($myVar, array('a', 'b'))
+ * </code>
  */
 class InToken extends CustomGenericToken
 {

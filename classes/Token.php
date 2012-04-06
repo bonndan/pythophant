@@ -10,6 +10,7 @@ interface Token
     const T_ASSIGN = 'T_ASSIGN';
     const T_CALL = 'T_CALL';
     const T_CLOSE_BRACE = 'T_CLOSE_BRACE';
+    const T_COLON = 'T_COLON';
     const T_COMMA = 'T_COMMA';
     const T_CONST = 'T_CONST';
     const T_CONSTANT_ENCAPSED_STRING = 'T_CONSTANT_ENCAPSED_STRING';

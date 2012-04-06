@@ -202,8 +202,8 @@ abstract class PythoPhant_Grammar
         'T_EMPTY',
     );
     /**
-     *
-     * @var type 
+     * @deprecated
+     * @var array 
      */
     public static $stopsQuestionSubject = array(
         'T_IF',
@@ -216,4 +216,26 @@ abstract class PythoPhant_Grammar
         'T_RETURN',
         'T_ASSIGN',
     );
+    
+    /**
+     * get the token names which mark the end of an expression when searching
+     * backwards
+     * 
+     * @return array 
+     */
+    public static function getExpressionDelimiters()
+    {
+        return array_merge(
+            self::$controls,
+            array(
+                'T_NOT',
+                'T_BOOLEAN_AND',
+                'T_BOOLEAN_OR',
+                'T_LOGICAL_AND',
+                'T_LOGICAL_OR',
+                'T_RETURN',
+                'T_ASSIGN',
+            )
+        );
+    }
 }
