@@ -1,5 +1,7 @@
 <?php
 /**
+ * PythoPhant_Renderer
+ * 
  * generic token renderer
  *  
  */
@@ -41,7 +43,7 @@ class PythoPhant_Renderer implements Renderer
     }
     
     /**
-     * add a watermark text
+     * add a watermark comment to the first token
      * 
      * @param string $watermarkText 
      * 
@@ -50,7 +52,9 @@ class PythoPhant_Renderer implements Renderer
     public function addWaterMark($watermarkText)
     {
         $openTag = $this->tokenList[0];
-        $openTag->setContent(trim($openTag->getContent()) . " /** $watermarkText */" . PHP_EOL);
+        $openTag->setContent(
+            trim($openTag->getContent()) . " /** $watermarkText */" . PHP_EOL
+        );
         
         return $this;
     }
