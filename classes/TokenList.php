@@ -83,7 +83,7 @@ class TokenList implements Iterator, Countable, ArrayAccess
             if ($newLineEnds && $next instanceof NewLineToken) {
                 break;
             }
-            if (!in_array($next->getTokenName(), array('T_WHITESPACE', Token::T_INDENT))) {
+            if (!in_array($next->getTokenName(), array(Token::T_WHITESPACE, Token::T_INDENT))) {
                 return $next;
             }
             $index = $index + $incrementor;
@@ -100,6 +100,35 @@ class TokenList implements Iterator, Countable, ArrayAccess
     public function getPreviousNonWhitespace(Token $token, $newLineEnds = true)
     {
         return $this->getNextNonWhitespace($token, $newLineEnds, -1);
+    }
+    
+    /**
+     * get all tokens belonging to an expression in reverse direction starting
+     * from the given token
+     * 
+     * @param Token $token
+     * @param bool  $newLineEnds
+     * 
+     * @return array Token[]
+     */
+    public function getPreviousExpression(Token $token, $newLineEnds = true)
+    {
+        $tokens = array();
+        $prev = $this->getPreviousNonWhitespace($token, $newLineEnds);
+        $stop = false;
+        $delimiters = PythoPhant_Grammar::getExpressionDelimiters();
+        while($prev instanceof Token && !$stop) {
+            $stop = $this->isTokenIncluded(array($prev), $delimiters);
+            if ($stop) {
+                break;
+            }
+            $tokens[] = $prev;
+            $prev = $this->getPreviousNonWhitespace($prev, $newLineEnds);
+        }
+        
+        $tokens = array_reverse($tokens);
+        
+        return $tokens;
     }
     
     /**
@@ -127,8 +156,8 @@ class TokenList implements Iterator, Countable, ArrayAccess
     /**
      * moves tokens around, returns the new index of the last token
      * 
-     * @param array $tokens      tokens to move
-     * @param int   $destination index
+     * @param array $tokens      tokens to move, from left to right
+     * @param Token $destination index
      * 
      * @return int
      */
@@ -143,12 +172,10 @@ class TokenList implements Iterator, Countable, ArrayAccess
             );
         }
         
-        $offset = 0;
         foreach ($tokens as $token) {
             $this->offsetUnset($this->getTokenIndex($token));
             $destIndex = $this->getTokenIndex($destination);
-            $this->injectToken($token, $destIndex + $offset);
-            //$offset++;
+            $this->injectToken($token, $destIndex);
         }
         
         return $this->getTokenIndex($token);

@@ -103,5 +103,48 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $res = $this->object->isTokenIncluded(array($token), array('T_ASSIGN'));
         $this->assertFalse($res);
     }
+    
+    public function testGetPreviousExpressionUntilNull()
+    {
+        $tokenList = new TokenList();
+        
+        $token1 = new StringToken('T_STRING', 'myFunc', 1);
+        $token2 = new ColonToken('T_COLON', ':', 1);
+        $token3 = new StringToken('T_STRING', 'myVar', 1);
+        $startToken = new CustomGenericToken('start', 'test', 0);
+        
+        $tokenList->pushToken($token1);
+        $tokenList->pushToken($token2);
+        $tokenList->pushToken($token3);
+        $tokenList->pushToken($startToken);
+        
+        $res = $tokenList->getPreviousExpression($startToken);
+        $this->assertInternalType('array', $res);
+        $this->assertContains($token1, $res);
+        $this->assertContains($token2, $res);
+        $this->assertContains($token3, $res);
+    }
+    
+    public function testGetPreviousExpressionUntilDelimiter()
+    {
+        $tokenList = new TokenList();
+        
+        $token1 = new CustomGenericToken('T_LOGICAL_AND', 'and', 1);
+        $token2 = new StringToken('T_STRING', 'myVar', 1);
+        $token3 = new ColonToken('T_COLON', ':', 1);
+        
+        $startToken = new CustomGenericToken('start', 'test', 0);
+        
+        $tokenList->pushToken($token1);
+        $tokenList->pushToken($token2);
+        $tokenList->pushToken($token3);
+        $tokenList->pushToken($startToken);
+        
+        $res = $tokenList->getPreviousExpression($startToken);
+        $this->assertInternalType('array', $res);
+        $this->assertNotContains($token1, $res);
+        $this->assertContains($token2, $res);
+        $this->assertContains($token3, $res);
+    }
 }
 
