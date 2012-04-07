@@ -18,8 +18,12 @@ class ColonTest
             @setVar: new SomeClass: myVar "someConstructorArg", 1
         return ucfirst: str_replace: 'a', 'b', 'tesT'
 
-    private aTest: array data
-        if not empty: data
+    private aTest: array data = null
+        if data is not empty?
+            @aFunc()
+        if data is not array?
+            @aFunc()
+        if someVar is readable? and someVar is callable?
             @aFunc()
     
         foreach data as akey => val

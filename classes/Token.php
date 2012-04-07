@@ -15,7 +15,9 @@ interface Token
     const T_CONST = 'T_CONST';
     const T_CONSTANT_ENCAPSED_STRING = 'T_CONSTANT_ENCAPSED_STRING';
     const T_CONCAT = 'T_CONCAT';
+    const T_EXCLAMATION = 'T_EXCLAMATION';
     const T_IF = 'T_IF';
+    const T_IS = 'T_IS';
     const T_INDENT= 'T_INDENT';
     const T_JSON_OPEN_ARRAY = "T_JSON_OPEN_ARRAY";
     const T_JSON_CLOSE_ARRAY = "T_JSON_CLOSE_ARRAY";
@@ -24,6 +26,7 @@ interface Token
     const T_JSON_ASSIGN = "T_JSON_ASSIGN";
     const T_MEMBER = 'T_MEMBER';
     const T_NEWLINE = 'T_NEWLINE';
+    const T_NOT = 'T_NOT';
     const T_OPEN_ARRAY = "T_OPEN_ARRAY";
     const T_OPEN_BRACE = 'T_OPEN_BRACE';
     const T_RETURN = 'T_RETURN';

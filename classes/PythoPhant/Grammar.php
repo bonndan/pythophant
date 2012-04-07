@@ -63,7 +63,7 @@ abstract class PythoPhant_Grammar
      * @var array 
      */
     public static $returnValues = array(
-        'string', 'int', 'float', 'double', 'bool', 'boolean', 'void'
+        'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'void'
     );
     
     /**
