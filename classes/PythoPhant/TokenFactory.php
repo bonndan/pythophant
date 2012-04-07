@@ -25,6 +25,7 @@ class PythoPhant_TokenFactory implements TokenFactory
     private static $tokens = array(
         'T_ASSIGN' => PythoPhant_Grammar::T_ASSIGN,
         'T_COMMA' => PythoPhant_Grammar::T_COMMA,
+        'T_IS' => PythoPhant_Grammar::T_IS,
         'T_MEMBER' => PythoPhant_Grammar::T_MEMBER,
         'T_OPEN_BRACE' => PythoPhant_Grammar::T_OPEN_BRACE,
         'T_CLOSE_BRACE' => PythoPhant_Grammar::T_CLOSE_BRACE,
@@ -60,12 +61,13 @@ class PythoPhant_TokenFactory implements TokenFactory
     private static $implementations = array(
         'T_MEMBER' => 'MemberToken',
         'T_THIS' => 'ThisToken',
-        'T_THIS_MEMBER' => 'ThisMemberToken',
+        'T_THIS_MEMBER' => 'ThisToken',
         'T_RETURNVALUE' => 'ReturnValueToken',
         'T_NEWLINE' => 'NewLineToken',
         'T_INDENT' => 'IndentationToken',
         'T_STRING' => 'StringToken',
         'T_IN' => 'InToken',
+        'T_IS' => 'IsToken',
         'T_OPEN_ARRAY' => 'JsonToken',
         'T_CLOSE_ARRAY' => 'JsonToken',
         'T_COLON' => 'ColonToken',
