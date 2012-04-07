@@ -12,6 +12,8 @@ abstract class PythoPhant_Grammar
     const INDENTATION_LEVEL = 4;
     
     const T_ASSIGN = '=';
+    const T_IF = 'if';
+    const T_IS = 'is';
     const T_OPEN_BRACE = '(';
     const T_CLOSE_BRACE = ')';
     const T_OPEN_ARRAY = '[';
