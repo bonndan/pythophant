@@ -1,9 +1,18 @@
 <?php
-
+/**
+ * ExclamationToken
+ * 
+ * exclamation mark used as placeholder for a previous expression
+ * 
+ * <code>
+ * myVar = 'aString' strtolower()! ucfirst()!
+ * </code>
+ */
 class ExclamationToken extends CustomGenericToken implements ParsedEarlyToken
 {
     /**
-     * question mark can be the regular if short form or a placeholder
+     * question mark can be the regular if short form or a placeholder if it
+     * trails a closing brace
      * 
      * @param TokenList $tokenList
      * 
@@ -13,10 +22,10 @@ class ExclamationToken extends CustomGenericToken implements ParsedEarlyToken
     {
         $token = $tokenList->getPreviousNonWhitespace($this);
         if ($token->getTokenName() == Token::T_CLOSE_BRACE) {
-            $this->tokenName = 'T_EXCLAMATION';
+            $this->tokenName = Token::T_EXCLAMATION;
             $this->replaceExclamationMark($tokenList);
         } else {
-            $this->tokenName = 'T_NOT';
+            $this->tokenName = Token::T_NOT;
             $this->content = '!';
         }
     }
@@ -49,23 +58,10 @@ class ExclamationToken extends CustomGenericToken implements ParsedEarlyToken
         }
         
         if (!$function) {
-            throw new LogicException('Could not find a function call');
+            throw new PythoPhant_Exception('Could not find a function call token.');
         }
         
-        $moved = array();
-        $prev = $tokenList->getPreviousNonWhitespace($function);
-        $stop = false;
-        while($prev instanceof Token && !$stop) {
-            $stop = $tokenList->isTokenIncluded(array($prev), PythoPhant_Grammar::$stopsQuestionSubject);
-            if (!$stop) {
-                $moved[] = $prev;
-            } else {
-                break;
-            }
-            $prev = $tokenList->getPreviousNonWhitespace($prev);
-        }
-        
-        $moved = array_reverse($moved);
+        $moved = $tokenList->getPreviousExpression($function);
         
         /**
          * write 
@@ -74,7 +70,7 @@ class ExclamationToken extends CustomGenericToken implements ParsedEarlyToken
         
         if ($tokenList->getPreviousNonWhitespace($closeBrace) !== $openBrace) {
             $tokenList->injectToken(
-                new PHPToken('T_COMMA', ', ', $closeBrace->getLine()),
+                new PHPToken(Token::T_COMMA, ', ', $closeBrace->getLine()),
                 $tokenList->getTokenIndex($closeBrace)
             );
         }
