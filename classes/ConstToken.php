@@ -1,6 +1,6 @@
 <?php
 /**
- * Token for constants, provides string concatenation 
+ * Token for constants / strings, provides string concatenation 
  */
 class ConstToken extends CustomGenericToken
 {
@@ -24,10 +24,7 @@ class ConstToken extends CustomGenericToken
         $precondition = $tokenList->isTokenIncluded(array($prev), $prevIndicators);
         
         if ($precondition) {
-            $tokenList->injectToken(
-                new StringToken('T_CONCAT', '. ', $this->getLine()),
-                $tokenList->getTokenIndex($this)
-            );
+            $this->injectConcatenation($tokenList);
         }
         
         $nextIndicators = array(
@@ -39,11 +36,24 @@ class ConstToken extends CustomGenericToken
         $next = $tokenList->getNextNonWhitespace($this);
         $postcondition = $tokenList->isTokenIncluded(array($next), $nextIndicators);
         if ($postcondition) {
-            $tokenList->injectToken(
-                new StringToken('T_CONCAT', ' .', $this->getLine()),
-                $tokenList->getTokenIndex($this) + 1
-            );
+            $this->injectConcatenation($tokenList, 1);
         }
         return;
+    }
+    
+    /**
+     * inject a StringToken T_CONCAT (".")
+     * 
+     * @param TokenList $tokenList
+     * @param int       $offset 
+     * 
+     * @return void
+     */
+    private function injectConcatenation(TokenList $tokenList, $offset = 0)
+    {
+        $tokenList->injectToken(
+            new StringToken('T_CONCAT', '. ', $this->getLine()),
+            $tokenList->getTokenIndex($this) + $offset
+        );
     }
 }
