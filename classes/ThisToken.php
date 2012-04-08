@@ -2,14 +2,14 @@
 /**
  * ThisToken
  * 
- * the dollar sign in prepended 
+ * the dollar sign is prepended, "@" translated to "this->"
  */
 class ThisToken extends CustomGenericToken
 {
     /**
      * turns the "@" sign into "this->"
      * 
-     * @return string 
+     * @return ThisToken 
      */
     public function setContent($content)
     {
