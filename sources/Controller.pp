@@ -8,7 +8,7 @@ class XYZ_Controller extends Zend_Controller_Action
         json = [12, 13]
         json[3] = 'somevar'
         json2 = {
-            'uncle': ['bob', 'joe'],
+            'uncle': ['bob', 'joe', 1],
             'names': ['first': 'walter'],
         }
         

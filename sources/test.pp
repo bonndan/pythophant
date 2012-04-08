@@ -18,5 +18,5 @@ class Test extends StdClass implements Countable
 
     
     private isSomethingContained (something)
-        return  in_array(something, ['a', 1]) or something ctype_alnum?
+        return something in(['a', 1]) or something ctype_alnum?
     
