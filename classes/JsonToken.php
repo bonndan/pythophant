@@ -29,7 +29,7 @@ class JsonToken extends PHPToken implements CustomToken
             Token::T_JSON_ASSIGN,
             Token::T_COMMA,
             Token::T_OPEN_BRACE,
-            'T_IN'
+            Token::T_IN,
         );
         
         return $indicators;
@@ -53,6 +53,7 @@ class JsonToken extends PHPToken implements CustomToken
             
             if (in_array($tokenName, $indicators)) {
                 $this->content = 'array(';
+                $this->tokenName = Token::T_JSON_OPEN_ARRAY;
             }
         }
 
@@ -61,6 +62,7 @@ class JsonToken extends PHPToken implements CustomToken
                 ->getTokenName();
             if (in_array($tokenName, $indicators)) {
                 $this->content = '(object)array(';
+                $this->tokenName = Token::T_JSON_OPEN_OBJECT;
             }
         }
 
