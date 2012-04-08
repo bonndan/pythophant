@@ -3,6 +3,8 @@
  * ReturnValueToken
  * 
  * A token representing a return value or scalar type hint. It is not rendered.
+ * 
+ * @see PythoPhant_Grammar::$returnValues
  */
 class ReturnValueToken extends CustomGenericToken
 {
@@ -18,16 +20,22 @@ class ReturnValueToken extends CustomGenericToken
      * @param TokenList $tokenList 
      * 
      * @return void
+     * @throws PythoPhant_Exception
      */
     public function affectTokenList(TokenList $tokenList)
     {
         $ownIndex = $tokenList->getTokenIndex($this);
-        $next = $tokenList[$ownIndex + 1];
-        if (!$this->returnContent 
-            && $next instanceof Token 
-            && $next->getTokenName() == Token::T_WHITESPACE
+        try {
+            $next = $tokenList->offsetGet($ownIndex + 1);
+        } catch (OutOfBoundsException $exc) {
+            throw new PythoPhant_Exception(
+                'T_RETURNVALUE is not followed by any token', $this->line
+            );
+        }
+        
+        if (!$this->returnContent && $next->getTokenName() == Token::T_WHITESPACE
         ) {
-            $next->setContent("");
+            $next->setContent('');
         }
     }
 
@@ -48,7 +56,7 @@ class ReturnValueToken extends CustomGenericToken
     }
 
     /**
-     * enable or disable content rendering
+     * enable or disable content rendering, required for IsToken
      * 
      * @param boolean
      * 
