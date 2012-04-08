@@ -25,6 +25,7 @@ class PythoPhant_TokenFactory implements TokenFactory
     private static $tokens = array(
         'T_ASSIGN' => PythoPhant_Grammar::T_ASSIGN,
         'T_COMMA' => PythoPhant_Grammar::T_COMMA,
+        'T_IN' => PythoPhant_Grammar::T_IN,
         'T_IS' => PythoPhant_Grammar::T_IS,
         'T_MEMBER' => PythoPhant_Grammar::T_MEMBER,
         'T_OPEN_BRACE' => PythoPhant_Grammar::T_OPEN_BRACE,

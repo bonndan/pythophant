@@ -201,8 +201,25 @@ class TokenList implements Iterator, Countable, ArrayAccess
     /**
      * ArrayAccess methods
      */
+    
     public function offsetExists($offset){return isset($this->tokens[$offset]);}
-    public function offsetGet($offset) {return $this->tokens[$offset];}
+    
+    /**
+     *
+     * @param type $offset
+     * 
+     * @return Token 
+     * @throws Ou
+     */
+    public function offsetGet($offset)
+    {
+        if (!$this->offsetExists($offset)) {
+            throw new OutOfBoundsException('Unknown offset: ' . $offset);
+        }
+        
+        return $this->tokens[$offset];
+    }
+    
     public function offsetSet($offset, $value){throw new Exception('Use injectToken');}
     
     /**

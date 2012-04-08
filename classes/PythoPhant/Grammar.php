@@ -13,6 +13,7 @@ abstract class PythoPhant_Grammar
     
     const T_ASSIGN = '=';
     const T_IF = 'if';
+    const T_IN = 'in'; 
     const T_IS = 'is';
     const T_OPEN_BRACE = '(';
     const T_CLOSE_BRACE = ')';

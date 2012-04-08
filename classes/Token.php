@@ -17,6 +17,7 @@ interface Token
     const T_CONCAT = 'T_CONCAT';
     const T_EXCLAMATION = 'T_EXCLAMATION';
     const T_IF = 'T_IF';
+    const T_IN = 'T_IN';
     const T_IS = 'T_IS';
     const T_INDENT= 'T_INDENT';
     const T_JSON_OPEN_ARRAY = "T_JSON_OPEN_ARRAY";
