@@ -1,7 +1,13 @@
 <?php
 
 /**
- * colon is assignment in json context 
+ * ColonToken
+ * 
+ * colon is assignment in json context OR replacement for a pair of braces
+ * 
+ * <code>
+ * myVar = strlen: "aString"
+ * </code>
  */
 class ColonToken extends CustomGenericToken implements ParsedEarlyToken
 {
@@ -30,11 +36,9 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
         }
         
         $firstPrev = $prev;
+        $jsonIndicators = array(Token::T_JSON_OPEN_ARRAY, Token::T_OPEN_ARRAY);
         while($prev = $tokenList->getPreviousNonWhitespace($prev)) {
-            if ($prev->getTokenName() == Token::T_JSON_OPEN_ARRAY) {
-                return $this->makeJsonAssign();
-            }
-            if ($prev->getTokenName() == Token::T_OPEN_ARRAY) {
+            if (in_array($prev->getTokenName(), $jsonIndicators)) {
                 return $this->makeJsonAssign();
             }
         }
@@ -59,8 +63,9 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
     }
     
     /**
-     *
-     * @param Token $previous
+     * check if a token is a function or a control symbol
+     * 
+     * @param Token     $previous
      * @param TokenList $tokenList
      * 
      * @return boolean
@@ -91,7 +96,7 @@ class ColonToken extends CustomGenericToken implements ParsedEarlyToken
         $this->tokenName = Token::T_OPEN_BRACE;
         
         $token = $this;
-        while ($token = $tokenList->getNextNonWhitespace($token)){
+        while ($token = $tokenList->getNextNonWhitespace($token)) {
             $lastToken = $token;
         }
         
