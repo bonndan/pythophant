@@ -13,6 +13,6 @@ class PythoPhant_Logger_Console implements PythoPhant_Observer
      */
     public function update(PythoPhant_Event $event)
     {
-        echo $event . PHP_EOL;
+        echo $event->__toString() . PHP_EOL;
     }
 }
