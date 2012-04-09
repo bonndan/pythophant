@@ -4,7 +4,7 @@
  * 
  * notifies observers when a file has changed
  * 
- *  
+ * @see PythoPhant_DirectoryWatcher
  */
 class PythoPhant_Event_FileChanged
 implements PythoPhant_Event
@@ -16,8 +16,11 @@ implements PythoPhant_Event
     private $path;
     
     /**
-     *
+     * constructor requires a valid path
+     * 
      * @param string $path 
+     * 
+     * @throws InvalidArgumentException
      */
     public function __construct($path)
     {
