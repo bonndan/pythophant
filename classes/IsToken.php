@@ -14,6 +14,7 @@
  */
 class IsToken extends CustomGenericToken implements ParsedEarlyToken
 {
+
     /**
      * checks the tokenlist for previous tokens whether it is a colon or json assignment
      * 
@@ -29,20 +30,20 @@ class IsToken extends CustomGenericToken implements ParsedEarlyToken
             throw new PythoPhant_Exception('T_IS requires a trailing token.');
         } elseif ($next instanceof ExclamationToken) {
             $next = $tokenList->getNextNonWhitespace($next);
-            $previous = $tokenList->getPreviousExpression($this);
-            if (empty($previous)) {
-                throw new PythoPhant_Exception(
-                    'T_IS followed by T_NOT requires a preceding expression on line '
-                    . $this->getLine()
-                ); 
-            }
-            $tokenList->moveTokensBefore($previous, $next);
         }
-        
+        $previous = $tokenList->getPreviousExpression($this);
+        if (empty($previous)) {
+            throw new PythoPhant_Exception(
+                'T_IS followed by T_NOT requires a preceding expression on line '
+                . $this->getLine()
+            );
+        }
+        $tokenList->moveTokensBefore($previous, $next);
+
         if ($functionName = $this->isNextNativeFunction($next)) {
             $next->setContent($functionName);
         }
-        
+
         $this->content = null;
         $ownIndex = $tokenList->getTokenIndex($this);
         $next = $tokenList->offsetGet($ownIndex + 1);
@@ -50,7 +51,7 @@ class IsToken extends CustomGenericToken implements ParsedEarlyToken
             $next->setContent('');
         }
     }
-    
+
     /**
      * checks if a function exists which is "is_" plus the next token's content
      * 
@@ -65,7 +66,7 @@ class IsToken extends CustomGenericToken implements ParsedEarlyToken
         } else {
             $content = $next->getContent();
         }
-        
+
         $functionName = 'is_' . $content;
         if (function_exists($functionName)) {
             if ($next instanceof ReturnValueToken) {
@@ -76,4 +77,5 @@ class IsToken extends CustomGenericToken implements ParsedEarlyToken
             return null;
         }
     }
+
 }

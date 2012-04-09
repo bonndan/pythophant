@@ -21,13 +21,27 @@ class IsTokenTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
+        $token = new StringToken(Token::T_STRING, 'myVar', 0);
         $this->token = new IsToken(Token::T_IS, 'is', 0);
         $this->tokenList = new TokenList();
+        $this->tokenList->pushToken($token);
         $this->tokenList->pushToken($this->token);
     }
     
     public function testIsFollowedByNothingThrowsException()
     {
+        $this->setExpectedException('PythoPhant_Exception');
+        $this->token->affectTokenList($this->tokenList);
+    }
+    
+    public function testIsPrecededByNothingThrowsException()
+    {
+        $this->tokenList = new TokenList();
+        $this->tokenList->pushToken($this->token);
+        
+        $tokenMock = new StringToken(Token::T_STRING, 'null', 0);
+        $this->tokenList->pushToken($tokenMock);
+        
         $this->setExpectedException('PythoPhant_Exception');
         $this->token->affectTokenList($this->tokenList);
     }
