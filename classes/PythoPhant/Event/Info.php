@@ -21,9 +21,10 @@ implements PythoPhant_Event
     private $path;
     
     /**
-     *
-     * @param type $message
-     * @param type $path 
+     * cosntruct with a message
+     * 
+     * @param string $message
+     * @param string $path 
      */
     public function __construct($message, $path = null)
     {
