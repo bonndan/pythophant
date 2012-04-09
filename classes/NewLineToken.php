@@ -11,14 +11,14 @@ class NewLineToken extends CustomGenericToken
     protected $auxValue = ';';
 
     /**
-     * returns PHP_EOL
+     * returns PHP_EOL, preserves content before the first eol and appends the
+     * auxval (in most cases ";") then appends other eols
      * 
      * @return string 
      */
     public function getContent()
     {
-        $firstNL = strpos($this->content, PHP_EOL);
-        $content = substr($this->content, 0, $firstNL);
+        $content = substr($this->content, 0, strpos($this->content, PHP_EOL));
         $content .= $this->auxValue;
 
         return $content
