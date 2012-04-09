@@ -7,6 +7,7 @@
  */
 class PythoPhant_Scanner implements Scanner
 {
+
     /**
      * @var TokenList
      */
@@ -23,7 +24,7 @@ class PythoPhant_Scanner implements Scanner
      * @var int|null
      */
     private $errorLine = null;
-    
+
     /**
      * token factory must be injected
      * 
@@ -59,8 +60,8 @@ class PythoPhant_Scanner implements Scanner
             } catch (LogicException $exception) {
                 $this->errorLine = $currentLine;
                 throw new PythoPhant_Exception(
-                    $exception->getMessage() . ' in line ' . $currentLine . ': '
-                    . serialize($content)
+                    $exception->getMessage() . serialize($content),
+                    $currentLine
                 );
             }
 
@@ -70,18 +71,35 @@ class PythoPhant_Scanner implements Scanner
                         $tokenName, $content, $currentLine
                     );
                 } catch (PythoPhant_Exception $exc) {
-                    $message = $exc->getMessage() . ' in line ' . $currentLine;
-                    if (isset($tokens[$index-1])) {
-                        $message .= ' after ' . @$tokens[$index-3][1] . @$tokens[$index-2][1] . @$tokens[$index-1][1];
-                    } else {
-                        $message .= ' before ' . @$tokens[$index+1][1];
-                    }
-                        
-                    throw new PythoPhant_Exception($message);
+                    $this->errorLine = $currentLine;
+                    $message = $exc->getMessage() 
+                        . $this->getDebuggingMessage($tokens, $index);
+                    
+                    throw new PythoPhant_Exception($message, $currentLine);
                 }
                 $this->tokenList->pushToken($tokenInstance);
             }
         }
+    }
+
+    /**
+     * returns some parts of the source for debugging
+     * 
+     * @param array $tokens
+     * @param int   $index
+     * 
+     * @return string 
+     */
+    private function getDebuggingMessage(array $tokens, $index)
+    {
+        if (isset($tokens[$index - 1])) {
+            $message = ' after ' . @$tokens[$index - 3][1] . @$tokens[$index - 2][1]
+                . @$tokens[$index - 1][1];
+        } else {
+            $message = ' before ' . @$tokens[$index + 1][1];
+        }
+        
+        return $message;
     }
 
     /**
@@ -103,4 +121,5 @@ class PythoPhant_Scanner implements Scanner
     {
         return $this->errorLine;
     }
+
 }

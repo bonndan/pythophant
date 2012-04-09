@@ -16,20 +16,28 @@ implements PythoPhant_Event
     
     /**
      * file / path where the error occurred
-     * @var type 
+     * @var string 
      */
     private $path;
+    
+    /**
+     * line number where the error occurred
+     * @var int 
+     */
+    private $line;
     
     /**
      * constructor requires message and path
      * 
      * @param string $message
      * @param string $path 
+     * @param int    $line 
      */
-    public function __construct($message, $path)
+    public function __construct($message, $path, $line = null)
     {
         $this->message = (string)$message;
         $this->path = $path;
+        $this->line = $line;
     }
     
     /**
@@ -42,4 +50,23 @@ implements PythoPhant_Event
         return $this->message;
     }
 
+    /**
+     * file and path of the error
+     * 
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+    
+    /**
+     * line number of the error
+     * 
+     * @return int|null 
+     */
+    public function getLine()
+    {
+        return $this->line;
+    }
 }

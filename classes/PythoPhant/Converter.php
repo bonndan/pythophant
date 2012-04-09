@@ -80,7 +80,8 @@ implements PythoPhant_Observer, PythoPhant_Subject
         } catch (PythoPhant_Exception $exc) {
             $event = new PythoPhant_Event_Error(
                 'Error scanning the source: ' .$exc->getMessage(),
-                $source->getFilename()
+                $source->getFilename(),
+                $exc->getSourceLine()
             );
             return $this->notify($event);
         }
@@ -90,13 +91,13 @@ implements PythoPhant_Observer, PythoPhant_Subject
         } catch (PythoPhant_Exception $exc) {
             $event = new PythoPhant_Event_Error(
                 'Error parsing the token list: ' . $exc->getMessage(),
-                $source->getFilename()
+                $source->getFilename(),
+                $exc->getSourceLine()
             );
             $this->notify($event);
             if (!$debug) {
                 return false;
             }
-            
         }
         
         $this->renderer->enableDebugging($debug);

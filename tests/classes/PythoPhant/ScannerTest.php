@@ -55,6 +55,44 @@ class PythoPhant_ScannerTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * 
+     */
+    public function testScanSourceWithLogicException()
+    {
+        $tokenFactory = $this->getMock('PythoPhant_TokenFactory');
+        
+        $this->object = new PythoPhant_Scanner($tokenFactory);
+        $tokenFactory->expects($this->any())
+            ->method('getTokenName')
+            ->will($this->throwException(new LogicException('test', 1)));
+        
+        $this->setExpectedException('PythoPhant_Exception');
+        $source = "<?php \necho 'Hello World';";
+        $res = $this->object->scanSource($source);
+    }
+    
+    /**
+     * 
+     */
+    public function testScanSourceWithPythoPhantException()
+    {
+        $tokenFactory = $this->getMock('PythoPhant_TokenFactory');
+        
+        $this->object = new PythoPhant_Scanner($tokenFactory);
+        $tokenFactory->expects($this->any())
+            ->method('getTokenName')
+            ->will($this->returnValue(array('T_STRING')));
+        
+        $tokenFactory->expects($this->any())
+            ->method('createToken')
+            ->will($this->throwException(new PythoPhant_Exception('test', 1)));
+        
+        $this->setExpectedException('PythoPhant_Exception');
+        $source = "<?php \necho 'Hello World';";
+        $res = $this->object->scanSource($source);
+    }
+    
+    /**
      * testParse().
      */
     public function testScanJsonSource()

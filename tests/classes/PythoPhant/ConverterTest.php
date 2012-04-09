@@ -49,6 +49,41 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
         $this->converter->convert($source);
     }
     
+    public function testConvertWithScannerException()
+    {
+        $source = $this->getMockBuilder('PythoPhant_SourceFile')
+            ->disableOriginalConstructor()->getMock();
+        $this->scanner->expects($this->once())
+            ->method('scanSource')
+            ->will($this->throwException(new PythoPhant_Exception('test', 1)));
+        
+        $observer = $this->getMock('PythoPhant_Observer');
+        $this->converter->attach($observer);
+        $observer->expects($this->once())
+            ->method('update');
+        $this->converter->convert($source);
+    }
+    
+    public function testConvertWithParserException()
+    {
+        $source = $this->getMockBuilder('PythoPhant_SourceFile')
+            ->disableOriginalConstructor()->getMock();
+        
+        $this->scanner->expects($this->once())
+            ->method('getTokenList')
+            ->will($this->returnValue($this->getMock('TokenList')));
+        
+        $this->parser->expects($this->once())
+            ->method('processTokenList')
+            ->will($this->throwException(new PythoPhant_Exception('test', 1)));
+        
+        $observer = $this->getMock('PythoPhant_Observer');
+        $this->converter->attach($observer);
+        $observer->expects($this->once())
+            ->method('update');
+        $this->converter->convert($source);
+    }
+    
     public function testUpdate()
     {
         $mock = $this->getMockBuilder('PythoPhant_Event_FileChanged')->disableOriginalConstructor()->getMock();
