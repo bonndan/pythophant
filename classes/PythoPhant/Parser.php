@@ -273,10 +273,11 @@ class PythoPhant_Parser implements Parser
         }
         
         /**
-         * @todo inject visibility as token 
+         * inject visibility as token 
          */
         if (!$visibilitySet) {
-            $function->setContent('public function ');
+            $public = new PHPToken('T_PUBLIC', 'public ', $function->getLine());
+            $this->tokenList->injectToken($public, $this->tokenList->getTokenIndex($function));
         }
     }
 

@@ -68,11 +68,10 @@ class PythoPhant_Event_Proxy extends PythoPhant_AbstractSubject implements Pytho
      * tries to load a class via autoloading
      * 
      * @param string $classname
-     * @param string $requireClass require_once 
      * 
      * @return false|PythoPhant_Observer
      */
-    private function tryLoadLoggerClass($classname, $requireClass = null)
+    private function tryLoadLoggerClass($classname)
     {
         $result = false;
         try {
@@ -89,7 +88,7 @@ class PythoPhant_Event_Proxy extends PythoPhant_AbstractSubject implements Pytho
                 } else {
                     $result = $logger;
                 }
-            }
+            }  
         } catch (Exception $exc) {
             
         }

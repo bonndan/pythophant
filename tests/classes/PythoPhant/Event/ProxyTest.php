@@ -55,7 +55,13 @@ class PythoPhant_Event_ProxyTest extends PHPUnit_Framework_TestCase
     
     public function testAddLoggerWithOtherInstance()
     {
-        $res = $this->proxy->addLogger('PythoPhant_PHPToken');
+        $observer = $this->getMock('PythoPhant_Observer');
+        $observer->expects($this->once())
+            ->method('update');
+        $this->proxy->attach($observer);
+        
+        $res = $this->proxy->addLogger('TokenList');
+        
         $this->assertNull($res);
     }
     
