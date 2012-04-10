@@ -158,6 +158,7 @@ abstract class PythoPhant_Grammar
         'T_ARRAY',
         'T_OPEN_ARRAY',
         'T_COLON',
+        'T_VAR',
         Token::T_JSON_OPEN_ARRAY,
     );
     

@@ -4,6 +4,11 @@ class XYZ_Controller extends Zend_Controller_Action
     
     const MY_CLASS_CONST = 'const'
 
+    /**
+     * some var 
+     */
+    var someVar
+
     public addAction(SomeInterface xyz)
         json = [12, 13]
         json[3] = 'somevar'
