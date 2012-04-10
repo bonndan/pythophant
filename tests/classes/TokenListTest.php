@@ -45,7 +45,7 @@ class TokenListTest extends PHPUnit_Framework_TestCase
     /**
      * testInjectToken().
      */
-    public function testInjectToken()
+    public function testInjectTokenWithIntPosition()
     {
         $tokenMock = $this->getTokenMock();
         $this->assertFalse($this->object->offsetExists(0));
@@ -53,6 +53,22 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         
         $tokenMock2 = $this->getTokenMock();
         $this->object->injectToken($tokenMock2, 0);
+        
+        $this->assertEquals($tokenMock2, $this->object->offsetGet(0));
+        $this->assertEquals($tokenMock, $this->object->offsetGet(1));
+    }
+    
+    /**
+     * testInjectToken().
+     */
+    public function testInjectTokenWithTokenPosition()
+    {
+        $tokenMock = $this->getTokenMock();
+        $this->assertFalse($this->object->offsetExists(0));
+        $this->object->pushToken($tokenMock);
+        
+        $tokenMock2 = $this->getTokenMock();
+        $this->object->injectToken($tokenMock2, $tokenMock);
         
         $this->assertEquals($tokenMock2, $this->object->offsetGet(0));
         $this->assertEquals($tokenMock, $this->object->offsetGet(1));

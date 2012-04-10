@@ -18,7 +18,7 @@ class ConstToken extends CustomGenericToken
             Token::T_CONSTANT_ENCAPSED_STRING,
             Token::T_NEWLINE,
             Token::T_VARIABLE,
-            Token::T_STRING, /** @todo $this->var ... var is T_STRING*/
+            Token::T_STRING,
         );
         $prev = $tokenList->getPreviousNonWhitespace($this);
         $precondition = $tokenList->isTokenIncluded(array($prev), $prevIndicators);

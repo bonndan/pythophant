@@ -69,7 +69,9 @@ class PythoPhant_Parser implements Parser
     }
 
     /**
-     * the "magic" 
+     * the "magic". First the "parsed early" tokens are processed, beginning with
+     * the first token in the list. The second pass treats all other tokens which
+     * could affect the list.
      */
     public function parseListAffections()
     {
@@ -173,6 +175,9 @@ class PythoPhant_Parser implements Parser
         $newlineToken = $line[count($line)-1];
         $currentPos = $this->tokenList->getTokenIndex($newlineToken);
         
+        /**
+         * implements or extends on next line? then remove semicolon and return
+         */
         if(isset($this->lines[$lineNumber+1])) {
             $nextOpened = $this->isDeclarationOpened($this->lines[$lineNumber+1]);
             if ($nextOpened === self::EXPLICITLY_OPENED) {
@@ -199,28 +204,6 @@ class PythoPhant_Parser implements Parser
     }
     
     /**
-     *
-     * @param Token $injected
-     * @param Token $token 
-     */
-    private function injectTokenBefore(Token $injected, Token $token)
-    {
-        $currPos = $this->tokenList->getTokenIndex($token);
-        $this->tokenList->injectToken($injected, $currPos);
-    }
-
-    /**
-     *
-     * @param Token $injected new token to be injected
-     * @param Token $token 
-     */
-    private function injectTokenAfter(Token $injected, Token $token)
-    {
-        $currPos = $this->tokenList->getTokenIndex($token);
-        $this->tokenList->injectToken($injected, $currPos + 1);
-    }
-
-    /**
      * indents a token
      * 
      * @param int   $nestingLevel
@@ -235,18 +218,19 @@ class PythoPhant_Parser implements Parser
         }
 
         $injected = IndentationToken::create($nestingLevel, $token->getLine());
-        $this->injectTokenBefore($injected, $token);
+        $this->tokenList->injectToken($injected, $token);
     }
 
     /**
      * inject "function" for function declaration
      * 
-     * @param array $line 
+     * @param array $line array of tokens on the same line
+     * 
+     * @return void
      */
     private function injectFunctionInLine(array $line)
     {
         $visibilitySet = false;
-        $function = $this->tokenFactory->createToken('T_FUNCTION', 'function ', 0);
             
         foreach ($line as $token) {
             if ($this->tokenList->isTokenIncluded(array($token), PythoPhant_Grammar::$modifiers)) {
@@ -257,7 +241,9 @@ class PythoPhant_Parser implements Parser
              * return value is a clear sign to inject the function token
              */
             if (in_array(trim($token->getContent()), PythoPhant_Grammar::$returnValues)) {
-                $this->injectTokenAfter($function, $token);
+                $function = $this->tokenFactory->createToken('T_FUNCTION', 'function ', $token->getLine());
+                $currPos = $this->tokenList->getTokenIndex($token);
+                $this->tokenList->injectToken($function, $currPos + 1);
                 break;
             }
 
@@ -265,8 +251,9 @@ class PythoPhant_Parser implements Parser
              * T_STRING is the function name 
              */
             if ($next = $this->tokenList->getNextNonWhitespace($token)) {
+                $function = $this->tokenFactory->createToken('T_FUNCTION', 'function ', $next->getLine());
                 if ($next->getTokenName() == Token::T_STRING) {
-                    $this->injectTokenBefore($function, $next);
+                    $this->tokenList->injectToken($function, $next);
                     break;
                 }
             }
@@ -298,7 +285,7 @@ class PythoPhant_Parser implements Parser
         }
 
         /**
-         * indications: second (with indentation) token has a lead a and braces found 
+         * indications: second (with indentation) token has a lead and braces found 
          */
         $hasLead = in_array($line[1]->getTokenName(), PythoPhant_Grammar::$modifiers);
         if (!$hasLead && $line[0] instanceof IndentationToken) {
@@ -400,18 +387,18 @@ class PythoPhant_Parser implements Parser
 
     /**
      * checks the last token in list and inserts newline if necessary. then 
-     * close open block with curly braces based in remaining indentation
+     * close open block with curly braces based on remaining indentation
      * 
      * @param int $currentLevel
      */
-    private function closeClass($currentLevel)
+    public function closeClass($currentLevel)
     {
         while ($currentLevel > 0) {
             $currentLevel--;
             $lastToken = $this->tokenList[count($this->tokenList) - 1];
             $lastNonWhiteSpace = $this->tokenList->getPreviousNonWhitespace($lastToken, false);
             
-            if ($lastNonWhiteSpace->getTokenName() == Token::T_CLOSE_BRACE) {
+            if ($lastNonWhiteSpace && $lastNonWhiteSpace->getTokenName() == Token::T_CLOSE_BRACE) {
                 $lastToken->setAuxValue(';');
             }
             $this->injectBlockClosingAfter(
@@ -447,10 +434,8 @@ class PythoPhant_Parser implements Parser
             $token->setNestingLevel($nestingLevel);
         }
         
-        $this->tokenList->injectToken(
-            $close = $this->tokenFactory->createToken('T_CLOSE_BLOCK', $content),
-            $index + 2
-        );
+        $close = $this->tokenFactory->createToken(Token::T_CLOSE_BLOCK, $content);
+        $this->tokenList->injectToken($close, $index + 2);
 
         return $close;
     }

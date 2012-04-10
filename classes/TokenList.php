@@ -34,15 +34,19 @@ class TokenList implements Iterator, Countable, ArrayAccess
     }
     
     /**
-     * inject a token at a certain position in the list
+     * inject a token at a certain position in the list. The position can be
+     * passed as int or Token
      * 
-     * @param Token $token
-     * @param int   $index 
+     * @param Token     $token injected token
+     * @param Token|int $index position
      * 
      * @return TokenList
      */
     public function injectToken(Token $token, $index)
     {
+        if ($index instanceof Token) {
+            $index = $this->getTokenIndex($index);
+        }
         array_splice($this->tokens, $index, 0, array($token));
         return $this;
     }

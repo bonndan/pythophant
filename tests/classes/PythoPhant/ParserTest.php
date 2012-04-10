@@ -193,5 +193,40 @@ class PythoPhant_ParserTest extends PHPUnit_Framework_TestCase
         
         $this->assertEquals(8, count($tokenList));
     }
+
+    public function testCloseClass()
+    {
+        $tokenList = $this->getTokenList();
+        $this->object->setTokenList($tokenList);
+        $tokenList
+            ->pushToken(IndentationToken::create(1))
+            ->pushToken($this->tokenFactory->createToken('T_STRING', 'myFunc'))
+            ;
+        
+        $this->object->closeClass(1);
+        $last = $tokenList[count($tokenList) - 1];
+        $this->assertContains("}" . PHP_EOL, $last->getContent());
+    }
+    
+    public function testCloseClassAddsSemicolon()
+    {
+        $tokenList = $this->getTokenList();
+        $this->object->setTokenList($tokenList);
+        $tokenList
+            ->pushToken(IndentationToken::create(1))
+            ->pushToken($this->tokenFactory->createToken('T_STRING', 'myFunc'))
+            ->pushToken($this->tokenFactory->createToken('T_OPEN_BRACE', '('))
+            ->pushToken($this->tokenFactory->createToken('T_CLOSE_BRACE', ')'))
+            ;
+        $nlToken = $this->getMockBuilder('NewLineToken')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $nlToken->expects($this->once())
+            ->method('setAuxValue')
+            ->with(';');
+        $tokenList->pushToken($nlToken);
+        
+        $this->object->closeClass(1);
+    }
 }
 
