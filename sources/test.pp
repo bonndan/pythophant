@@ -18,5 +18,6 @@ class Test extends StdClass implements Countable
 
     
     private isSomethingContained (something)
+        something = (bool)something
         return something in(['a', 1]) or something ctype_alnum?
     

@@ -46,7 +46,8 @@ class StringToken extends CustomGenericToken
         $previous = $tokenList->getPreviousNonWhitespace($this);
         $preVariableIndicators = array_merge(
             PythoPhant_Grammar::$preVariableIndicators,
-            PythoPhant_Grammar::$controls
+            PythoPhant_Grammar::$controls,
+            PythoPhant_Grammar::$casts
         );
         $preCondition = $tokenList->isTokenIncluded(array($previous), $preVariableIndicators);
         

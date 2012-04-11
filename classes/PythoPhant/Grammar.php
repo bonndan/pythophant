@@ -68,7 +68,7 @@ abstract class PythoPhant_Grammar
     );
     
     /**
-     *
+     * visibility modifiers
      * @var array 
      */
     public static $modifiers = array(
@@ -78,6 +78,18 @@ abstract class PythoPhant_Grammar
         'T_FINAL',
         'T_ABSTRACT',
         'T_ACCESSIBLE',
+    );
+    
+    /**
+     * casting tokens
+     * @var array 
+     */
+    public static $casts = array(
+        'T_BOOL_CAST',
+        'T_INT_CAST',
+        'T_STRING_CAST',
+        'T_ARRAY_CAST',
+        'T_OBJECT_CAST',
     );
     
     /**
