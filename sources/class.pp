@@ -13,7 +13,7 @@ implements Foo, Bar
         else
             return aString
             
-    someFunc: MyInterface anObject
+    someFunc: MyInterface anObject, int mustBeInt, boolean mustBeBool
         try
             return anObject.someFunc()
         catch Exception e
