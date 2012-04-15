@@ -236,5 +236,47 @@ class TokenList implements Iterator, Countable, ArrayAccess
         unset($this->tokens[$offset]);
         $this->tokens = array_values($this->tokens);
     }
-    
+ 
+    /**
+     * pick a token from the list relative the passed Token
+     * 
+     * @param Token $position      the token defining the position
+     * @param int   $offset        the offset, positive or negative
+     * @param bool  $nonWhiteSpace no whitespace only?
+     * 
+     * @return Token|null
+     * @throws InvalidArgumentException
+     */
+    public function getAdjacentToken(Token $position, $offset, $nonWhiteSpace = true)
+    {
+        if (intval($offset) == 0) {
+            throw new InvalidArgumentException(
+                'The offset for picking a token must be different from zero.'
+            );
+        }
+        
+        if ($nonWhiteSpace == false) {
+            try {
+                $index = $this->getTokenIndex($position);
+                return $this->offsetGet($index + intval($offset));
+            } catch (OutOfBoundsException $exc) {
+                return null;
+            }
+        }
+        
+        $i = 0;
+        if ($offset < 0) {
+            while ($i > $offset) {
+                $position = $this->getPreviousNonWhitespace($position);
+                $i--;
+            }
+        } else {
+            while ($i < $offset) {
+                $position = $this->getnextNonWhitespace($position);
+                $i++;
+            }
+        }
+        
+        return $position;
+    }
 }

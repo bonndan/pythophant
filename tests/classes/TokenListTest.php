@@ -162,5 +162,80 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertContains($token2, $res);
         $this->assertContains($token3, $res);
     }
+    
+    /**
+     * returns a token list filled with various tokens, containing the passed
+     * token in its middle
+     * 
+     * @param Token $token
+     * @return TokenList 
+     */
+    public function getFilledTokenListContaining(Token $token)
+    {
+        $tokenList = new TokenList();
+        
+        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
+        $tokenList->pushToken(new CustomGenericToken('T_LOGICAL_AND', 'and', 1));
+        $tokenList->pushToken(new StringToken('T_STRING', 'myVar', 1));
+        $tokenList->pushToken(new ColonToken('T_COLON', ':', 1));
+        $tokenList->pushToken(new PHPToken(Token::T_WHITESPACE, 'whitespaceBefore', 0));
+        $tokenList->pushToken($token);
+        $tokenList->pushToken(new PHPToken(Token::T_WHITESPACE, 'whitespaceAfter', 0));
+        $tokenList->pushToken(new CustomGenericToken('start', 'test', 0));
+        $tokenList->pushToken(new StringToken('T_STRING', 'myVar2', 1));
+        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
+        
+        return $tokenList;
+    }
+    
+    public function testGetAdjacentTokenWithPositiveOffset()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $this->assertEquals('myVar2', $tokenList->getAdjacentToken($token, 3, false)->getContent());
+    }
+    
+    public function testGetAdjacentTokenWithNegativeOffset()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $this->assertEquals('myVar', $tokenList->getAdjacentToken($token, -3, false)->getContent());
+    }
+    
+    public function testGetAdjacentTokenNotExistingReturnsNull()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $this->assertNull($tokenList->getAdjacentToken($token, 333, false));
+    }
+    
+    public function testGetAdjacentTokenWithZeroThrowsException()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $this->setExpectedException('InvalidArgumentException');
+        $tokenList->getAdjacentToken($token, 0);
+    }
+    
+    public function testGetAdjacentNonWhitespaceTokenWithPositiveOffset()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $this->assertEquals('myVar', $tokenList->getAdjacentToken($token, -2)->getContent());
+    }
+    
+    public function testGetAdjacentNonWhitespaceTokenWithNegativeOffset()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $this->assertEquals('myVar2', $tokenList->getAdjacentToken($token, 2)->getContent());
+    }
+    
 }
 
