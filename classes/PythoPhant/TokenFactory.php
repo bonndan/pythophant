@@ -45,7 +45,7 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_JSON_OPEN_OBJECT' => PythoPhant_Grammar::T_JSON_OPEN_OBJECT,
         'T_JSON_CLOSE_OBJECT' => PythoPhant_Grammar::T_JSON_CLOSE_OBJECT,
         
-        'T_ACCESSIBLE' => PythoPhant_Grammar::T_ACCESSIBLE,
+        'T_PROPERTY' => PythoPhant_Grammar::T_PROPERTY,
         
         'T_BIT_AND' => PythoPhant_Grammar::T_BIT_AND,
         'T_BIT_OR' => PythoPhant_Grammar::T_BIT_OR,
@@ -74,7 +74,7 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_COLON' => 'ColonToken',
         'T_JSON_OPEN_OBJECT' => 'JsonToken',
         'T_JSON_CLOSE_OBJECT' => 'JsonToken',
-        'T_ACCESSIBLE' => 'AccessibleToken',
+        'T_PROPERTY' => 'PropertyToken',
         'T_QUESTION' => 'QuestionToken',
         'T_CONST' => 'ConstToken',
         'T_CONSTANT_ENCAPSED_STRING' => 'ConstToken',
@@ -177,7 +177,16 @@ class PythoPhant_TokenFactory implements TokenFactory
             $content = constant('PythoPhant_Grammar::' . $tokenName);
         }
         
-        return new $class($tokenName, $content, $line);
+        $instance = new $class($tokenName, $content, $line);
+        
+        /**
+         * inject a new scanner in macro tokens 
+         */
+        if ($instance instanceof MacroConsumer) {
+            $instance->setScanner(new PythoPhant_Scanner($this));
+        }
+        
+        return $instance;
     }
     
     /**
