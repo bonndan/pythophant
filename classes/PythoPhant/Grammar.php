@@ -43,7 +43,7 @@ abstract class PythoPhant_Grammar
     const T_JSON_OPEN_OBJECT = "{";
     const T_JSON_CLOSE_OBJECT = "}";
     
-    const T_ACCESSIBLE = 'accessible';
+    const T_PROPERTY = 'property';
     
     /**
      * declaration tokens
