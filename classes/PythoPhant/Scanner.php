@@ -7,7 +7,6 @@
  */
 class PythoPhant_Scanner implements Scanner
 {
-
     /**
      * @var TokenList
      */
@@ -33,7 +32,6 @@ class PythoPhant_Scanner implements Scanner
     public function __construct(TokenFactory $factory)
     {
         $this->tokenFactory = $factory;
-        $this->tokenList = new TokenList;
     }
 
     /**
@@ -46,6 +44,7 @@ class PythoPhant_Scanner implements Scanner
      */
     public function scanSource($source)
     {
+        $this->tokenList = new TokenList;
         $tokens = token_get_all($source);
         $currentLine = 1;
 
