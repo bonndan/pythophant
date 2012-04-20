@@ -59,4 +59,47 @@ class PythoPhant_MacroTest extends PHPUnit_Framework_TestCase
         $res = $this->macro->getSource();
         $this->assertEquals('<?php echo test', $res);
     }
+    
+    /**
+     * get a scanner
+     * 
+     * @return PythoPhant_Scanner 
+     */
+    protected function getScanner()
+    {
+        $scanner = new PythoPhant_Scanner(new PythoPhant_TokenFactory());
+        return $scanner;
+    }
+
+    /**
+     *  
+     */
+    public function testCleanTokenListWithOpenTag()
+    {
+        $scanner = $this->getScanner();
+        $scanner->scanSource('<?php ' . PHP_EOL .'echo "test"');
+        $tokenList = $scanner->getTokenList();
+        $count = $tokenList->count();
+        
+        $this->macro->cleanTokenList($tokenList);
+        
+        $this->assertEquals($count-2, $tokenList->count());
+    }
+    
+    /**
+     *  
+     */
+    public function testCleanTokenListWithOpenTagAndIndentation()
+    {
+        $scanner = $this->getScanner();
+        $scanner->scanSource('<?php ' . PHP_EOL .'echo "test"');
+        $tokenList = $scanner->getTokenList();
+        $count = $tokenList->count();
+        
+        $this->macro->cleanTokenList($tokenList, 1);
+        
+        $this->assertEquals($count-1, $tokenList->count());
+        $first = $tokenList[0];
+        $this->assertInstanceOf('IndentationToken', $first, $first->getContent());
+    }
 }

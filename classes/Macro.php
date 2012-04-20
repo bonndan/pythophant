@@ -26,4 +26,12 @@ interface Macro
      * @return string 
      */
     public function getSource();
+    
+    /**
+     * remove the php open_tag, indent if needed
+     * 
+     * @param TokenList $tokenList   token list to clena
+     * @param int       $indentation indentation level to add
+     */
+    public function cleanTokenList(TokenList $tokenList, $indentation = 0);
 }
