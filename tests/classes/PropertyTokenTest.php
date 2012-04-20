@@ -36,6 +36,9 @@ class PropertyTokenTest extends PHPUnit_Framework_TestCase
         return $tokenList;
     }
     
+    /**
+     * ensures that invalid use throws an exception 
+     */
     public function testAffectTokenListThrowsException()
     {
         $tokenList = new TokenList();
@@ -49,19 +52,23 @@ class PropertyTokenTest extends PHPUnit_Framework_TestCase
     public function testAffectTokenList()
     {
         $tokenList = $this->getTokenList();
-        
+        $count = $tokenList->count();
         $scanner = $this->getMockBuilder('Scanner')
             ->disableOriginalConstructor()
             ->getMock();
         $scanner->expects($this->exactly(2))
             ->method('scanSource');
+        $macroTokens = new TokenList();
+        $macroTokens->pushToken(new StringToken('T_STRING', 'test', 1));
         $scanner->expects($this->exactly(2))
             ->method('getTokenList')
-            ->will($this->returnValue(array(IndentationToken::create(1))));
+            ->will($this->returnValue($macroTokens));
         
         $this->token->setScanner($scanner);
         $this->token->affectTokenList($tokenList);
         
-        $this->assertEquals(5, $tokenList->count());
+        //2 test + 3 indent
+        $extra = 2 * 1 + 3;
+        $this->assertEquals($count + $extra, $tokenList->count());
     }
 }

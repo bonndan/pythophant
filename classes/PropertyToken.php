@@ -91,7 +91,6 @@ class PropertyToken extends CustomGenericToken implements MacroConsumer
             PATH_PYTHOPHANT_MACROS . DIRECTORY_SEPARATOR . 'propertyGetter.pp'
         );
         $this->addMacro($file, array($type, $varName), $tokenList, $this->getterScanner);
-        
     }
     
     /**
@@ -118,13 +117,17 @@ class PropertyToken extends CustomGenericToken implements MacroConsumer
      * @param TokenList     $tokenList
      * @param Scanner       $scanner 
      */
-    private function addMacro(SplFileObject $file, array $params, TokenList $tokenList, Scanner $scanner)
-    {
+    private function addMacro(
+        SplFileObject $file,
+        array $params,
+        TokenList $tokenList,
+        Scanner $scanner
+    ) {
         $macro = new PythoPhant_Macro($file);
         $macro->setParams($params);
         $scanner->scanSource($macro->getSource());
-        $macroTokens = $this->getterScanner->getTokenList();
-        
+        $macroTokens = $scanner->getTokenList();
+        $macro->cleanTokenList($macroTokens, 1);
         foreach ($macroTokens as $token) {
             $tokenList->pushToken($token);
         }
