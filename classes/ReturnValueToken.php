@@ -52,7 +52,8 @@ class ReturnValueToken extends CustomGenericToken
             $this->insertTypeCheckInFunction($tokenList, $variable->getContent());
         }
 
-        if (!$this->returnContent && $next->getTokenName() == Token::T_WHITESPACE
+        if ($this->returnContent == false 
+            && $next->getTokenName() == Token::T_WHITESPACE
         ) {
             $next->setContent('');
         }

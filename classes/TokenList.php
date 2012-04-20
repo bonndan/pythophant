@@ -64,7 +64,9 @@ class TokenList implements Iterator, Countable, ArrayAccess
         $index = array_search($token, $this->tokens, true);
         
         if ($index === FALSE) {
-            throw new OutOfBoundsException('Token is not part of the list');
+            throw new OutOfBoundsException(
+                'Token is not part of the list: ' . $token->getContent()
+            );
         }
         
         return $index;
