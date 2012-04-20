@@ -80,6 +80,7 @@ class PythoPhant_TokenFactory implements TokenFactory
         'T_CONSTANT_ENCAPSED_STRING' => 'ConstToken',
         'T_EXCLAMATION' => 'ExclamationToken',
         'T_NOT' => 'ExclamationToken',
+        'T_DOC_COMMENT' => 'DocCommentToken',
     );
 
     /**

@@ -16,6 +16,7 @@ interface Token
     const T_CONST = 'T_CONST';
     const T_CONSTANT_ENCAPSED_STRING = 'T_CONSTANT_ENCAPSED_STRING';
     const T_CONCAT = 'T_CONCAT';
+    const T_DOC_COMMENT = 'T_DOC_COMMENT';
     const T_EXCLAMATION = 'T_EXCLAMATION';
     const T_FUNCTION = 'T_FUNCTION';
     const T_IF = 'T_IF';
