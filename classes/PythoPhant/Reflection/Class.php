@@ -7,7 +7,6 @@
 class PythoPhant_Reflection_Class
 extends PythoPhant_Reflection_Interface
 {
-    
     /**
      * class scope
      * @var array 
@@ -15,10 +14,10 @@ extends PythoPhant_Reflection_Interface
     private $vars = array();
     
     /**
-     * class methods
-     * @var PythoPhant_Function[] 
+     * names of the implemented interfaces
+     * @var array(string) 
      */
-    private $methods = array();
+    private $implements = array();
     
     /**
      * add a class variable
@@ -33,5 +32,22 @@ extends PythoPhant_Reflection_Interface
         return $this;
     }
     
-
+    /**
+     * set the implemented interfaces
+     * 
+     * @param array $interfaces
+     * 
+     * @return PythoPhant_Reflection_Class
+     */
+    public function setImplements(array $interfaces)
+    {
+        foreach ($interfaces as $key => $interface) {
+            if ($interface instanceof StringToken) {
+                $interfaces[$key] = $interface->getContent();
+            }
+        }
+        
+        $this->implements = $interfaces;
+        return $this;
+    }
 }

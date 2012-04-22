@@ -47,4 +47,20 @@ class PythoPhant_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         $class->addVar($var);
         $this->assertAttributeContains($var, 'vars', $class);
     }
+
+    /**
+     * test setter of implemented interfaces 
+     */
+    public function testSetImplements()
+    {
+        $class = $this->getClass();
+        $interfaces = array(
+            'MyInterface1',
+            new StringToken('T_STRING', 'MyInterface2', 0)
+        );
+        $class->setImplements($interfaces);
+        
+        $this->assertAttributeContains('MyInterface1', 'implements', $class);
+        $this->assertAttributeContains('MyInterface2', 'implements', $class);
+    }
 }
