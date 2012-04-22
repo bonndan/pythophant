@@ -14,15 +14,6 @@ class PythoPhant_FunctionTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $function = new PythoPhant_Function('testFunction');
-        $this->assertEquals('testFunction', $function->getName());
-    }
-    
-    /**
-     * 
-     */
-    public function testSetSignatureFromDocComment()
-    {
         $content = 
 "/**
  * test
@@ -34,8 +25,10 @@ class PythoPhant_FunctionTest extends PHPUnit_Framework_TestCase
  */";
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
         
-        $function = new PythoPhant_Function('testFunction');
-        $function->setSignatureFromDocComment($doc);
+        $function = new PythoPhant_Function('testFunction', $doc);
+        
+        $this->assertEquals('testFunction', $function->getName());
+        
         $res = $function->getParams();
         $this->assertInternalType('array', $res);
         $this->assertEquals(2, count($res));
@@ -44,5 +37,6 @@ class PythoPhant_FunctionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('test2', $res['test2']->getName());
         $this->assertEquals('SomeInterface[]', $res['test2']->getType());
     }
+    
 }
     

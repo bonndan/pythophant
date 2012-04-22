@@ -31,14 +31,16 @@ class PythoPhant_Function
     private $params = array();
     
     /**
-     * constructor requires a name
+     * constructor requires a name and a doc comment
      * 
-     * @param string $name
-     * @param string $modifiers
+     * @param string          $name
+     * @param DocCommentToken $docComment
+     * @param string          $modifiers
      */
-    public function __construct($name, $modifiers = null)
+    public function __construct($name, DocCommentToken $docComment, $modifiers = null)
     {
-        $this->name       = $name;
+        $this->name = $name;
+        $this->setSignatureFromDocComment($docComment);
         if ($modifiers !== null) {
             $this->modifiers  = $modifiers;
         }
@@ -59,7 +61,7 @@ class PythoPhant_Function
      * 
      * @param DocCommentToken $docComment 
      */
-    public function setSignatureFromDocComment(DocCommentToken $docComment)
+    private function setSignatureFromDocComment(DocCommentToken $docComment)
     {
         $this->docComment = $docComment;
         
@@ -71,6 +73,7 @@ class PythoPhant_Function
     
     /**
      * returns all function params
+     * 
      * @return array 
      */
     public function getParams()
