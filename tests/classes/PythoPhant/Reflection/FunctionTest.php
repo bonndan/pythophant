@@ -38,5 +38,23 @@ class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('SomeInterface[]', $res['test2']->getType());
     }
     
+    /**
+     * ensures that tokens can be added to the list of body tokens 
+     */
+    public function testAddBodyLine()
+    {
+        $content = 
+"/**
+ * test
+ */";
+        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
+        
+        $function = new PythoPhant_Reflection_Function('testFunction', $doc);
+        
+        $token = new StringToken('T_STRING', 'myString', 0);
+        $tokens = array($token);
+        $function->addBodyLine($tokens);
+        $this->assertAttributeContains($token, "bodyTokens", $function);
+    }
 }
     

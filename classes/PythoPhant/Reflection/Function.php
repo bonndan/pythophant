@@ -19,6 +19,12 @@ class PythoPhant_Reflection_Function extends PythoPhant_Reflection_ElementAbstra
     private $params = array();
     
     /**
+     * array of body tokens
+     * @var array 
+     */
+    private $bodyTokens = array();
+    
+    /**
      * constructor requires a name and a doc comment
      * 
      * @param string          $name
@@ -57,5 +63,21 @@ class PythoPhant_Reflection_Function extends PythoPhant_Reflection_ElementAbstra
     public function getParams()
     {
         return $this->params;
+    }
+    
+    /**
+     * add a collection of tokens to the body
+     * 
+     * @param array $tokens 
+     * 
+     * @return void
+     */
+    public function addBodyLine(array $tokens)
+    {
+        foreach ($tokens as $token) {
+            if ($token instanceof Token) {
+                array_push($this->bodyTokens, $token);
+            }
+        }
     }
 }
