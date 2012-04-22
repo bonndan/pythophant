@@ -1,28 +1,16 @@
 <?php
 /**
- * PythoPhant_ClassVar
+ * PythoPhant_Reflection_ClassVar
  * 
  * representation of a class variable
  */
-class PythoPhant_ClassVar
+class PythoPhant_Reflection_ClassVar extends PythoPhant_Reflection_ElementAbstract
 {
-    /**
-     * variable name
-     * @var string
-     */
-    private $name = null;
-    
     /**
      * variable type
      * @var string|null
      */
     private $type = null;
-    
-    /**
-     * doc comment
-     * @var DocCommentToken 
-     */
-    private $docComment;
     
     /**
      * constructor requires a name and the doc comment as token
@@ -32,8 +20,7 @@ class PythoPhant_ClassVar
      */
     public function __construct($name, DocCommentToken $docComment)
     {
-        $this->name = (string)$name;
-        $this->docComment = $docComment;
+        parent::__construct($name, $docComment);
         $this->detectType();
     }
     
@@ -48,16 +35,6 @@ class PythoPhant_ClassVar
         if ($types !== null && !empty($types)) {
             $this->type = current($types);
         }
-    }
-    
-    /**
-     * get the variable name
-     * 
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
     
     /**

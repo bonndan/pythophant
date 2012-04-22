@@ -1,16 +1,16 @@
 <?php 
 
-require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/bootstrap.php';
 
 /**
- * Test class for PythoPhant_ClassVar.
+ * Test class for PythoPhant_Reflection_ClassVar.
  */
-class PythoPhant_ClassVarTest extends PHPUnit_Framework_TestCase
+class PythoPhant_Reflection_ClassVarTest extends PHPUnit_Framework_TestCase
 {
     /**
      * create an instance
      * 
-     * @return PythoPhant_ClassVar
+     * @return PythoPhant_Reflection_ClassVar
      */
     protected function getClassVar($content = null)
     {
@@ -20,7 +20,7 @@ class PythoPhant_ClassVarTest extends PHPUnit_Framework_TestCase
  * @var string
  */";
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
-        return new PythoPhant_ClassVar('myVar', $doc);
+        return new PythoPhant_Reflection_ClassVar('myVar', $doc);
     }
     
     public function testConstructor()
