@@ -4,49 +4,60 @@
  * DocCommentToken
  * 
  * token representing a doc comment
+ * @author Daniel Pozzi <bonndan76@googlemail.com>
  */
 class DocCommentToken extends PHPToken
 {
-    /**
-     * tags which appear more than once
-     * @var type 
-     */
-    private $multiOccurence = array(
-        'param',
-        'throws',
-        'author',
-    );
-    
     /**
      * short description
      * @var string 
      */
     private $shortDesc = '';
-    
+
     /**
      * long description
      * @var string 
      */
     private $longDesc = '';
-    
+
     /**
      * params noted in \@param
-     * @var array 
+     * @var array(array(string type, string description, string default)) 
      */
     private $param = array();
-    
+
     /**
-     * params noted in \@throws
+     * excptions noted in \@throws
      * @var array 
      */
     private $throws = array();
-    
+
     /**
      * params noted in \@author
      * @var array 
      */
     private $author = array();
-    
+
+    /**
+     * return value
+     * @var array(string type, string description)
+     */
+    private $return = array();
+
+    /**
+     * overrides setContent, parse the doc block
+     * 
+     * @param string $content doc block
+     * 
+     * @return DocCommentToken
+     */
+    public function setContent($content)
+    {
+        parent::setContent($content);
+        $this->processPHPDoc();
+        return $this;
+    }
+
     /**
      * indent the whole doc block
      * 
@@ -73,53 +84,169 @@ class DocCommentToken extends PHPToken
         if (trim($docComment) == '') {
             return null;
         }
-        
+
         $docComment = str_replace("\r\n", PHP_EOL, $docComment);
         $docComment = str_replace(array('/**', '*/'), '', $docComment);
-        
+
         $lines = explode(PHP_EOL, $docComment);
         foreach ($lines as $line) {
             $line = trim(ltrim($line, " *"));
             if ($line == '') {
                 continue;
             }
-            
+
             if ($this->shortDesc === '') {
                 $this->shortDesc = $line;
                 continue;
             }
-            
+
             if ($line[0] != '@') {
                 $this->longDesc .= $line . PHP_EOL;
             } else {
-                $matches = array();
-                preg_match('#^@(\w+)\s+([\w|\\\]+)(?:\s+(\$\S+))?(?:\s+(.*))?#s', $line, $matches);
-                $tag  = strtolower($matches[1]);
-                $type = isset($matches[2]) ? $matches[2] : null;
-                $name = isset($matches[3]) ? $matches[3] : null;
-                $desc = isset($matches[4]) ? $matches[4] : null;
-                $this->setTag($tag, $type, $name, $desc);
+                $this->parseAnnotationLine($line);
             }
         }
     }
 
     /**
-     * set or add a tag
+     * parse a line
      * 
-     * @param string $tag  name of the tag
-     * @param string $type type or any first word after the tag
-     * @param string $name variable name or any second word
-     * @param string $desc optional third word
+     * @param string $line 
+     */
+    private function parseAnnotationLine($line)
+    {
+        $matches = explode(' ', $line);
+        foreach($matches as $key => $string) {
+            if ($string == '') {
+                unset($matches[$key]);
+            }
+        }
+        
+        $tag = substr(array_shift($matches), 1);
+        
+        $matches = array_values($matches);
+        $setter = 'set' . ucfirst($tag);
+        if (method_exists($this, $setter)) {
+            $this->$setter($matches);
+        } else {
+            $this->setAnnotation($tag, $matches);
+        }
+    }
+
+    /**
+     * add an annotation
+     * 
+     * @param string $tag     name of the tag
+     * @param array  $matches all words including $tag
      * 
      * @return void
      */
-    public function setTag($tag, $type, $name = null, $desc = null)
+    public function setAnnotation($tag, array $matches)
     {
-        if (in_array($tag, $this->multiOccurence)) {
-            array_push($this->$tag, array($type, $name, $desc));
-        } else {
-            $this->$tag = array($type, $name, $desc);
+        if (!isset($this->$tag)) {
+            $this->$tag = array();
         }
+        array_push($this->$tag, trim(implode(' ', $matches)));
     }
-   
+
+    /**
+     * set a param
+     * 
+     * @param array $matches 
+     * 
+     * @return void
+     */
+    public function setParam(array $matches)
+    {
+        if (!isset($matches[0])) {
+            return;
+        }
+        $type = $matches[0];
+        $var  = $matches[1];
+        unset($matches[0]);
+        unset($matches[1]);
+        $default = null;
+        if (isset($matches[2]) && $matches[2] == '=') {
+            $default = $matches[3];
+            unset($matches[2]);
+            unset($matches[3]);
+        }
+        $description = implode(' ', $matches);
+        $this->param[$var] = array($type, $description, $default);
+    }
+    
+    /**
+     * set the return annotation values
+     * 
+     * @param array $matches return annotation words
+     * 
+     * @return void
+     */
+    public function setReturn(array $matches)
+    {
+        if (!isset($matches[0])) {
+            return;
+        }
+        $type = $matches[0];
+        unset($matches[0]);
+        $description = implode(' ', $matches);
+        $this->return = array($type, $description);
+    }
+    
+    /**
+     * returns the short description
+     * 
+     * @return string 
+     */
+    public function getShortDescription()
+    {
+        return $this->shortDesc;
+    }
+    
+    /**
+     * returns the long description
+     * 
+     * @return string 
+     */
+    public function getLongDescription()
+    {
+        return $this->longDesc;
+    }
+    
+    /**
+     * get the found param annotations
+     * 
+     * @return array 
+     */
+    public function getParams()
+    {
+        return $this->param;
+    }
+
+    /**
+     * type of the return value
+     * 
+     * @return string 
+     */
+    public function getReturnType()
+    {
+        return $this->return[0];
+    }
+
+    /**
+     * get any annotation
+     * 
+     * @param string $name
+     * 
+     * @return array 
+     */
+    public function getAnnotation($name)
+    {
+        if (!isset($this->$name)) {
+            return null;
+        }
+        
+        return $this->$name;
+    }
+
 }

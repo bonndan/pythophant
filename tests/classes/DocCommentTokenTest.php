@@ -14,9 +14,8 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
      */
     private $token;
     
-    public function setup()
+    protected function getToken()
     {
-        parent::setUp();
         $content = 
 "/**
  * test
@@ -24,16 +23,24 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
  * more lines
  * here
  * 
- * @param string \$test some var
+ * @param string          test some var
+ * @param SomeInterface[] test2 = array() some other var
  *
  * @return void
  * @author Daniel Pozzi <bonndan76@googlemail.com>
  */";
-        $this->token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        $token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        
+        return $token;
     }
     
+    /**
+     * test the whole block indentation function 
+     */
     public function testIndent()
     {
+        $this->token = $this->getToken();
+        
         $this->token->indent(1);
         $content =   "    /**
      * test
@@ -41,7 +48,8 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
      * more lines
      * here
      * 
-     * @param string \$test some var
+     * @param string          test some var
+     * @param SomeInterface[] test2 = array() some other var
      *
      * @return void
      * @author Daniel Pozzi <bonndan76@googlemail.com>
@@ -51,12 +59,38 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
     
     public function testProcessPHPDoc()
     {
-        $this->token->processPHPDoc();
+        $this->token = $this->getToken();
         
         $this->assertAttributeEquals('test', 'shortDesc', $this->token);
         $this->assertAttributeContains('more lines', 'longDesc', $this->token);
         $this->assertAttributeContains('here', 'longDesc', $this->token);
-        $this->assertAttributeEquals(array('void', null, null), 'return', $this->token);
-        $this->assertAttributeContains(array('string', '$test', 'some var'), 'param', $this->token);
+        $value = $this->token->getAnnotation('author');
+        $this->assertContains('Daniel Pozzi', $value[0], serialize($value));
+        $this->assertEquals('void', $this->token->getReturnType());
+        
+        $params = $this->token->getParams();
+        $this->assertEquals(array('string', 'some var', null), $params['test']);
+        
+        $this->assertEquals('test', $this->token->getShortDescription());
+        $this->assertContains('more lines', $this->token->getLongDescription());
+    }
+    
+    /**
+     * ensures that any annotation is noted 
+     */
+    public function testSetCustomAnnotation()
+    {
+        $content = 
+"/**
+ * test
+ *
+ * more lines
+ * here
+ * 
+ * @customAnnotation test123
+ */";
+        $this->token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        $custom = $this->token->getAnnotation('customAnnotation');
+        $this->assertEquals('test123', $custom[0]);
     }
 }
