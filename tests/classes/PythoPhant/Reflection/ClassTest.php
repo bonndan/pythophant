@@ -47,20 +47,4 @@ class PythoPhant_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         $class->addVar($var);
         $this->assertAttributeContains($var, 'vars', $class);
     }
-    
-    /**
-     * test class var addition 
-     */
-    public function testAddMethod()
-    {
-        $content = "/**
- * some thing
- */";
-        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
-        $method = new PythoPhant_Reflection_Function('myFunction', $doc);
-        
-        $class = $this->getClass();
-        $class->addMethod($method);
-        $this->assertContains($method, $class->getMethods());
-    }
 }
