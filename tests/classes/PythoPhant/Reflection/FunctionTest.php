@@ -1,13 +1,13 @@
 <?php
 
-require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/bootstrap.php';
 
 /**
  * Test class for PythoPhant_Function.
  * 
  * 
  */
-class PythoPhant_FunctionTest extends PHPUnit_Framework_TestCase
+class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
 {
     /**
      * ensures the constructor stores all params 
@@ -25,7 +25,7 @@ class PythoPhant_FunctionTest extends PHPUnit_Framework_TestCase
  */";
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
         
-        $function = new PythoPhant_Function('testFunction', $doc);
+        $function = new PythoPhant_Reflection_Function('testFunction', $doc);
         
         $this->assertEquals('testFunction', $function->getName());
         
