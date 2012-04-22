@@ -11,6 +11,12 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
     protected $extends = null;
     
     /**
+     * nall class methods
+     * @var array
+     */
+    protected $methods = array();
+    
+    /**
      * add a method
      * 
      * @param PythoPhant_Reflection_Function $method

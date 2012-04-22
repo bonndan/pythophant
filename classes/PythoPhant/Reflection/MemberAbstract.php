@@ -73,6 +73,20 @@ implements PythoPhant_Reflection_Member
     }
     
     /**
+     * returns all body tokens
+     * 
+     * @return TokenList 
+     */
+    public function getBodyTokenList()
+    {
+        $tokenList = new TokenList();
+        foreach ($this->bodyTokens as $token) {
+            $tokenList->pushToken($token);
+        }
+        return $tokenList;
+    }
+    
+    /**
      * returns the variable type
      * @return string|null
      */

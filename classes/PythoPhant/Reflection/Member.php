@@ -24,4 +24,10 @@ interface PythoPhant_Reflection_Member extends PythoPhant_Reflection_Element
      * add tokens to the body 
      */
     public function addBodyTokens(array $tokens);
+    
+    /**
+     * returns the body tokens as TokenList
+     * @return TokenList 
+     */
+    public function getBodyTokenList();
 }

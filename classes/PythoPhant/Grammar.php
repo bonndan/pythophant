@@ -77,7 +77,7 @@ abstract class PythoPhant_Grammar
         'T_PUBLIC',
         'T_FINAL',
         'T_ABSTRACT',
-        'T_ACCESSIBLE',
+        'T_PROPERTY',
     );
     
     /**

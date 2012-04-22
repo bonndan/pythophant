@@ -29,204 +29,162 @@ class PythoPhant_ParserTest extends PHPUnit_Framework_TestCase
             $this->tokenFactory
         );
     }
-
-    protected function getTokenList()
+    
+    /**
+     * @return PythoPhant_Scanner
+     */
+    protected function getScanner()
     {
-        return new TokenList();
+        return new PythoPhant_Scanner($this->tokenFactory);
+    }
+
+    /**
+     * 
+     */
+    public function testProcessTokenListFindsClass()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+
+";
+        $scanner->scanSource($source);
+        
+        $this->object->processTokenList($scanner->getTokenList());
+        $class = $this->object->getClass();
+        $this->assertInstanceOf('PythoPhant_Reflection_Class', $class);
+        $this->assertEquals('MyTest', $class->getName() );
+    }
+    
+        /**
+     * 
+     */
+    public function testProcessTokenListFindsClassWithExtends()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+extends Something
+
+";
+        $scanner->scanSource($source);
+        
+        $this->object->processTokenList($scanner->getTokenList());
+        $class = $this->object->getClass();
+        $this->assertAttributeEquals('Something', 'extends', $class);
     }
     
     /**
-     * testScanTokenList().
+     * ensure implemented interfaces are passed
      */
-    public function testprocessTokenList()
+    public function testProcessTokenListFindsClassWithImplements()
     {
-        $tokenList = new TokenList();
-        $tokenMock = $this->getMockBuilder('CustomGenericToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenList->pushToken($tokenMock);
-        
-        $tokenMock->expects($this->once())
-            ->method('affectTokenList');
-        
-        $this->object->processTokenList($tokenList);
-    }
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+implements Something, SomeOtherThing
 
-    public function testParseLineEndsWithSimpleClassDeclaration()
-    {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $tokenList
-            ->pushToken($this->tokenFactory->createToken('T_CLASS', 'class'))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'MyClass'));
-        $nlToken = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenList->pushToken($nlToken);
+";
+        $scanner->scanSource($source);
         
-        $nlToken->expects($this->once())
-            ->method('setAuxValue')
-            ->with("");
-        $nlToken->expects($this->once())
-            ->method('setContent')
-            ->with(PHP_EOL);
-        $this->object->parseLineEnds();
-        
-        $this->assertEquals(5, count($tokenList));
+        $this->object->processTokenList($scanner->getTokenList());
+        $class = $this->object->getClass();
+        $this->assertAttributeContains('Something', 'implements', $class);
+        $this->assertAttributeContains('SomeOtherThing', 'implements', $class);
     }
     
-    public function testParseLineEndsWithClassDeclarationAndExtends()
-    {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $nlToken = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-         
-        $tokenList
-            ->pushToken($this->tokenFactory->createToken('T_CLASS', 'class'))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'MyClass'))
-            ->pushToken(NewLineToken::createEmpty())
-            ->pushToken($this->tokenFactory->createToken('T_EXTENDS', 'extends'))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'SomeClass'))
-            ;
-        $nlToken2 = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenList->pushToken($nlToken2);
-        
-        $nlToken->expects($this->never())
-            ->method('setContent')
-            ;
-        $nlToken2->expects($this->once())
-            ->method('setAuxValue')
-            ->with("");
-        $nlToken2->expects($this->once())
-            ->method('setContent')
-            ->with(PHP_EOL);
-        $this->object->parseLineEnds();
-        
-        $this->assertEquals(8, count($tokenList));
-    }
-    
-    public function testSimpleFunctionDeclaration()
-    {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $tokenList
-            ->pushToken(IndentationToken::create(1))
-            ->pushToken($this->tokenFactory->createToken('T_FUNCTION', 'function'))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'myFunction'))
-            ->pushToken($this->tokenFactory->createToken('T_OPEN_BRACE', '('))
-            ->pushToken($this->tokenFactory->createToken('T_CLOSE_BRACE', ')'))
-            ;
-        $nlToken = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenList->pushToken($nlToken);
-        
-        $nlToken->expects($this->once())
-            ->method('setAuxValue')
-            ->with("");
-        $nlToken->expects($this->once())
-            ->method('setContent')
-            ->with(PHP_EOL);
-        $this->object->parseLineEnds();
-        
-        $this->assertEquals(9, count($tokenList));
-    }
-    
-    public function testImplicitFunctionDeclaration()
-    {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $tokenList
-            ->pushToken(IndentationToken::create(1))
-            ->pushToken($this->tokenFactory->createToken('T_PRIVATE', 'private'))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'myFunction'))
-            ->pushToken($this->tokenFactory->createToken('T_OPEN_BRACE', '('))
-            ->pushToken($this->tokenFactory->createToken('T_CLOSE_BRACE', ')'))
-            ;
-        $nlToken = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenList->pushToken($nlToken);
-        
-        $nlToken->expects($this->once())
-            ->method('setAuxValue')
-            ->with("");
-        $nlToken->expects($this->once())
-            ->method('setContent')
-            ->with(PHP_EOL);
-        $this->object->parseLineEnds();
-        
-        $this->assertEquals(10, count($tokenList));
-        
-        $func = $tokenList->offsetGet(1);
-        $this->assertEquals('private', $func->getContent());
-        $func = $tokenList->offsetGet(2);
-        $this->assertEquals('function', trim($func->getContent()), serialize($func->getContent()));
-    }
-    
-    public function testBlockIsOpened()
-    {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $tokenList
-            ->pushToken(IndentationToken::create(1))
-            ->pushToken($this->tokenFactory->createToken('T_IF', 'if'))
-            ->pushToken($this->tokenFactory->createToken('T_OPEN_BRACE', '('))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'false'))
-            ->pushToken($this->tokenFactory->createToken('T_CLOSE_BRACE', ')'))
-            ;
-        $nlToken = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenList->pushToken($nlToken);
-        
-        $nlToken->expects($this->once())
-            ->method('setAuxValue')
-            ->with(' ' . PythoPhant_Grammar::T_OPEN_BLOCK);
-        $nlToken->expects($this->never())
-            ->method('setContent');
-        $this->object->parseLineEnds();
-        
-        $this->assertEquals(8, count($tokenList));
-    }
 
-    public function testCloseClass()
+    
+    /**
+     * 
+     */
+    public function testProcessTokenListThrowsMissingDocCommentException()
     {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $tokenList
-            ->pushToken(IndentationToken::create(1))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'myFunc'))
-            ;
-        
-        $this->object->closeClass(1);
-        $last = $tokenList[count($tokenList) - 1];
-        $this->assertContains("}" . PHP_EOL, $last->getContent());
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+
+    private aVar
+";
+        $scanner->scanSource($source);
+        $this->setExpectedException('PythoPhant_Exception');
+        $this->object->processTokenList($scanner->getTokenList());
     }
     
-    public function testCloseClassAddsSemicolon()
+    /**
+     * 
+     */
+    public function testProcessTokenListFindsClassVar()
     {
-        $tokenList = $this->getTokenList();
-        $this->object->setTokenList($tokenList);
-        $tokenList
-            ->pushToken(IndentationToken::create(1))
-            ->pushToken($this->tokenFactory->createToken('T_STRING', 'myFunc'))
-            ->pushToken($this->tokenFactory->createToken('T_OPEN_BRACE', '('))
-            ->pushToken($this->tokenFactory->createToken('T_CLOSE_BRACE', ')'))
-            ;
-        $nlToken = $this->getMockBuilder('NewLineToken')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $nlToken->expects($this->once())
-            ->method('setAuxValue')
-            ->with(';');
-        $tokenList->pushToken($nlToken);
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+extends Something
+
+    /**
+     * some description
+     * @var string
+     */
+    private aVar
+    
+    /**
+     * more description
+     * @var array
+     */
+    private static anArray
+";
+        $scanner->scanSource($source);
         
-        $this->object->closeClass(1);
+        $this->object->processTokenList($scanner->getTokenList());
+        $class = $this->object->getClass();
+        $vars = $class->getVars();
+        $this->assertEquals(2, count($vars));
+        $this->assertEquals('aVar', key($vars));
+    }
+    
+                /**
+     * 
+     */
+    public function testProcessTokenListFindsClassMethods()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+extends Something
+
+    /**
+     * some description
+     * @param string myString
+     */
+    private myFunction
+        echo 'test'
+
+";
+        $scanner->scanSource($source);
+        
+        $this->object->processTokenList($scanner->getTokenList());
+        $class = $this->object->getClass();
+        $methods = $class->getMethods();
+        $this->assertEquals(1, count($methods));
+        $this->assertEquals('myFunction', key($methods));
     }
 }
 
