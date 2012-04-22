@@ -5,13 +5,13 @@ class Schinken extends Wurst
      * hans
      * @var int 
      */
-    private accessible int hans
+    private property int hans
     
     /**
      * myCountable
      * @var Countable 
      */
-    private accessible Countable myCountable
+    private property Countable myCountable
     
     /**
      * wurst
@@ -31,27 +31,37 @@ class Schinken extends Wurst
      * @param string      wurst 
      * @return Schinken
      */
-    private hanswurst (MyInterface hans, string wurst = 'Schinken')
-        this.hans = hans
+    private hanswurst
+        @hans = hans
         self::wurst = wurst
-        this.anArray[] = 1
-        this.anArray[] = 2
-    
-        return this
+        @anArray[] = 1
+        @anArray[] = 2
 
     /**
      * final function
+     * 
+     * @param int nothing
      */
-    final someFunction ()
+    final someFunction
         this.hanswurst(1, "hanswurst")
-        a = ['b', var1, var2]
+        a = ['b', var1, nothing]
         return this.hans " " self::wurst
     
-    anotherMethod()
+    /**
+     * another method
+     * 
+     * @return void
+     */
+    anotherMethod
         if true
             echo "Hello World"
         else
             echo "World, Hello"
 
-    anotherMethodAgain ()
+    /**
+     * some method
+     * 
+     * @return void
+     */
+    anotherMethodAgain:
         echo "Hello World"
