@@ -41,7 +41,7 @@ class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
     /**
      * ensures that tokens can be added to the list of body tokens 
      */
-    public function testAddBodyLine()
+    public function testAddBodyTokens()
     {
         $content = 
 "/**
@@ -53,8 +53,34 @@ class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
         
         $token = new StringToken('T_STRING', 'myString', 0);
         $tokens = array($token);
-        $function->addBodyLine($tokens);
+        $function->addBodyTokens($tokens);
         $this->assertAttributeContains($token, "bodyTokens", $function);
+    }
+    
+    public function testSetType()
+    {
+        $content = 
+"/**
+ * test
+ */";
+        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
+        
+        $function = new PythoPhant_Reflection_Function('testFunction', $doc);
+        $function->setType('string');
+        $this->assertAttributeEquals('string', 'type', $function);
+    }
+    
+    public function testSetTypeWithReturnValueToken()
+    {
+        $content = 
+"/**
+ * test
+ */";
+        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
+        
+        $function = new PythoPhant_Reflection_Function('testFunction', $doc);
+        $function->setType(new ReturnValueToken(Token::T_RETURNVALUE, 'string', 0));
+        $this->assertAttributeEquals('string', 'type', $function);
     }
 }
     

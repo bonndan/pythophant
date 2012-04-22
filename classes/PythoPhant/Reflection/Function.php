@@ -4,14 +4,9 @@
  * 
  * representation of a class method
  */
-class PythoPhant_Reflection_Function extends PythoPhant_Reflection_ElementAbstract
+class PythoPhant_Reflection_Function 
+extends PythoPhant_Reflection_MemberAbstract
 {
-    /**
-     * modifiers, visibility
-     * @var string
-     */
-    private $modifiers = 'public';
-    
     /**
      * function params
      * @var PythoPhant_FunctionParam[] 
@@ -19,25 +14,15 @@ class PythoPhant_Reflection_Function extends PythoPhant_Reflection_ElementAbstra
     private $params = array();
     
     /**
-     * array of body tokens
-     * @var array 
-     */
-    private $bodyTokens = array();
-    
-    /**
      * constructor requires a name and a doc comment
      * 
      * @param string          $name
      * @param DocCommentToken $docComment
-     * @param string          $modifiers
      */
-    public function __construct($name, DocCommentToken $docComment, $modifiers = null)
+    public function __construct($name, DocCommentToken $docComment)
     {
         parent::__construct($name, $docComment);
         $this->setSignatureFromDocComment($docComment);
-        if ($modifiers !== null) {
-            $this->modifiers  = $modifiers;
-        }
     }
     
     /**
@@ -63,21 +48,5 @@ class PythoPhant_Reflection_Function extends PythoPhant_Reflection_ElementAbstra
     public function getParams()
     {
         return $this->params;
-    }
-    
-    /**
-     * add a collection of tokens to the body
-     * 
-     * @param array $tokens 
-     * 
-     * @return void
-     */
-    public function addBodyLine(array $tokens)
-    {
-        foreach ($tokens as $token) {
-            if ($token instanceof Token) {
-                array_push($this->bodyTokens, $token);
-            }
-        }
     }
 }

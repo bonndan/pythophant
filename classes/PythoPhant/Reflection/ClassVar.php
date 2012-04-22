@@ -4,14 +4,9 @@
  * 
  * representation of a class variable
  */
-class PythoPhant_Reflection_ClassVar extends PythoPhant_Reflection_ElementAbstract
+class PythoPhant_Reflection_ClassVar
+extends PythoPhant_Reflection_MemberAbstract
 {
-    /**
-     * variable type
-     * @var string|null
-     */
-    private $type = null;
-    
     /**
      * constructor requires a name and the doc comment as token
      * 
@@ -35,15 +30,6 @@ class PythoPhant_Reflection_ClassVar extends PythoPhant_Reflection_ElementAbstra
         if ($types !== null && !empty($types)) {
             $this->type = current($types);
         }
-    }
-    
-    /**
-     * returns the variable type
-     * @return string|null
-     */
-    public function getType()
-    {
-        return $this->type;
     }
     
     /**
