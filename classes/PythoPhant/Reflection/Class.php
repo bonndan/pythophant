@@ -33,6 +33,15 @@ extends PythoPhant_Reflection_Interface
     }
     
     /**
+     * get the declared class vars
+     * @return array 
+     */
+    public function getVars()
+    {
+        return $this->vars;
+    }
+    
+    /**
      * set the implemented interfaces
      * 
      * @param array $interfaces
