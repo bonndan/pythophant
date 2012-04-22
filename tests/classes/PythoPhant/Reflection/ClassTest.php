@@ -1,11 +1,10 @@
 <?php 
-
-require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/bootstrap.php';
 
 /**
- * Test class for PythoPhant_Class.
+ * Test class for PythoPhant_Reflection_Class.
  */
-class PythoPhant_ClassTest extends PHPUnit_Framework_TestCase
+class PythoPhant_Reflection_ClassTest extends PHPUnit_Framework_TestCase
 {
     /**
      * create an instance
@@ -20,7 +19,7 @@ class PythoPhant_ClassTest extends PHPUnit_Framework_TestCase
  * @author Daniel Pozzi <bonndan76@googlemail.com>
  */";
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
-        return new PythoPhant_Class('TestClass', $doc);
+        return new PythoPhant_Reflection_Class('TestClass', $doc);
     }
     
     /**
@@ -42,7 +41,7 @@ class PythoPhant_ClassTest extends PHPUnit_Framework_TestCase
  * @var string
  */";
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
-        $var = new PythoPhant_ClassVar('myVar', $doc);
+        $var = new PythoPhant_Reflection_ClassVar('myVar', $doc);
         
         $class = $this->getClass();
         $class->addVar($var);
@@ -58,7 +57,7 @@ class PythoPhant_ClassTest extends PHPUnit_Framework_TestCase
  * some thing
  */";
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
-        $method = new PythoPhant_Function('myFunction', $doc);
+        $method = new PythoPhant_Reflection_Function('myFunction', $doc);
         
         $class = $this->getClass();
         $class->addMethod($method);
