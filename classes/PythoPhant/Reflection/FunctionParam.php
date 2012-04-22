@@ -7,12 +7,11 @@
  * 
  * @author Daniel Pozzi <bonndan76@googlemail.com>
  */
-class PythoPhant_FunctionParam
+class PythoPhant_Reflection_FunctionParam
 {
-
     /**
      * type hint represented as token
-     * @var ReturnValueToken 
+     * @var string 
      */
     private $type;
 
