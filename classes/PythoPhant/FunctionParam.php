@@ -43,6 +43,24 @@ class PythoPhant_FunctionParam
     }
     
     /**
+     * param type
+     * @return string|null 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+    
+    /**
+     * param variable name
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
      * return the data as 
      * 
      * @return TokenList
