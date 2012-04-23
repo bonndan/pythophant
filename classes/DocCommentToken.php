@@ -4,6 +4,7 @@
  * DocCommentToken
  * 
  * token representing a doc comment
+ * 
  * @author Daniel Pozzi <bonndan76@googlemail.com>
  */
 class DocCommentToken extends PHPToken
@@ -101,7 +102,7 @@ class DocCommentToken extends PHPToken
             }
 
             if ($line[0] != '@') {
-                $this->longDesc .= $line . PHP_EOL;
+                $this->appendToLongDescription($line . PHP_EOL);
             } else {
                 $this->parseAnnotationLine($line);
             }
@@ -211,6 +212,16 @@ class DocCommentToken extends PHPToken
     public function getLongDescription()
     {
         return $this->longDesc;
+    }
+    
+    /**
+     * public function append something to the long description
+     * 
+     * @param string $text text
+     */
+    public function appendToLongDescription($text)
+    {
+        $this->longDesc .= $text;
     }
     
     /**
