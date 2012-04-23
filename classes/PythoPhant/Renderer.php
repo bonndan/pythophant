@@ -1,79 +1,32 @@
 <?php
 /**
- * PythoPhant_Renderer
- * 
- * generic token renderer
+ * Interface for renderers
  *  
+ * @package PythoPhant
  */
-class PythoPhant_Renderer implements Renderer
+interface PythoPhant_Renderer
 {
     /**
-     * list of tokens of a file
-     * @var TokenList 
+     * inject the tokens
+     * 
+     * @param PythoPhant_Reflection_Element $element
      */
-    private $tokenList;
+    public function setReflectionElement(PythoPhant_Reflection_Element $element);
     
     /**
-     * debug mode
-     * @var bool 
+     * enable or disable debugging mode
+     * 
+     * @param bool $debug 
+     * 
+     * @return Renderer
      */
-    private $debug = false;
-    
-    /**
-     * inject the lines
-     * 
-     * @param array $lines 
-     */
-    public function setTokenList(TokenList $tokenList)
-    {
-        $this->tokenList = $tokenList;
-    }
-    
-    /**
-     * trigger debug
-     * 
-     * @param bool $debug
-     * 
-     * @return PythoPhant_Renderer 
-     */
-    public function enableDebugging($debug)
-    {
-        $this->debug = (bool)$debug;
-        return $this;
-    }
-    
-    /**
-     * add a watermark comment to the first token
-     * 
-     * @param string $watermarkText 
-     * 
-     * @return void
-     */
-    public function addWaterMark($watermarkText)
-    {
-        $openTag = $this->tokenList[0];
-        $openTag->setContent(
-            trim($openTag->getContent()) . " /** $watermarkText */" . PHP_EOL
-        );
-        
-        return $this;
-    }
+    public function enableDebugging($debug);
     
     /**
      * turns all tokens into their php equivalent
      * 
      * @return string 
      */
-    public function getPHPSource()
-    {
-        $buffer = "";
-        foreach ($this->tokenList as $token) {
-            if ($this->debug) {
-                $buffer .= $token->getTokenName();
-            }
-            $buffer .= $token->getContent();
-        }
-        
-        return $buffer;
-    }
+    public function getPHPSource();
+    
 }
