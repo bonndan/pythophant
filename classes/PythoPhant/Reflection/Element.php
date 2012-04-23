@@ -20,4 +20,11 @@ interface PythoPhant_Reflection_Element
      * @return string 
      */
     public function getName();
+    
+    /**
+     * get the doc comment
+     * 
+     * @return DocCommentToken
+     */
+    public function getDocComment();
 }

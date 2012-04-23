@@ -43,4 +43,14 @@ implements PythoPhant_Reflection_Element
     {
         return $this->name;
     }
+    
+    /**
+     * get the doc comment
+     * 
+     * @return DocCommentToken
+     */
+    public function getDocComment()
+    {
+        return $this->docComment;
+    }
 }
