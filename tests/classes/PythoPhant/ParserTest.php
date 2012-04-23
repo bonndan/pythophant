@@ -156,8 +156,33 @@ class MyTest
         $this->assertArrayHasKey('aVar', $vars);
         $this->assertArrayHasKey('anArray', $vars);
     }
+
+    public function testProcessTokenListFindsConstant()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+
+    /**
+     * some constant
+     * @var string
+     */
+    const MY_CONST = 'test'
     
-                /**
+";
+        $scanner->scanSource($source);
+        $tokenList = $scanner->getTokenList();
+        $this->object->processTokenList($tokenList);
+        $class = $this->object->getReflectionElement();
+        $consts = $class->getConstants();
+        $this->assertEquals(1, count($consts));
+        $this->assertArrayHasKey('MY_CONST', $consts);
+    }
+    
+    /**
      * 
      */
     public function testProcessTokenListFindsClassMethods()

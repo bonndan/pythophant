@@ -96,19 +96,22 @@ class PythoPhant_Parser implements Parser
     /**
      * make lines based on newline tokens
      * 
-     * @return void
-     * @todo return array, remove $this->lines class var
+     * @param TokenList $tokenList
+     * 
+     * @return array
      */
-    private function makeLines()
+    private function makeLines(TokenList $tokenList)
     {
         $currentLine = 1;
-        $this->lines = array();
-        foreach ($this->tokenList as $token) {
-            $this->lines[$currentLine][] = $token;
+        $lines = array();
+        foreach ($tokenList as $token) {
+            $lines[$currentLine][] = $token;
             if ($token instanceof NewLineToken) {
                 $currentLine++;
             }
         }
+        
+        return $lines;
     }
     
     /**
@@ -123,7 +126,7 @@ class PythoPhant_Parser implements Parser
         $implements = array();
         $docComment = new DocCommentToken('T_DOC_COMMENT', '', 0);
 
-        $this->makeLines();
+        $this->lines = $this->makeLines($this->tokenList);
         foreach ($this->lines as $line) {
             if ($line[0] instanceof IndentationToken) {
                 continue;
@@ -176,9 +179,9 @@ class PythoPhant_Parser implements Parser
      * returns the representation of the class or interface which is currently
      * built
      * 
-     * @return PythoPhant_Reflection_Class|PythoPhant_Reflection_Interface|null
+     * @return PythoPhant_Reflection_Element
      */
-    public function getClass()
+    public function getReflectionElement()
     {
         return $this->class;
     }
@@ -188,7 +191,7 @@ class PythoPhant_Parser implements Parser
      */
     private function findClassElements()
     {
-        $this->makeLines();
+        $this->lines = $this->makeLines($this->tokenList);
         $docComment = null;
         $declaration = null;
         foreach ($this->lines as $line) {
@@ -222,35 +225,51 @@ class PythoPhant_Parser implements Parser
      * set the corresponding currentElement
      * 
      * @param array           $line       tokens of the declaration line
-     * @param DocCommentToken $docComment 
+     * @param DocCommentToken $docComment doc comment token
+     * 
+     * @return void
      */
     private function handleElementDeclaration(array $line, DocCommentToken $docComment)
     {
         $modifiers = array();
         $returnValue = null;
-
-        if ($this->tokenList->isTokenIncluded($line, array(Token::T_CONST))) {
-            //const
-            return;
-        }
-
+        $body = array();
+        
         if ($docComment->getAnnotation('var') !== null) {
-            $type = 'PythoPhant_Reflection_ClassVar';
-            $setter = 'addVar';
+            if ($line[1]->getContent() == 'const') {
+                $type = 'PythoPhant_Reflection_ClassConst';
+                $setter = 'addConstant';
+                $name = $line[3]->getContent(); /* @todo not nice */
+            } else {
+                $type = 'PythoPhant_Reflection_ClassVar';
+                $setter = 'addVar';
+            }
+            
         } else {
             $type = 'PythoPhant_Reflection_Function';
             $setter = 'addMethod';
         }
         
-        foreach ($line as $token) {
+        foreach ($line as $i => $token) {
             if ($this->tokenList->isTokenIncluded(array($token), PythoPhant_Grammar::$modifiers)) {
                 $modifiers[] = $token;
             }
             if ($token instanceof ReturnValueToken) {
                 $returnValue = $token;
             }
+            
             if ($token instanceof StringToken) {
                 $name = $token->getContent();
+            }
+            
+            /*
+             * break if body assignment is found (vars and consts) 
+             */
+            if ($token->getContent() == PythoPhant_Grammar::T_ASSIGN) {
+                for($j = $i - 1; $j<count($line); $j++) {
+                    $body[] = $line[$j];
+                }
+                break;
             }
         }
         
@@ -264,6 +283,9 @@ class PythoPhant_Parser implements Parser
         }
         if (count($modifiers) > 0) {
             $element->setModifiers($modifiers);
+        }
+        if (count($body) > 0) {
+            $element->addBodyTokens($body);
         }
         
         $this->class->$setter($element);
@@ -295,7 +317,7 @@ class PythoPhant_Parser implements Parser
      * - inject opening braces
      * - inject function declarations
      */
-    public function parseLineEnds()
+    public function __parseLineEnds()
     {
         $this->makeLines();
         foreach ($this->lines as $index => $line) {
@@ -487,10 +509,11 @@ class PythoPhant_Parser implements Parser
      */
     public function parseBlocks(TokenList $tokenList)
     {
-        $this->makeLines();
+        $lines = $this->makeLines($tokenList);
 
         $currentLevel = 0;
-        foreach ($this->lines as $count => $line) {
+        $nestingLevel = 0;
+        foreach ($lines as $count => $line) {
             $nestingLevel = 0;
             if ($line[0] instanceof IndentationToken) {
                 $nestingLevel = $line[0]->getNestingLevel();
@@ -504,7 +527,7 @@ class PythoPhant_Parser implements Parser
                     $currentLevel = $nestingLevel;
                     continue;
                 }
-                $prevLine = $this->lines[$count - 1];
+                $prevLine = $lines[$count - 1];
                 $lastToken = $prevLine[count($prevLine) - 1];
                 if ($lastToken instanceof NewLineToken) {
                     $tok = $lastToken;
@@ -554,9 +577,10 @@ class PythoPhant_Parser implements Parser
     /**
      * injects indentation and curly brace
      * 
-     * @param Token  $token
-     * @param int    $nestingLevel 
-     * @param string $content 
+     * @param TokenList  $tokenList
+     * @param Token      $token
+     * @param int        $nestingLevel 
+     * @param string     $content 
      * 
      * @return StringToken
      */
