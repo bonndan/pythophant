@@ -260,4 +260,13 @@ class DocCommentToken extends PHPToken
         return $this->$name;
     }
 
+    /**
+     * rebuild the content by the parsed content
+     * 
+     * @todo rebuild the whole content, insert missing dollar signs for vars 
+     */
+    public function getRebuiltContent()
+    {
+        
+    }
 }
