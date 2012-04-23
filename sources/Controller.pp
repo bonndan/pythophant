@@ -9,6 +9,29 @@ class XYZ_Controller extends Zend_Controller_Action
      */
     var someVar
 
+
+    "function to test something"
+    private void myFunction 
+        @param string myparam = null "an important param"
+        @param int    myparam1 = 1   "an important param too"
+        myparam1 = strtolower: myparam1
+
+        return myparam
+    
+    "function to test something"
+    @param string myparam = null "an important param"
+    @param int    myparam1 = 1   "an important param too"
+    private void myFunction2
+        
+        myparam1 = strtolower: myparam1
+
+        return myparam
+    
+    private void myFunction2: string myParam = null
+
+
+
+
     public addAction(SomeInterface xyz)
         json = [12, 13]
         json[3] = 'somevar'

@@ -21,7 +21,7 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         $this->scanner = $this->getMockBuilder('PythoPhant_Scanner')->disableOriginalConstructor()->getMock();
         $this->parser = $this->getMockBuilder('PythoPhant_Parser')->disableOriginalConstructor()->getMock();
-        $this->renderer = $this->getMock('PythoPhant_Renderer');
+        $this->renderer = $this->getMock('PythoPhant_RenderHelper');
         $this->converter = new PythoPhant_Converter($this->scanner, $this->parser, $this->renderer);
     }
     
@@ -40,8 +40,11 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
             ->method('getTokenList')
             ->will($this->returnValue($this->getMock('TokenList')));
         $this->parser->expects($this->once())->method('processTokenList');
+        $this->parser->expects($this->once())
+            ->method('getReflectionElement')
+            ->will($this->returnValue($this->getMock('PythoPhant_Reflection_Element')));
         $this->renderer->expects($this->once())->method('enableDebugging');
-        $this->renderer->expects($this->once())->method('setTokenList');
+        $this->renderer->expects($this->once())->method('setReflectionElement');
         $this->renderer->expects($this->once())->method('addWaterMark');
         $this->renderer->expects($this->once())->method('getPHPSource');
         $source->expects($this->once())->method('writeTarget');

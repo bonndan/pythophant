@@ -61,7 +61,7 @@ class PythoPhant
     {
         $scanner = new PythoPhant_Scanner($tokenFactory = new PythoPhant_TokenFactory());
         $parser = new PythoPhant_Parser($tokenFactory);
-        $renderer = new PythoPhant_Renderer();
+        $renderer = new PythoPhant_RenderHelper();
 
         return new PythoPhant_Converter($scanner, $parser, $renderer);
     }

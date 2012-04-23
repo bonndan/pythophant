@@ -15,7 +15,7 @@ abstract class PythoPhant_AbstractSubject
     /**
      * the constructor initialises the observer object storage 
      */
-    __construct()
+    __construct
         @observers = new SplObjectStorage()
     
     /**
@@ -25,16 +25,18 @@ abstract class PythoPhant_AbstractSubject
      * 
      * @return \PythoPhant_DirectoryWatcher 
      */
-    attach: PythoPhant_Observer observer
+    attach
         @observers.attach: observer
         return this
     
     /**
-     *
+     * detach an observer
+     * 
      * @param PythoPhant_Observer $observer
+     * 
      * @return \PythoPhant_DirectoryWatcher 
      */
-    detach: PythoPhant_Observer observer
+    detach
         @observers.detach: observer
         return this
     
@@ -43,6 +45,6 @@ abstract class PythoPhant_AbstractSubject
      * 
      * @param PythoPhant_Event $event 
      */
-    protected notify: PythoPhant_Event event
+    protected notify
         foreach @observers as observer
             observer.update: event
