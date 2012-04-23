@@ -38,6 +38,23 @@ class PythoPhant_Reflection_InterfaceTest extends PHPUnit_Framework_TestCase
         $this->assertContains($method, $class->getMethods());
     }
     
+    /**
+     * test class var addition 
+     */
+    public function testAddConstant()
+    {
+        $content = "/**
+ * some thing
+ * @var string
+ */";
+        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
+        $const = new PythoPhant_Reflection_ClassConst('MY_CONST', $doc);
+        
+        $class = $this->getClass();
+        $class->addConstant($const);
+        $this->assertContains($const, $class->getConstants());
+    }
+    
     public function testSetExtendsWithString()
     {
         $class = $this->getClass();

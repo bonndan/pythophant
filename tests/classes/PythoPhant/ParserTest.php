@@ -54,7 +54,7 @@ class MyTest
         $scanner->scanSource($source);
         
         $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getClass();
+        $class = $this->object->getReflectionElement();
         $this->assertInstanceOf('PythoPhant_Reflection_Class', $class);
         $this->assertEquals('MyTest', $class->getName() );
     }
@@ -76,7 +76,7 @@ extends Something
         $scanner->scanSource($source);
         
         $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getClass();
+        $class = $this->object->getReflectionElement();
         $this->assertAttributeEquals('Something', 'extends', $class);
     }
     
@@ -97,7 +97,7 @@ implements Something, SomeOtherThing
         $scanner->scanSource($source);
         
         $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getClass();
+        $class = $this->object->getReflectionElement();
         $this->assertAttributeContains('Something', 'implements', $class);
         $this->assertAttributeContains('SomeOtherThing', 'implements', $class);
     }
@@ -134,13 +134,12 @@ class MyTest
  * doc comment
  */
 class MyTest
-extends Something
 
     /**
      * some description
      * @var string
      */
-    private aVar
+    private aVar = 1
     
     /**
      * more description
@@ -149,12 +148,13 @@ extends Something
     private static anArray
 ";
         $scanner->scanSource($source);
-        
-        $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getClass();
+        $tokenList = $scanner->getTokenList(); 
+        $this->object->processTokenList($tokenList);
+        $class = $this->object->getReflectionElement();
         $vars = $class->getVars();
         $this->assertEquals(2, count($vars));
-        $this->assertEquals('aVar', key($vars));
+        $this->assertArrayHasKey('aVar', $vars);
+        $this->assertArrayHasKey('anArray', $vars);
     }
     
                 /**
@@ -181,7 +181,7 @@ extends Something
         $scanner->scanSource($source);
         
         $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getClass();
+        $class = $this->object->getReflectionElement();
         $methods = $class->getMethods();
         $this->assertEquals(1, count($methods));
         $this->assertEquals('myFunction', key($methods));

@@ -11,10 +11,29 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
     protected $extends = null;
     
     /**
-     * nall class methods
+     * all class constants
+     * @var array
+     */
+    protected $const = array();
+    
+    /**
+     * all class methods
      * @var array
      */
     protected $methods = array();
+    
+    /**
+     * add a class constant
+     * 
+     * @param PythoPhant_Reflection_ClassConst $const
+     * 
+     * @return PythoPhant_Reflection_Class 
+     */
+    public function addConstant(PythoPhant_Reflection_ClassConst $const)
+    {
+        $this->const[$const->getName()] = $const;
+        return $this;
+    }
     
     /**
      * add a method
@@ -26,6 +45,16 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
     {
         $this->methods[$method->getName()] = $method;
         return $this;
+    }
+    
+    /**
+     * return all methods
+     * 
+     * @return array 
+     */
+    public function getConstants()
+    {
+        return $this->const;
     }
     
     /**
