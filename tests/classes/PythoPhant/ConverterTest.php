@@ -87,16 +87,23 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
         $this->converter->convert($source);
     }
     
+    /**
+     * ensure that update() triggers conversion 
+     */
     public function testUpdate()
     {
-        $mock = $this->getMockBuilder('PythoPhant_Event_FileChanged')->disableOriginalConstructor()->getMock();
+        $mock = $this->getMockBuilder('PythoPhant_Event_FileChanged')
+            ->disableOriginalConstructor()
+            ->getMock();
         $mock->expects($this->once())->method('getPath')
             ->will($this->returnValue(dirname(PATH_TEST) . '/sources/test.pp'));
         
         $this->scanner->expects($this->once())
             ->method('getTokenList')
             ->will($this->returnValue($this->getMock('TokenList')));
-        
+        $this->parser->expects($this->once())
+            ->method('getReflectionElement')
+            ->will($this->returnValue($this->getMock('PythoPhant_Reflection_Element')));
         $res = $this->converter->update($mock);
         $this->assertEquals($this->converter, $res);
     }
