@@ -207,8 +207,10 @@ class TokenList implements Iterator, Countable, ArrayAccess
     /**
      * ArrayAccess methods
      */
-    
-    public function offsetExists($offset){return isset($this->tokens[$offset]);}
+    public function offsetExists($offset)
+    {
+        return $offset >= 0 && isset($this->tokens[$offset]);
+    }
     
     /**
      *
@@ -280,5 +282,94 @@ class TokenList implements Iterator, Countable, ArrayAccess
         }
         
         return $position;
+    }
+    
+    /**
+     * make lines based on newline tokens
+     * 
+     * @return array
+     */
+    public function makeLines()
+    {
+        $currentLine = 1;
+        $lines = array();
+        foreach ($this->tokens as $token) {
+            $lines[$currentLine][] = $token;
+            if ($token instanceof NewLineToken) {
+                $currentLine++;
+            }
+        }
+        
+        return $lines;
+    }
+    
+    /**
+     * gets the next token of a given type and search direction
+     * 
+     * @param string $type
+     * @param Token  $token
+     * @param int    $incrementor
+     * @param bool   $newLineEnds
+     * 
+     * @return null|Token 
+     */
+    private function getAdjacentTokenOfType($type, Token $token, $incrementor, $newLineEnds = true)
+    {
+        $ownIndex = $this->getTokenIndex($token);
+        $index = $ownIndex + $incrementor;
+        
+        while($this->offsetExists($index)) {
+            $token = $this->offsetGet($index);
+            if ($newLineEnds === true && $token instanceof NewLineToken) {
+                return null;
+            }
+            if ($token instanceof $type) {
+                return $token;
+            }
+            $index += $incrementor;
+        }
+        
+        return null;
+    }
+    
+    /**
+     * search for a previous token of a type
+     * 
+     * @param string $type        class or interface name
+     * @param Token  $token       token instance (reference position)
+     * @param bool   $newLineEnds flag whether eol ends the search
+     * 
+     * @return null|Token 
+     */
+    public function getPreviousTokenOfType($type, Token $token, $newLineEnds = true)
+    {
+        return $this->getAdjacentTokenOfType($type, $token, -1, $newLineEnds);
+    }
+    
+    /**
+     * search for a previous token of a type
+     * 
+     * @param string $type        class or interface name
+     * @param Token  $token       token instance (reference position)
+     * @param bool   $newLineEnds flag whether eol ends the search
+     * 
+     * @return null|Token 
+     */
+    public function getNextTokenOfType($type, Token $token, $newLineEnds = true)
+    {
+        return $this->getAdjacentTokenOfType($type, $token, 1, $newLineEnds);
+    }
+    
+    /**
+     * Returns the previous indentation token unless a newline token is found or
+     * the list's first element is reached.
+     * 
+     * @param Token $token
+     * 
+     * @return IndentationToken|null
+     */
+    public function getLineIndentationToken(Token $token)
+    {
+        return $this->getPreviousTokenOfType('IndentationToken', $token);
     }
 }

@@ -29,10 +29,35 @@ class TokenListTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
     }
-    /**
-     * testPushToken().
+    
+        /**
+     * returns a token list filled with various tokens, containing the passed
+     * token in its middle
+     * 
+     * @param Token $token
+     * @return TokenList 
      */
-    public function testPushToken()
+    public function getFilledTokenListContaining(Token $token)
+    {
+        $tokenList = new TokenList();
+        
+        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
+        $tokenList->pushToken(new CustomGenericToken('T_LOGICAL_AND', 'and', 1));
+        $tokenList->pushToken(new StringToken('T_STRING', 'myVar', 1));
+        $tokenList->pushToken(new ColonToken('T_COLON', ':', 1));
+        $tokenList->pushToken(new PHPToken(Token::T_WHITESPACE, 'whitespaceBefore', 0));
+        $tokenList->pushToken($token);
+        $tokenList->pushToken(new PHPToken(Token::T_WHITESPACE, 'whitespaceAfter', 0));
+        $tokenList->pushToken(new CustomGenericToken('start', 'test', 0));
+        $tokenList->pushToken(new StringToken('T_STRING', 'myVar2', 1));
+        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
+        
+        return $tokenList;
+    }
+    
+    /**
+     */
+    public function testPushTokenIsInsertedAtEnd()
     {
         $tokenMock = $this->getTokenMock();
         $this->assertFalse($this->object->offsetExists(0));
@@ -42,9 +67,6 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($tokenMock, $this->object->offsetGet(0));
     }
 
-    /**
-     * testInjectToken().
-     */
     public function testInjectTokenWithIntPosition()
     {
         $tokenMock = $this->getTokenMock();
@@ -58,9 +80,6 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($tokenMock, $this->object->offsetGet(1));
     }
     
-    /**
-     * testInjectToken().
-     */
     public function testInjectTokenWithTokenPosition()
     {
         $tokenMock = $this->getTokenMock();
@@ -74,9 +93,6 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($tokenMock, $this->object->offsetGet(1));
     }
 
-    /**
-     * 
-     */
     public function testGetNextNonWhitespace1()
     {
         $token = new StringToken('T_STRING', 'my', 1);
@@ -90,8 +106,6 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($string, $res);
     }
     
-    /**
-     */
     public function testGetNextNonWhitespaceNull()
     {
         $token = new StringToken('T_STRING', 'my', 1);
@@ -163,30 +177,7 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertContains($token3, $res);
     }
     
-    /**
-     * returns a token list filled with various tokens, containing the passed
-     * token in its middle
-     * 
-     * @param Token $token
-     * @return TokenList 
-     */
-    public function getFilledTokenListContaining(Token $token)
-    {
-        $tokenList = new TokenList();
-        
-        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
-        $tokenList->pushToken(new CustomGenericToken('T_LOGICAL_AND', 'and', 1));
-        $tokenList->pushToken(new StringToken('T_STRING', 'myVar', 1));
-        $tokenList->pushToken(new ColonToken('T_COLON', ':', 1));
-        $tokenList->pushToken(new PHPToken(Token::T_WHITESPACE, 'whitespaceBefore', 0));
-        $tokenList->pushToken($token);
-        $tokenList->pushToken(new PHPToken(Token::T_WHITESPACE, 'whitespaceAfter', 0));
-        $tokenList->pushToken(new CustomGenericToken('start', 'test', 0));
-        $tokenList->pushToken(new StringToken('T_STRING', 'myVar2', 1));
-        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
-        
-        return $tokenList;
-    }
+
     
     public function testGetAdjacentTokenWithPositiveOffset()
     {
@@ -237,5 +228,43 @@ class TokenListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('myVar2', $tokenList->getAdjacentToken($token, 2)->getContent());
     }
     
+    public function testMakeLines()
+    {
+        $token = new NewLineToken('T_NEWLINE', PHP_EOL, 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $res = $tokenList->makeLines();
+        $this->assertEquals(3, count($res));
+    }
+    
+    public function testGetLineIndentationToken()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        $expected = new IndentationToken('T_INDENT', '    ', 0);
+        $tokenList->injectToken($expected, 1);
+        
+        $res = $tokenList->getLineIndentationToken($token);
+        $this->assertEquals($expected, $res);
+    }
+    
+    public function testGetLineIndentationTokenNotFound()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = $this->getFilledTokenListContaining($token);
+        
+        $res = $tokenList->getLineIndentationToken($token);
+        $this->assertNull($res);
+    }
+    
+    public function testGetLineIndentationTokenReachesStartOfLists()
+    {
+        $token = new PHPToken('test', 'test', 1);
+        $tokenList = new TokenList();
+        $tokenList->pushToken($token);
+        
+        $res = $tokenList->getLineIndentationToken($token);
+        $this->assertNull($res);
+    }
 }
 
