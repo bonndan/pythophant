@@ -93,4 +93,26 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
         $custom = $this->token->getAnnotation('customAnnotation');
         $this->assertEquals('test123', $custom[0]);
     }
+    
+    public function testIsNotMethodComment()
+    {
+                $content = 
+"/**
+ * test
+ * @var string
+ */";
+        $this->token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        $this->assertFalse($this->token->isMethodComment());
+    }
+    
+    public function testIsMethodComment()
+    {
+                $content = 
+"/**
+ * test
+ * @return string
+ */";
+        $this->token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        $this->assertTrue($this->token->isMethodComment());
+    }
 }

@@ -261,6 +261,17 @@ class DocCommentToken extends PHPToken
     }
 
     /**
+     * check if the comment is for a class method. Determined by the presence
+     * of a "var" annotation
+     * 
+     * @return boolean
+     */
+    public function isMethodComment()
+    {
+        return count($this->getAnnotation('var')) == 0;
+    }
+    
+    /**
      * rebuild the content by the parsed content
      * 
      * @todo rebuild the whole content, insert missing dollar signs for vars 
