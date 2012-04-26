@@ -7,7 +7,7 @@ require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
  * 
  * .
  */
-class PythoPhant_RendererHelperTest extends PHPUnit_Framework_TestCase
+class PythoPhant_RenderHelperTest extends PHPUnit_Framework_TestCase
 {
     /**
      * sut
@@ -60,7 +60,7 @@ class PythoPhant_RendererHelperTest extends PHPUnit_Framework_TestCase
         
         $res = $this->renderer->getPHPSource();
         $this->assertContains('<?php', $res);
-        $this->assertContains('class Test', $res);
+        $this->assertContains('class test', $res, $res);
     }
 }
    
