@@ -47,6 +47,8 @@ interface Token
      * @param string $tokenName
      * @param string $content
      * @param int    $line
+     * 
+     * @todo tokenName is only really needed for PHPToken
      */
     function __construct($tokenName, $content, $line);
 
