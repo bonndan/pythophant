@@ -199,8 +199,18 @@ abstract class PythoPhant_Grammar
     );
     
     /**
+     * block opener tokens
+     * @var array 
+     */
+    public static $blockOpeners = array(
+        Token::T_OPEN_BRACE,
+        Token::T_JSON_OPEN_ARRAY,
+        Token::T_JSON_OPEN_OBJECT,
+    );
+    
+    /**
      * block closing tokens
-     * @var type 
+     * @var array 
      */
     public static $blockClosers = array(
         Token::T_CLOSE_BRACE,
