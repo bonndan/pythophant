@@ -13,6 +13,16 @@ abstract class PythoPhant_Grammar
     
     const T_ASSIGN = '=';
     const T_IF = 'if';
+    const T_ELSE = 'else';
+    const T_ELSEIF = 'elseif';
+    const T_FOR = 'for';
+    const T_FOREACH = 'foreach';
+    const T_WHILE = 'while';
+    const T_SWITCH = 'switch';
+    const T_CASE = 'case';
+    const T_TRY = 'try';
+    const T_CATCH = 'catch';
+    
     const T_IN = 'in'; 
     const T_IS = 'is';
     const T_OPEN_BRACE = '(';
