@@ -50,4 +50,44 @@ class StringTokenTest extends PHPUnit_Framework_TestCase
         $this->token->affectTokenList($list);
         $this->assertEquals('$a', $this->token->getContent());
     }
+    
+    public function testClassVarNameIsVariable()
+    {
+        $list = new TokenList();
+        $token = new StringToken('T_STRING', 'myVar', 1);
+                $content = 
+"/**
+ * test
+ *
+ * @var string
+ */";
+        $list->pushToken(new DocCommentToken('T_DOC_COMMENT', $content, 1));
+        $list->pushToken(new NewLineToken('T_NEWLINE', PHP_EOL, 1));
+        $list->pushToken(IndentationToken::create(1));
+        $list->pushToken(new ReturnValueToken('T_RETURNVALUE', 'private', 1));
+        $list->pushToken($token);
+        
+        $token->affectTokenList($list);
+        $this->assertContains('$', $token->getContent());
+    }
+    
+    public function testClassMethodNameIsNotVariable()
+    {
+        $list = new TokenList();
+        $token = new StringToken('T_STRING', 'myFunction', 1);
+                $content = 
+"/**
+ * test
+ *
+ * @return string
+ */";
+        $list->pushToken(new DocCommentToken('T_DOC_COMMENT', $content, 1));
+        $list->pushToken(new NewLineToken('T_NEWLINE', PHP_EOL, 1));
+        $list->pushToken(IndentationToken::create(1));
+        $list->pushToken(new ReturnValueToken('T_RETURNVALUE', 'private', 1));
+        $list->pushToken($token);
+        
+        $token->affectTokenList($list);
+        $this->assertNotContains('$', $token->getContent());
+    }
 }

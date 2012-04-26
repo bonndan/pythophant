@@ -320,7 +320,7 @@ class TokenList implements Iterator, Countable, ArrayAccess
         
         while($this->offsetExists($index)) {
             $token = $this->offsetGet($index);
-            if ($newLineEnds === true && $token instanceof NewLineToken) {
+            if ($type !== 'NewLineToken' && $newLineEnds === true && $token instanceof NewLineToken) {
                 return null;
             }
             if ($token instanceof $type) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * StringToken 
  * 
@@ -7,6 +8,7 @@
  */
 class StringToken extends CustomGenericToken
 {
+
     /**
      * if the next token in list is a whitespace, it will be nulled
      * 
@@ -30,64 +32,80 @@ class StringToken extends CustomGenericToken
     {
         /**
          * check for implements, then its just a class name
-         * @todo move code, remove special "implements" rule
+         * @todo remove special "implements" rule
          */
         $first = $this;
-        while($token = $tokenList->getPreviousNonWhitespace($first)) {
+        while ($token = $tokenList->getPreviousNonWhitespace($first)) {
             $first = $token;
         }
         if ($first->getTokenName() == 'T_IMPLEMENTS') {
             return;
         }
-        
+
+        /*
+         * class members 
+         */
+        $preCondition = false;
+        $indent = $tokenList->getLineIndentationToken($this);
+        if ($indent !== null && $indent->getNestingLevel() == 1) {
+            $newline = $tokenList->getPreviousTokenOfType('NewLineToken', $this);
+            $docComment = $tokenList->getAdjacentToken($newline, -1);
+            if ($docComment instanceof DocCommentToken) {
+                if ($docComment->isMethodComment()) {
+                    return;
+                } else {
+                    $preCondition = true;
+                }
+            }
+        }
+
         /**
          * token before 
          */
         $previous = $tokenList->getPreviousNonWhitespace($this);
         $preVariableIndicators = array_merge(
-            PythoPhant_Grammar::$preVariableIndicators,
-            PythoPhant_Grammar::$controls,
-            PythoPhant_Grammar::$casts
+            PythoPhant_Grammar::$preVariableIndicators, PythoPhant_Grammar::$controls, PythoPhant_Grammar::$casts
         );
         $preCondition = $tokenList->isTokenIncluded(array($previous), $preVariableIndicators);
-        
+
+
         /**
          * token after 
          */
         $next = $tokenList->getNextNonWhitespace($this);
-        
+
         $postCondition = $tokenList->isTokenIncluded(
-            array($next),
-            PythoPhant_Grammar::$postVariableIndicators
+            array($next), PythoPhant_Grammar::$postVariableIndicators
         );
 
-        if(
-            ($preCondition && $postCondition) 
+        if (
+            ($preCondition && $postCondition)
             || (is_null($previous) && $postCondition)
             || ($preCondition && is_null($next))
         ) {
             $this->tokenName = Token::T_VARIABLE;
             if (!$previous || $previous->getTokenName() != Token::T_MEMBER) {
-                $this->content = '$'.$this->content;
+                $this->content = '$' . $this->content;
             }
         }
-        
+
         /**
          * class var declaration 
          */
         if (!$previous || $this->tokenName != Token::T_VARIABLE) {
             return;
         }
-        
+
         /**
          * return type cant be rendered 
          */
         $preprevious = $tokenList->getPreviousNonWhitespace($previous);
-        if ($previous instanceof StringToken 
+        if ($previous instanceof StringToken
             && $preprevious instanceof Token
             && in_array($preprevious->getTokenName(), PythoPhant_Grammar::$modifiers)
         ) {
             $preprevious->setContent('');
         }
     }
+
 }
