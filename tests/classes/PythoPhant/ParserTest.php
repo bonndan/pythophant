@@ -198,6 +198,7 @@ extends Something
     /**
      * some description
      * @param string myString
+     * @return void
      */
     private myFunction
         echo 'test'
@@ -210,6 +211,36 @@ extends Something
         $methods = $class->getMethods();
         $this->assertEquals(1, count($methods));
         $this->assertEquals('myFunction', key($methods));
+    }
+    
+    /**
+     * testing of a function body
+     */
+    public function testParseBlocks()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest
+extends Something
+
+    /**
+     * some description
+     * @param string myString
+     */
+    myFunction:
+        if something == true
+            echo 'Test'
+        else
+            echo 'No Test'
+
+";
+        $scanner->scanSource($source);
+        
+        $this->object->processTokenList($scanner->getTokenList());
+        $class = $this->object->getReflectionElement();
     }
 }
 
