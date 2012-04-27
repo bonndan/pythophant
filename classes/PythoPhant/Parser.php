@@ -293,41 +293,6 @@ class PythoPhant_Parser implements Parser
     }
 
     /**
-     * check if a line is a block declaration
-     * 
-     * - injects opening and closing braces (unless "else" is used)
-     * 
-     * @param array     $line      Token[]
-     * @param TokenList $tokenList 
-     * 
-     * @return boolean 
-     */
-    private function handleControls(array $line, TokenList $tokenList)
-    {
-        $found = false;
-        foreach ($line as $token) {
-            if (in_array($token->getTokenName(), PythoPhant_Grammar::$controls)) {
-                $found = true;
-                $index = $tokenList->getTokenIndex($token);
-
-                if (in_array($token->getTokenName(), PythoPhant_Grammar::$controlsWithoutBraces)) {
-                    break;
-                }
-                $tokenList->injectToken(
-                    $this->tokenFactory->createToken(Token::T_OPEN_BRACE, '('), $index + 2
-                );
-                $index = $tokenList->getTokenIndex($line[count($line) - 1]);
-                $tokenList->injectToken(
-                    $this->tokenFactory->createToken(Token::T_CLOSE_BRACE, ')'), $index
-                );
-                break;
-            }
-        }
-
-        return $found;
-    }
-
-    /**
      * parses blocks based on indentation
      * 
      * @param TokenList $tokenList
@@ -418,8 +383,6 @@ class PythoPhant_Parser implements Parser
                 continue;
             }
 
-            $this->handleControls($line, $tokenList);
-                
             /*
              * remove semicolons from line ends 
              */
