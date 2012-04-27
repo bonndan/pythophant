@@ -29,4 +29,13 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $res = $token->getContent();
         $this->assertEquals(' ;'.PHP_EOL, $res);
     }
+    
+    public function testCreateEmpty()
+    {
+        $token = NewLineToken::createEmpty(1);
+        $this->assertInstanceOf('NewLineToken', $token);
+        $this->assertEquals(Token::T_NEWLINE, $token->getTokenName());
+        $this->assertEquals(PHP_EOL, $token->getContent());
+        $this->assertEquals(1, $token->getLine());
+    }
 }

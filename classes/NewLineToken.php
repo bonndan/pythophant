@@ -1,5 +1,7 @@
 <?php
 /**
+ * NewLineToken
+ * 
  * Token representing the last token of a line. Can contain ; or { or } or nothing 
  */
 class NewLineToken extends CustomGenericToken
