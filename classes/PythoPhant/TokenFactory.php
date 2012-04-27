@@ -84,6 +84,19 @@ class PythoPhant_TokenFactory implements TokenFactory
     );
 
     /**
+     * constructor registers additional tokens
+     * 
+     * @todo refactor: token implementation registration
+     */
+    public function __construct()
+    {
+        foreach (PythoPhant_Grammar::$controls as $control) {
+            self::$tokens[$control] = constant('PythoPhant_Grammar::' . $control);
+            self::$implementations[$control] = 'ControlToken';
+        }
+    }
+    
+    /**
      * array_search did not work properly
      * 
      * @param array|string $tokenized
