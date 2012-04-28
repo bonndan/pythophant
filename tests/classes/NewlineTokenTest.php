@@ -61,6 +61,9 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $this->assertContains(';', $token->getContent());
     }
     
+    /**
+     * ensures a new token is injected after the newline token 
+     */
     public function testAffectTokenlistInsertsOpenBraceIfNextLineIndentedDeeper()
     {
         $token = NewLineToken::createEmpty(1);
@@ -74,23 +77,29 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $tokenlist->pushToken(new NewLineToken('T_NEWLINE', PHP_EOL, 1));
         $token->affectTokenList($tokenlist);
         
-        $this->assertContains('{', $token->getContent(), serialize($token->getContent()));
+        $index = $tokenlist->getTokenIndex($token) + 1;
+        $openBrace = $tokenlist->offsetGet($index);
+        $this->assertEquals('T_OPEN_BLOCK', $openBrace->getTokenName());
+        $this->assertEquals('{', $openBrace->getContent());
     }
     
     public function testAffectTokenlistInsertsCloseBraceIfNextLineIndentedLess()
     {
         $token = NewLineToken::createEmpty(1);
-        
+        $target = new StringToken('test2', 'test2',1);
         $tokenlist = new TokenList;
         $tokenlist->pushToken(IndentationToken::create(2));
         $tokenlist->pushToken(new StringToken('test', 'test',1));
         $tokenlist->pushToken($token);
         $tokenlist->pushToken(IndentationToken::create(1));
-        $tokenlist->pushToken(new StringToken('test2', 'test2',1));
+        $tokenlist->pushToken($target);
         $token->affectTokenList($tokenlist);
         
-        $res = $token->getContent();
-        $this->assertContains('}', $res, $res);
+        $index = $tokenlist->getTokenIndex($target) - 1;
+        $closeBrace = $tokenlist->offsetGet($index);
+        
+        $this->assertEquals('T_CLOSE_BLOCK', $closeBrace->getTokenName());
+        $this->assertEquals('}', $closeBrace->getContent());
     }
     
     /**

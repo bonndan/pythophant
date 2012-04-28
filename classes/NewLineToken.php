@@ -81,16 +81,24 @@ class NewLineToken extends CustomGenericToken
          * open or close blocks based on next line indentation
          */
         $nextIndentation = 1;
+        $ownIndex = $tokenList->getTokenIndex($this);
         $next = $tokenList->getAdjacentToken($this, 1, false);
         if ($next instanceof IndentationToken) {
             $nextIndentation = $next->getNestingLevel();
         }
         if ($nextIndentation > $currentIndentation) {
-            $this->setAuxValue(PythoPhant_Grammar::T_OPEN_BLOCK);
+            $tokenList->injectToken(
+                new PHPToken('T_OPEN_BLOCK', PythoPhant_Grammar::T_OPEN_BLOCK, $this->line),
+                $ownIndex + 1
+            );
             $this->state = self::STATE_OPEN_BLOCK;
             return;
         } elseif ($nextIndentation < $currentIndentation) {
-            $this->setAuxValue(PythoPhant_Grammar::T_CLOSE_BLOCK);
+            $next = $tokenList->getNextNonWhitespace($this, false);
+            $tokenList->injectToken(
+                new PHPToken('T_CLOSE_BLOCK', PythoPhant_Grammar::T_CLOSE_BLOCK, $next->getLine()),
+                $next
+            );
             $this->state = self::STATE_CLOSE_BLOCK;
             return;
         }
