@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NewLineToken
  * 
@@ -7,10 +8,96 @@
 class NewLineToken extends CustomGenericToken
 {
     /**
-     * last character of a line
-     * @var string 
+     * state constants
      */
-    protected $auxValue = ';';
+    const STATE_REGULAR_LINE  = 'STATE_REGULAR_LINE';
+    const STATE_EMTPY_LINE    = 'STATE_EMTPY_LINE';
+    const STATE_LAST_LINE     = 'STATE_LAST_LINE';
+    const STATE_NO_SEMICOLON  = 'STATE_NO_SEMICOLON';
+    const STATE_OPEN_BLOCK    = 'STATE_OPEN_BLOCK';
+    const STATE_CLOSE_BLOCK   = 'STATE_CLOSE_BLOCK';
+    
+    /**
+     * state / mode after affecting the tokenlist
+     * @var string
+     */
+    private $state = '';
+
+    /**
+     * affect the tokenlist: determine own content
+     * 
+     * @param TokenList $tokenList 
+     */
+    public function affectTokenList(TokenList $tokenList)
+    {
+        $currentIndentation = 1;
+        $currentIndent = $tokenList->getLineIndentationToken($this);
+        if ($currentIndent !== null) {
+            $currentIndentation = $currentIndent->getNestingLevel();
+        }
+
+        /**
+         * close remaining open braces ?
+         */
+        $next = $tokenList->getNextNonWhitespace($this, false);
+        if (!$next instanceof Token) {
+            $content = '';
+            while ($currentIndentation > 1) {
+                $content .= IndentationToken::create($currentIndentation)->getContent();
+                $content .= PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL;
+                $currentIndentation--;
+            }
+            $this->setContent($content);
+            $this->state = self::STATE_LAST_LINE;
+            return;
+        }
+        
+        /*
+         * blank line: no content
+         */
+        $previous = $tokenList->getAdjacentToken($this, -1, false);
+        if ($previous instanceof NewLineToken || $previous instanceof IndentationToken) {
+            $this->setAuxValue('');
+            $this->state = self::STATE_EMTPY_LINE;
+            return;
+        }
+
+        /*
+         * prevent semicolon
+         */
+        if ($prev = $tokenList->getPreviousNonWhitespace($this)) {
+            $preventSemicolon = $tokenList->isTokenIncluded(
+                array($prev), PythoPhant_Grammar::$preventSemicolon
+            );
+
+            if ($preventSemicolon) {
+                $this->setAuxValue("");
+                $this->state = self::STATE_NO_SEMICOLON;
+                return;
+            }
+        }
+
+        /*
+         * open or close blocks based on next line indentation
+         */
+        $nextIndentation = 1;
+        $next = $tokenList->getAdjacentToken($this, 1, false);
+        if ($next instanceof IndentationToken) {
+            $nextIndentation = $next->getNestingLevel();
+        }
+        if ($nextIndentation > $currentIndentation) {
+            $this->setAuxValue(PythoPhant_Grammar::T_OPEN_BLOCK);
+            $this->state = self::STATE_OPEN_BLOCK;
+            return;
+        } elseif ($nextIndentation < $currentIndentation) {
+            $this->setAuxValue(PythoPhant_Grammar::T_CLOSE_BLOCK);
+            $this->state = self::STATE_CLOSE_BLOCK;
+            return;
+        }
+        
+        $this->setAuxValue(';');
+        $this->state = self::STATE_REGULAR_LINE;
+    }
 
     /**
      * returns PHP_EOL, preserves content before the first eol and appends the
@@ -40,4 +127,5 @@ class NewLineToken extends CustomGenericToken
         $token->setAuxValue('');
         return $token;
     }
+
 }
