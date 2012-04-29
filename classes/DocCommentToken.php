@@ -9,6 +9,7 @@
  */
 class DocCommentToken extends PHPToken
 {
+
     /**
      * short description
      * @var string 
@@ -96,12 +97,11 @@ class DocCommentToken extends PHPToken
                 continue;
             }
 
-            if ($this->shortDesc === '') {
-                $this->shortDesc = $line;
-                continue;
-            }
-
             if ($line[0] != '@') {
+                if ($this->shortDesc === '') {
+                    $this->shortDesc = $line;
+                    continue;
+                }
                 $this->appendToLongDescription($line . PHP_EOL);
             } else {
                 $this->parseAnnotationLine($line);
@@ -117,14 +117,14 @@ class DocCommentToken extends PHPToken
     private function parseAnnotationLine($line)
     {
         $matches = explode(' ', $line);
-        foreach($matches as $key => $string) {
+        foreach ($matches as $key => $string) {
             if ($string == '') {
                 unset($matches[$key]);
             }
         }
-        
+
         $tag = substr(array_shift($matches), 1);
-        
+
         $matches = array_values($matches);
         $setter = 'set' . ucfirst($tag);
         if (method_exists($this, $setter)) {
@@ -163,7 +163,7 @@ class DocCommentToken extends PHPToken
             return;
         }
         $type = $matches[0];
-        $var  = $matches[1];
+        $var = $matches[1];
         unset($matches[0]);
         unset($matches[1]);
         $default = null;
@@ -175,7 +175,7 @@ class DocCommentToken extends PHPToken
         $description = implode(' ', $matches);
         $this->param[$var] = array($type, $description, $default);
     }
-    
+
     /**
      * set the return annotation values
      * 
@@ -193,7 +193,7 @@ class DocCommentToken extends PHPToken
         $description = implode(' ', $matches);
         $this->return = array($type, $description);
     }
-    
+
     /**
      * returns the short description
      * 
@@ -203,7 +203,7 @@ class DocCommentToken extends PHPToken
     {
         return $this->shortDesc;
     }
-    
+
     /**
      * returns the long description
      * 
@@ -213,7 +213,7 @@ class DocCommentToken extends PHPToken
     {
         return $this->longDesc;
     }
-    
+
     /**
      * public function append something to the long description
      * 
@@ -223,7 +223,7 @@ class DocCommentToken extends PHPToken
     {
         $this->longDesc .= $text;
     }
-    
+
     /**
      * get the found param annotations
      * 
@@ -256,7 +256,7 @@ class DocCommentToken extends PHPToken
         if (!isset($this->$name)) {
             return null;
         }
-        
+
         return $this->$name;
     }
 
@@ -270,7 +270,7 @@ class DocCommentToken extends PHPToken
     {
         return count($this->getAnnotation('var')) == 0;
     }
-    
+
     /**
      * rebuild the content by the parsed content
      * 
@@ -280,4 +280,5 @@ class DocCommentToken extends PHPToken
     {
         
     }
+
 }
