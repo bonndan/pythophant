@@ -254,7 +254,7 @@ extends Something
         
         $found = false;
         foreach ($tokenList as $token) {
-            $found = $token->getContent() == PythoPhant_Grammar::T_OPEN_BLOCK;
+            $found = ($token->getTokenName()== 'T_OPEN_BLOCK');
             if ($found)
                 break;
         }
