@@ -234,11 +234,19 @@ class TokenList implements Iterator, Countable, ArrayAccess
      * remove a token, rebuild the index
      * 
      * @param type $offset 
+     * 
+     * @return boolean
      */
     public function offsetUnset($offset)
     {
+        if (!array_key_exists($offset, $this->tokens)) {
+            return false;
+        }
+        
         unset($this->tokens[$offset]);
         $this->tokens = array_values($this->tokens);
+        
+        return true;
     }
  
     /**
