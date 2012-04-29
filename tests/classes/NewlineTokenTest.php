@@ -113,8 +113,7 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $tokenlist->pushToken(IndentationToken::create(1));
         $tokenlist->pushToken($target);
         $token->affectTokenList($tokenlist);
-        
-        $index = $tokenlist->getTokenIndex($target) - 1;
+        $index = $tokenlist->getTokenIndex($target) -2 ;
         $closeBrace = $tokenlist->offsetGet($index);
         
         $this->assertEquals('T_CLOSE_BLOCK', $closeBrace->getTokenName());
