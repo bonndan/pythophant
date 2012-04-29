@@ -41,13 +41,19 @@ class NewLineToken extends CustomGenericToken
          */
         $next = $tokenList->getNextNonWhitespace($this, false);
         if (!$next instanceof Token) {
-            $content = '';
+            $ownIndex = $tokenList->getTokenIndex($this);
             while ($currentIndentation > 1) {
-                $content .= IndentationToken::create($currentIndentation)->getContent();
-                $content .= PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL;
+                $tokenList->injectToken(
+                    IndentationToken::create($currentIndentation),
+                    $ownIndex + 1
+                );
+                $tokenList->injectToken(
+                    new PHPToken('T_CLOSE_BLOCK', PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL, $this->getLine()),
+                    $ownIndex + 1
+                );
                 $currentIndentation--;
             }
-            $this->setContent($content);
+            $this->setAuxValue(';');
             $this->state = self::STATE_LAST_LINE;
             return;
         }

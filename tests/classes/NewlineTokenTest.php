@@ -142,7 +142,8 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $tokenlist->pushToken(IndentationToken::create(3));
         $tokenlist->pushToken($token);
         $token->affectTokenList($tokenlist);
-        
-        $this->assertContains('}', $token->getContent(), serialize($tokenlist));
+        $this->assertEquals(';'.PHP_EOL, $token->getContent());
+        $this->assertInstanceOf('PhpToken', $tokenlist->getNextNonWhitespace($token));
+        $this->assertEquals('T_CLOSE_BLOCK', $tokenlist->getNextNonWhitespace($token)->getTokenName());
     }
 }
