@@ -14,6 +14,12 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
      */
     private $function;
     
+    /**
+     * toogle debugging
+     * 
+     * @param bool $debug 
+     * @todo implement
+     */
     public function enableDebugging($debug)
     {
         
@@ -27,12 +33,18 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
     public function getPHPSource()
     {
         $buffer = '    ' . $this->function->getDocComment()->getContent() . PHP_EOL;
-        $buffer .= '    public function ' . $this->function->getName();
+        $buffer .= '    ' . $this->function->getModifiers();
+        $buffer .= ' function ' . $this->function->getName();
         $buffer .= '(';
         $params = array();
         foreach ($this->function->getParams() as $param) {
+            $typeToken = new ReturnValueToken('T_RETURNVALUE', $param->getType(), 1);
+            $type = $typeToken->getContent();
+            if ($type != '') {
+                $type .= ' ';
+            }
             /* @var $param PythoPhant_Reflection_FunctionParam */
-            $params[] = $param->getType() . ' $'.$param->getName();
+            $params[] =  $type. '$'.$param->getName();
         }
         $buffer .= implode(', ', $params);
         $buffer .= ')';
