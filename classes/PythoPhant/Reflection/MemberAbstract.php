@@ -1,38 +1,38 @@
 <?php
+
 /**
  * PythoPhant_Reflection_ElementAbstract
  * 
  * abstract class implementing reflection element methods
  * 
  */
-abstract class PythoPhant_Reflection_MemberAbstract
-extends PythoPhant_Reflection_ElementAbstract
-implements PythoPhant_Reflection_Member
-{   
-     /**
+abstract class PythoPhant_Reflection_MemberAbstract extends PythoPhant_Reflection_ElementAbstract implements PythoPhant_Reflection_Member
+{
+
+    /**
      * modifiers, visibility
      * @var string
      */
     protected $modifiers = 'public';
-    
+
     /**
      * return type
      * @var string 
      */
     protected $type = null;
-    
+
     /**
      * array of body tokens
      * @var array 
      */
     protected $bodyTokens = array();
-    
+
     /**
      * the own token list
      * @var type 
      */
     protected $tokenList = null;
-    
+
     /**
      * set modifiers like visibility, static, final
      * 
@@ -45,10 +45,10 @@ implements PythoPhant_Reflection_Member
                 $modifiers[$key] = $mod->getContent();
             }
         }
-        
+
         $this->modifiers = implode(' ', $modifiers);
     }
-    
+
     /**
      * returns the modifiers (visibility, abstract etc)
      * 
@@ -58,7 +58,7 @@ implements PythoPhant_Reflection_Member
     {
         return $this->modifiers;
     }
-    
+
     /**
      * set the return true, force original content form ReturnValueToken
      * 
@@ -71,8 +71,8 @@ implements PythoPhant_Reflection_Member
         }
         $this->type = $type;
     }
-    
-        /**
+
+    /**
      * add a collection of tokens to the body
      * 
      * @param array $tokens 
@@ -87,9 +87,10 @@ implements PythoPhant_Reflection_Member
             }
         }
     }
-    
+
     /**
-     * returns all body tokens in a tokenlist
+     * returns all body tokens in a tokenlist, adds a trailing newline at last
+     * position if not present
      * 
      * @return TokenList 
      */
@@ -100,11 +101,19 @@ implements PythoPhant_Reflection_Member
             foreach ($this->bodyTokens as $token) {
                 $this->tokenList->pushToken($token);
             }
+
+            $count = $this->tokenList->count();
+            if ($count > 0) {
+                $last = $this->tokenList->offsetGet($count-1);
+                if (!$last instanceof NewLineToken) {
+                    $this->tokenList->pushToken(NewLineToken::createEmpty());
+                }
+            }
         }
-        
+
         return $this->tokenList;
     }
-    
+
     /**
      * returns the variable type
      * @return string|null
@@ -113,4 +122,5 @@ implements PythoPhant_Reflection_Member
     {
         return $this->type;
     }
+
 }
