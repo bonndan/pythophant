@@ -9,6 +9,9 @@ require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
  */
 class ControlTokenTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * ensures opening and closing brace are inserted 
+     */
     public function testAffectTokenListInsertsBraces()
     {
         $tokenList = new TokenList();
@@ -16,6 +19,7 @@ class ControlTokenTest extends PHPUnit_Framework_TestCase
         
         $tokenList->pushToken(IndentationToken::create(1));
         $tokenList->pushToken($token);
+        $tokenList->pushToken(new PHPToken('T_WHITESPACE', ' ', 1));
         $tokenList->pushToken(new StringToken('T_STRING', 'myVar', 1));
         $tokenList->pushToken(new PHPToken('T_EQUALS', '==', 1));
         $tokenList->pushToken(new PHPToken('T_TRUE', 'true', 1));
@@ -25,7 +29,7 @@ class ControlTokenTest extends PHPUnit_Framework_TestCase
         $token->affectTokenList($tokenList);
         
         $index = $tokenList->getTokenIndex($token);
-        $openBrace = $tokenList->offsetGet($index +1);
+        $openBrace = $tokenList->offsetGet($index + 2);
         $this->assertInstanceOf('PHPToken', $openBrace);
         $this->assertEquals('T_OPEN_BRACE', $openBrace->getTokenName());
         
