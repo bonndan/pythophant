@@ -380,4 +380,20 @@ class TokenList implements Iterator, Countable, ArrayAccess
     {
         return $this->getPreviousTokenOfType('IndentationToken', $token);
     }
+    
+    /**
+     * get the base / first indentation of the list
+     * 
+     * @return int 
+     */
+    public function getBaseIndentation()
+    {
+        foreach ($this->tokens as $token) {
+            if ($token instanceof IndentationToken) {
+                return $token->getNestingLevel();
+            }
+        }
+        
+        return 1;
+    }
 }
