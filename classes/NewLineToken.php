@@ -53,6 +53,7 @@ class NewLineToken extends CustomGenericToken
                 );
                 $currentIndentation--;
             }
+            $this->setContent('');
             $this->setAuxValue(';');
             $this->state = self::STATE_LAST_LINE;
             return;
@@ -83,6 +84,8 @@ class NewLineToken extends CustomGenericToken
             }
         }
 
+        
+        
         /*
          * open or close blocks based on next line indentation
          */
@@ -95,22 +98,23 @@ class NewLineToken extends CustomGenericToken
         if ($nextIndentation > $currentIndentation) {
             $tokenList->injectToken(
                 new PHPToken('T_OPEN_BLOCK', PythoPhant_Grammar::T_OPEN_BLOCK, $this->line),
-                $ownIndex + 1
+                $ownIndex
             );
             $this->state = self::STATE_OPEN_BLOCK;
+            $this->setAuxValue('');
             return;
         } elseif ($nextIndentation < $currentIndentation) {
             $next = $tokenList->getNextNonWhitespace($this, false);
             $tokenList->injectToken(
-                new PHPToken('T_CLOSE_BLOCK', PythoPhant_Grammar::T_CLOSE_BLOCK, $next->getLine()),
+                new PHPToken('T_CLOSE_BLOCK', PythoPhant_Grammar::T_CLOSE_BLOCK . ' ', $next->getLine()),
                 $next
             );
             $this->state = self::STATE_CLOSE_BLOCK;
             return;
         }
         
-        $this->setAuxValue(';');
         $this->state = self::STATE_REGULAR_LINE;
+        $this->setAuxValue(';');
     }
 
     /**

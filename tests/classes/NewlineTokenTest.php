@@ -77,7 +77,7 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $tokenlist->pushToken(new NewLineToken('T_NEWLINE', PHP_EOL, 1));
         $token->affectTokenList($tokenlist);
         
-        $index = $tokenlist->getTokenIndex($token) + 1;
+        $index = $tokenlist->getTokenIndex($token) - 1;
         $openBrace = $tokenlist->offsetGet($index);
         $this->assertEquals('T_OPEN_BLOCK', $openBrace->getTokenName());
         $this->assertEquals('{', $openBrace->getContent());
@@ -99,7 +99,7 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $closeBrace = $tokenlist->offsetGet($index);
         
         $this->assertEquals('T_CLOSE_BLOCK', $closeBrace->getTokenName());
-        $this->assertEquals('}', $closeBrace->getContent());
+        $this->assertContains('}', $closeBrace->getContent());
     }
     
     /**
