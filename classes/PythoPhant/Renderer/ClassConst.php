@@ -32,10 +32,15 @@ class PythoPhant_Renderer_ClassConst implements PythoPhant_Renderer
         $buffer .= '    const ' . $this->const->getName();
 
         $body = $this->const->getBodyTokenList();
-        foreach ($body as $token) {
-            $buffer .= $token->getContent();
+        if ($body->count() > 0) {
+            foreach ($body as $token) {
+                $buffer .= $token->getContent();
+            }
+        } else {
+            $buffer .= ';';
         }
-        $buffer .= ';' . PHP_EOL;
+       
+        $buffer .= PHP_EOL . PHP_EOL;
         return $buffer;
     }
 
