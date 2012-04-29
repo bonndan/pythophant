@@ -30,6 +30,14 @@ class NewLineToken extends CustomGenericToken
      */
     public function affectTokenList(TokenList $tokenList)
     {
+        /*
+         * prevent multiple execution (because insert of open brace causes
+         * endless loop) 
+         */
+        if ($this->state != '') {
+            return;
+        }
+        
         $currentIndentation = 1;
         $currentIndent = $tokenList->getLineIndentationToken($this);
         if ($currentIndent !== null) {
