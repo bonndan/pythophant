@@ -158,6 +158,7 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $token = NewLineToken::createEmpty(1);
         
         $tokenlist = new TokenList;
+        $tokenlist->pushToken(IndentationToken::create(1));
         $tokenlist->pushToken(IndentationToken::create(3));
         $tokenlist->pushToken(new StringToken('T_STRING', 'test', 1));
         $tokenlist->pushToken($token);
@@ -165,8 +166,9 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $token->affectTokenList($tokenlist);
         $this->assertAttributeEquals('STATE_LAST_LINE', 'state', $token);
         $this->assertContains(';', $token->getContent());
-        $this->assertInstanceOf('PhpToken', $tokenlist->getNextNonWhitespace($token));
         $close = $tokenlist->getNextNonWhitespace($token);
+        $this->assertEquals('T_CLOSE_BLOCK', $close->getTokenName());
+        $close = $tokenlist->getNextNonWhitespace($close);
         $this->assertEquals('T_CLOSE_BLOCK', $close->getTokenName());
         $this->assertNull($tokenlist->getNextNonWhitespace($close));
     }
