@@ -33,7 +33,7 @@ class PythoPhant_Parser implements Parser
 
     /**
      * currently processed method
-     * @var PythoPhant_Reflection_Method 
+     * @var PythoPhant_Reflection_MemberAbstract 
      */
     private $currentElement = null;
 
