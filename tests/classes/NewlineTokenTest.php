@@ -54,10 +54,29 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $tokenlist->pushToken(IndentationToken::create(1));
         $tokenlist->pushToken(new StringToken('test', 'test',1));
         $tokenlist->pushToken($token);
+        $tokenlist->pushToken(IndentationToken::create(1));
+        $tokenlist->pushToken(new StringToken('test2', 'test2',1));
+        $token->affectTokenList($tokenlist);
+        $this->assertAttributeEquals('STATE_REGULAR_LINE', 'state', $token);
+        $this->assertContains(';', $token->getContent());
+    }
+    
+    /**
+     * regular lines require semicolons 
+     */
+    public function testAffectTokenlistIngnoresEmptyLine()
+    {
+        $token = NewLineToken::createEmpty(1);
+        
+        $tokenlist = new TokenList;
+        $tokenlist->pushToken(IndentationToken::create(1));
+        $tokenlist->pushToken(new StringToken('test', 'test',1));
+        $tokenlist->pushToken($token);
         $tokenlist->pushToken(new NewLineToken('T_NEWLINE', PHP_EOL, 1));
         $tokenlist->pushToken(IndentationToken::create(1));
         $tokenlist->pushToken(new StringToken('test2', 'test2',1));
         $token->affectTokenList($tokenlist);
+        $this->assertAttributeEquals('STATE_REGULAR_LINE', 'state', $token);
         $this->assertContains(';', $token->getContent());
     }
     
@@ -80,7 +99,7 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $index = $tokenlist->getTokenIndex($token) - 1;
         $openBrace = $tokenlist->offsetGet($index);
         $this->assertEquals('T_OPEN_BLOCK', $openBrace->getTokenName());
-        $this->assertEquals('{', $openBrace->getContent());
+        $this->assertEquals(' {', $openBrace->getContent());
     }
     
     public function testAffectTokenlistInsertsCloseBraceIfNextLineIndentedLess()
@@ -141,10 +160,55 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         
         $tokenlist = new TokenList;
         $tokenlist->pushToken(IndentationToken::create(3));
+        $tokenlist->pushToken(new StringToken('T_STRING', 'test', 1));
         $tokenlist->pushToken($token);
+        
         $token->affectTokenList($tokenlist);
+        $this->assertAttributeEquals('STATE_LAST_LINE', 'state', $token);
         $this->assertContains(';', $token->getContent());
         $this->assertInstanceOf('PhpToken', $tokenlist->getNextNonWhitespace($token));
-        $this->assertEquals('T_CLOSE_BLOCK', $tokenlist->getNextNonWhitespace($token)->getTokenName());
+        $close = $tokenlist->getNextNonWhitespace($token);
+        $this->assertEquals('T_CLOSE_BLOCK', $close->getTokenName());
+        $this->assertNull($tokenlist->getNextNonWhitespace($close));
+    }
+    
+    /**
+     * ensure no brace 
+     */
+    public function testAffectTokenlistInsertsNoClosingBracesAtListEnd()
+    {
+        $token = NewLineToken::createEmpty(1);
+        
+        $tokenlist = new TokenList;
+        $tokenlist->pushToken(IndentationToken::create(2));
+        $tokenlist->pushToken(new StringToken('T_STRING', 'test', 1));
+        $tokenlist->pushToken($token);
+        $token->affectTokenList($tokenlist);
+        
+        $this->assertAttributeEquals('STATE_LAST_LINE', 'state', $token);
+        $this->assertContains(';', $token->getContent());
+        $this->assertEquals(3, count($tokenlist));
+    }
+    
+    public function testIsLineEmpty()
+    {
+        $token = NewLineToken::createEmpty(1);
+        $tokenlist = new TokenList;
+        $tokenlist->pushToken(NewLineToken::createEmpty(1));
+        $tokenlist->pushToken($token);
+        
+        $this->assertTrue($token->isLineEmpty($tokenlist));
+    }
+    
+    public function testIsLineEmptyWithIndentation()
+    {
+        $token = NewLineToken::createEmpty(1);
+        
+        $tokenlist = new TokenList;
+        $tokenlist->pushToken(NewLineToken::createEmpty(1));
+        $tokenlist->pushToken(IndentationToken::create(1));
+        $tokenlist->pushToken($token);
+        
+        $this->assertTrue($token->isLineEmpty($tokenlist));
     }
 }
