@@ -59,9 +59,6 @@ class MyTest
         $this->assertEquals('MyTest', $class->getName() );
     }
     
-        /**
-     * 
-     */
     public function testProcessTokenListFindsClassWithExtends()
     {
         $scanner = $this->getScanner();
@@ -224,7 +221,7 @@ extends Something
     /**
      * testing of a function body
      */
-    public function testParseBlocks()
+    public function testMethodBodyIsParsed()
     {
         $scanner = $this->getScanner();
         $source = "<?php
@@ -249,6 +246,19 @@ extends Something
         
         $this->object->processTokenList($scanner->getTokenList());
         $class = $this->object->getReflectionElement();
+        $methods = $class->getMethods();
+        $myFunc = current($methods);
+        $tokenList = $myFunc->getBodyTokenList();
+        $this->assertInstanceOf('TokenList', $tokenList);
+        $this->assertNotEmpty($tokenList);
+        
+        $found = false;
+        foreach ($tokenList as $token) {
+            $found = $token->getContent() == PythoPhant_Grammar::T_OPEN_BLOCK;
+            if ($found)
+                break;
+        }
+        $this->assertTrue($found);
     }
 }
 
