@@ -115,6 +115,7 @@ abstract class PythoPhant_Grammar
         'T_WHILE',
         'T_SWITCH',
         'T_CASE',
+        'T_DEFAULT',
         'T_TRY',
         'T_CATCH',
     );
@@ -126,6 +127,7 @@ abstract class PythoPhant_Grammar
     public static $controlsWithoutBraces = array(
         'T_ELSE',
         'T_CASE',
+        'T_DEFAULT',
         'T_TRY',
     );
     
