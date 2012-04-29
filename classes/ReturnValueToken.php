@@ -29,31 +29,13 @@ class ReturnValueToken extends CustomGenericToken
         $ownIndex = $tokenList->getTokenIndex($this);
         try {
             $next = $tokenList->offsetGet($ownIndex + 1);
-            $variable = $tokenList->offsetGet($ownIndex + 2);
         } catch (OutOfBoundsException $exc) {
             throw new PythoPhant_Exception(
                 'T_RETURNVALUE is not followed by any token', $this->line
             );
         }
 
-        $functionFound = false;
-        $prev = $this;
-        $funcDeclarationIndicators = array_merge(
-            PythoPhant_Grammar::$visibilities, array(Token::T_FUNCTION, Token::T_COLON, Token::T_OPEN_BRACE)
-        );
-        while ($prev = $tokenList->getPreviousNonWhitespace($prev)) {
-            if ($tokenList->isTokenIncluded(array($prev), $funcDeclarationIndicators)) {
-                $functionFound = true;
-                break;
-            }
-        }
-
-        if ($functionFound) {
-            $this->insertTypeCheckInFunction($tokenList, $variable->getContent());
-        }
-
-        if ($this->returnContent == false 
-            && $next->getTokenName() == Token::T_WHITESPACE
+        if ($this->returnContent == false && $next->getTokenName() == Token::T_WHITESPACE
         ) {
             $next->setContent('');
         }
@@ -67,7 +49,7 @@ class ReturnValueToken extends CustomGenericToken
      * 
      * @return void
      */
-    private function insertTypeCheckInFunction(TokenList $tokenList, $variable)
+    public function insertTypecheckinTokenList(TokenList $tokenList, $variable)
     {
         if ($this->content == 'boolean') {
             $this->content = 'bool';
@@ -102,6 +84,7 @@ class ReturnValueToken extends CustomGenericToken
      * @param type $variable
      * 
      * @return array(Token) 
+     * @todo use macro
      */
     private function createCheckTokens(Token $indentationToken, $variable)
     {
