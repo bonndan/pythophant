@@ -71,7 +71,7 @@ class PythoPhant_Parser implements Parser
 
         $this->findClass();
         $this->findClassElements();
-        $this->parseListAffections();
+        $this->class->parseListAffections();
     }
 
     /**
@@ -258,25 +258,5 @@ class PythoPhant_Parser implements Parser
         
         $this->class->$setter($element);
         $this->currentElement = $element;
-    }
-
-    /**
-     * the "magic". First the "parsed early" tokens are processed, beginning with
-     * the first token in the list. The second pass treats all other tokens which
-     * could affect the list.
-     */
-    private function parseListAffections()
-    {
-        foreach ($this->tokenList as $token) {
-            if ($token instanceof ParsedEarlyToken) {
-                $token->affectTokenList($this->tokenList);
-            }
-        }
-
-        foreach ($this->tokenList as $token) {
-            if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
-                $token->affectTokenList($this->tokenList);
-            }
-        }
     }
 }
