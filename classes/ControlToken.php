@@ -25,7 +25,7 @@ class ControlToken extends CustomGenericToken
         }
 
         $openBrace = new PHPToken(Token::T_OPEN_BRACE, '(', $this->line);
-        $tokenList->injectToken($openBrace, $tokenList->getTokenIndex($this) + 1);
+        $tokenList->injectToken($openBrace, $tokenList->getTokenIndex($this) + 2);
         
         $newLine = $tokenList->getNextTokenOfType('NewLineToken', $this);
         $closeBrace = new PHPToken(Token::T_CLOSE_BRACE, ')', $this->line);
