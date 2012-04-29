@@ -20,6 +20,7 @@ abstract class PythoPhant_Grammar
     const T_WHILE = 'while';
     const T_SWITCH = 'switch';
     const T_CASE = 'case';
+    const T_DEFAULT = 'default';
     const T_TRY = 'try';
     const T_CATCH = 'catch';
     
