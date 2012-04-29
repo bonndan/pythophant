@@ -60,6 +60,16 @@ class PythoPhant_Reflection_FunctionParam
     }
     
     /**
+     * returns the default value if any
+     * 
+     * @return string|null 
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+    
+    /**
      * return the data as 
      * 
      * @return TokenList
