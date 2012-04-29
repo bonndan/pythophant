@@ -28,6 +28,12 @@ implements PythoPhant_Reflection_Member
     protected $bodyTokens = array();
     
     /**
+     * the own token list
+     * @var type 
+     */
+    protected $tokenList = null;
+    
+    /**
      * set modifiers like visibility, static, final
      * 
      * @param array $modifiers 
@@ -73,17 +79,20 @@ implements PythoPhant_Reflection_Member
     }
     
     /**
-     * returns all body tokens
+     * returns all body tokens in a tokenlist
      * 
      * @return TokenList 
      */
     public function getBodyTokenList()
     {
-        $tokenList = new TokenList();
-        foreach ($this->bodyTokens as $token) {
-            $tokenList->pushToken($token);
+        if ($this->tokenList === null) {
+            $this->tokenList = new TokenList();
+            foreach ($this->bodyTokens as $token) {
+                $this->tokenList->pushToken($token);
+            }
         }
-        return $tokenList;
+        
+        return $this->tokenList;
     }
     
     /**
