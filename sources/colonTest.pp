@@ -1,24 +1,50 @@
 <?php
-
+/**
+ * ColonTest 
+ */
 class ColonTest
 
+    /**
+     * @var string 
+     */
     private aVar
 
-    public myFunction: Countable aCountable, myVar = ''
+    /**
+     * myFunction
+     * 
+     * @param Countable aCountable
+     * @param mixed myVar = ''
+     * 
+     * @return int
+     */
+    public myFunction:
         unset: myVar
         aCountable.count:
         return int_val: count: aCountable
 
-    private setVar: aVar, bv
+    /**
+     * @param string aVar
+     * @param int    bv 
+     */
+    private setVar:
         @aVar = aVar
 
+    /**
+     * a function
+     * @return string 
+     */
     aFunc:
         myVar = 1
         if @aVar == NULL
             @setVar: new SomeClass: myVar "someConstructorArg", 1
         return ucfirst: str_replace: 'a', 'b', 'tesT'
 
-    private aTest: array data = null
+    /**
+     * a test
+     * 
+     * @param array data = null 
+     */
+    private aTest:
         if data is not empty?
             @aFunc()
         if data is not array?
