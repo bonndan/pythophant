@@ -150,7 +150,11 @@ class ReturnValueToken extends CustomGenericToken
             return $this->content;
         }
 
-        return "";
+        if (in_array($this->content, PythoPhant_Grammar::$returnValues)) {
+            return "";
+        }
+        
+        return $this->content;
     }
 
     /**
