@@ -50,6 +50,16 @@ implements PythoPhant_Reflection_Member
     }
     
     /**
+     * returns the modifiers (visibility, abstract etc)
+     * 
+     * @return string
+     */
+    public function getModifiers()
+    {
+        return $this->modifiers;
+    }
+    
+    /**
      * set the return true, force original content form ReturnValueToken
      * 
      * @param string|Tkoen $type 
