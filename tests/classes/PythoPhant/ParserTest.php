@@ -157,6 +157,9 @@ class MyTest
         $this->assertArrayHasKey('anArray', $vars);
     }
 
+    /**
+     * ensures a class constant is found 
+     */
     public function testProcessTokenListFindsConstant()
     {
         $scanner = $this->getScanner();
@@ -172,6 +175,11 @@ class MyTest
      */
     const MY_CONST = 'test'
     
+    /**
+     * some constant
+     * @var string
+     */
+    private myVar = 'test'
 ";
         $scanner->scanSource($source);
         $tokenList = $scanner->getTokenList();

@@ -69,10 +69,9 @@ class PythoPhant_Parser implements Parser
     {
         $this->setTokenList($tokenList);
 
-        $this->parseListAffections();
         $this->findClass();
         $this->findClassElements();
-        
+        $this->parseListAffections();
     }
 
     /**
@@ -155,6 +154,7 @@ class PythoPhant_Parser implements Parser
         $this->lines = $this->tokenList->makeLines();
         $docComment = null;
         $declaration = null;
+        
         foreach ($this->lines as $line) {
             $first = $line[0];
             if (!$first instanceof IndentationToken) {
@@ -163,13 +163,20 @@ class PythoPhant_Parser implements Parser
             if ($first->getNestingLevel() == 1) {
                 $second = $line[1];
                 if ($second instanceof DocCommentToken) {
-                    $docComment = $second;
+                    $docComment = $second; 
                 } else {
+                    $closers = array(
+                        PythoPhant_Grammar::T_CLOSE_BLOCK,
+                        PythoPhant_Grammar::T_CLOSE_BRACE,
+                    );
+                    if (in_array($second->getContent(), $closers)) {
+                        continue;
+                    }
                     $declaration = $second;
                     if ($docComment === null) {
                         throw new PythoPhant_Exception(
-                            'Declaration ' . $declaration->getContent()
-                            . 'must be preceded by doc comment',
+                            'Declaration: ' . $declaration->getContent()
+                            . ' must be preceded by doc comment',
                             $first->getLine()
                         );
                     }
@@ -196,7 +203,7 @@ class PythoPhant_Parser implements Parser
         $returnValue = null;
         $body = array();
         
-        if ($docComment->getAnnotation('var') !== null) {
+        if (!$docComment->isMethodComment()) {
             if ($line[1]->getContent() == 'const') {
                 $type = 'PythoPhant_Reflection_ClassConst';
                 $setter = 'addConstant';
