@@ -27,15 +27,18 @@ class PythoPhant_Renderer_ClassVar implements PythoPhant_Renderer
     public function getPHPSource()
     {
         $buffer = '    ' . $this->classVar->getDocComment()->getContent() . PHP_EOL;
-        $buffer .= '    public $' . $this->classVar->getName();
+        $buffer .= '    ' . $this->classVar->getModifiers() . ' $' . $this->classVar->getName();
         
         $body = $this->classVar->getBodyTokenList();
-        if($body->count() > 0) {
+        if ($body->count() > 0) {
             foreach ($body as $token) {
                 $buffer .= $token->getContent();
             }
+        } else {
+            $buffer .= ';';
         }
-        $buffer .= ';' . PHP_EOL;
+       
+        $buffer .= PHP_EOL . PHP_EOL;
         return $buffer;
     }
 
