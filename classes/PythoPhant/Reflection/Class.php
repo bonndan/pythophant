@@ -69,19 +69,19 @@ class PythoPhant_Reflection_Class extends PythoPhant_Reflection_Interface
     public function parseListAffections()
     {
         $members = array_merge($this->getVars(), $this->getConstants(), $this->getMethods());
+
         foreach ($members as $var) {
+            
             $tokenList = $var->getBodyTokenList();
             foreach ($tokenList as $token) {
-                foreach ($tokenList as $token) {
-                    if ($token instanceof ParsedEarlyToken) {
-                        $token->affectTokenList($tokenList);
-                    }
+                if ($token instanceof ParsedEarlyToken) {
+                    $token->affectTokenList($tokenList);
                 }
+            }
 
-                foreach ($tokenList as $token) {
-                    if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
-                        $token->affectTokenList($tokenList);
-                    }
+            foreach ($tokenList as $token) {
+                if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
+                    $token->affectTokenList($tokenList);
                 }
             }
         }
