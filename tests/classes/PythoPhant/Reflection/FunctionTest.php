@@ -82,5 +82,28 @@ class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
         $function->setType(new ReturnValueToken(Token::T_RETURNVALUE, 'string', 0));
         $this->assertAttributeEquals('string', 'type', $function);
     }
+    
+    /**
+     * ensures read signature is read properly
+     */
+    public function testSetSignatureFromDocComment()
+    {
+                $content = 
+"/**
+  * test
+  * @param string myVariable
+  * @param string myVar = null
+  * @return string
+  */";
+        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
+        
+        $function = new PythoPhant_Reflection_Function('testFunction', $doc);
+        
+        $params = $function->getParams();
+        $this->assertArrayHasKey('myVariable', $params);
+        $this->assertArrayHasKey('myVar', $params);
+        $this->assertInstanceOf('PythoPhant_Reflection_FunctionParam', $params['myVar']);
+        $this->assertEquals('null', $params['myVar']->getDefault());
+    }
 }
     

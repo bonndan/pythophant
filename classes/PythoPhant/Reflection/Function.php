@@ -36,7 +36,11 @@ extends PythoPhant_Reflection_MemberAbstract
         
         $params = $this->docComment->getParams();
         foreach ($params as $variable => $data) {
-            $this->params[$variable] = new PythoPhant_Reflection_FunctionParam($data[0], $variable);
+            $this->params[$variable] = new PythoPhant_Reflection_FunctionParam(
+                $data[0],
+                $variable,
+                $data[2]
+            );
         }
     }
     
