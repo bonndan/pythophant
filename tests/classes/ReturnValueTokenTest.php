@@ -41,6 +41,23 @@ class ReturnValueTokenTest extends PHPUnit_Framework_TestCase implements ParsedE
         $this->assertEquals('SomeInterface', $token->getContent());
     }
     
+    /**
+     * 
+     */
+    public function testContentIsReplacedWithArrayIfSquareBracesAreUsed()
+    {
+        $tokenList = new TokenList();
+        $token = new ReturnValueToken(Token::T_RETURNVALUE, 'SomeInterface[]', 1);
+        $tokenList->pushToken($token);
+        $whitespace = new PHPToken(Token::T_WHITESPACE, ' ', 1);
+        $tokenList->pushToken($whitespace);
+        $var = new StringToken(Token::T_STRING, 'myVar', 1);
+        $tokenList->pushToken($var);
+        
+        $token->affectTokenList($tokenList);
+        $this->assertEquals('array', $token->getContent());
+    }
+    
     public function testWhitespaceIsEmptied()
     {
         $tokenList = new TokenList();

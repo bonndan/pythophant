@@ -137,6 +137,10 @@ class ReturnValueToken extends CustomGenericToken
             return "";
         }
         
+        if (strpos($this->content, '[]')) {
+            return "array";
+        }
+        
         return $this->content;
     }
 
