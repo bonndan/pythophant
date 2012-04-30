@@ -153,26 +153,26 @@ class DocCommentToken extends PHPToken
     /**
      * set a param
      * 
-     * @param array $matches 
+     * @param array $words 
      * 
      * @return void
      */
-    public function setParam(array $matches)
+    public function setParam(array $words)
     {
-        if (!isset($matches[0])) {
+        if (!isset($words[0])) {
             return;
         }
-        $type = $matches[0];
-        $var = $matches[1];
-        unset($matches[0]);
-        unset($matches[1]);
+        $type = $words[0];
+        $var = $words[1];
+        unset($words[0]);
+        unset($words[1]);
         $default = null;
-        if (isset($matches[2]) && $matches[2] == '=') {
-            $default = $matches[3];
-            unset($matches[2]);
-            unset($matches[3]);
+        if (isset($words[2]) && $words[2] == '=') {
+            $default = $words[3];
+            unset($words[2]);
+            unset($words[3]);
         }
-        $description = implode(' ', $matches);
+        $description = implode(' ', $words);
         $this->param[$var] = array($type, $description, $default);
     }
 

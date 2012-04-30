@@ -14,7 +14,7 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
      */
     private $token;
     
-    protected function getToken()
+    protected function  getToken()
     {
         $content = 
 "/**
@@ -67,12 +67,30 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
         $value = $this->token->getAnnotation('author');
         $this->assertContains('Daniel Pozzi', $value[0], serialize($value));
         $this->assertEquals('void', $this->token->getReturnType());
-        
-        $params = $this->token->getParams();
-        $this->assertEquals(array('string', 'some var', null), $params['test']);
-        
         $this->assertEquals('test', $this->token->getShortDescription());
         $this->assertContains('more lines', $this->token->getLongDescription());
+    }
+    
+    /**
+     * 
+     */
+    public function testProcessPHPDocRecognizesParams()
+    {
+        $this->token = $this->getToken();
+        
+        $params = $this->token->getParams();
+        $this->assertArrayHasKey('test', $params);
+        $this->assertArrayHasKey('test2', $params);
+        $this->assertEquals(array('string', 'some var', null), $params['test']);
+        
+    }
+    
+    public function testProcessPHPDocRecognizesParamDefault()
+    {
+        $this->token = $this->getToken();
+
+        $params = $this->token->getParams();
+        $this->assertEquals(array('SomeInterface[]', 'some other var', 'array()'), $params['test2']);
     }
     
     /**
