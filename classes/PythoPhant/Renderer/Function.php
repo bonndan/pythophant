@@ -45,7 +45,9 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
             }
             
             $default = $param->getDefault();
-            
+            if (trim($default) != '') {
+                $default = ' = ' .$default;
+            }
             /* @var $param PythoPhant_Reflection_FunctionParam */
             $params[] =  $type. '$'.$param->getName() . $default;
         }
