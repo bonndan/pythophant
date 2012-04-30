@@ -43,8 +43,11 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
             if ($type != '') {
                 $type .= ' ';
             }
+            
+            $default = $param->getDefault();
+            
             /* @var $param PythoPhant_Reflection_FunctionParam */
-            $params[] =  $type. '$'.$param->getName();
+            $params[] =  $type. '$'.$param->getName() . $default;
         }
         $buffer .= implode(', ', $params);
         $buffer .= ')';

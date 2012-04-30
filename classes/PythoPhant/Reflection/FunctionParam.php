@@ -25,7 +25,7 @@ class PythoPhant_Reflection_FunctionParam
      * deafult value of the param
      * @var string 
      */
-    private $default = '';
+    private $default = null;
 
     /**
      * constructor requires at least type and name
