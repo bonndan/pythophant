@@ -92,12 +92,14 @@ class NewLineToken extends CustomGenericToken
      */
     private function handleIndentationDifferences(TokenList $tokenList, $currentIndentation)
     {
+        /*
+         * the last line in the block
+         */
         $nextIndentation = $this->getNextIndentationLevel($tokenList);
         if ($nextIndentation === null) {
-            while ($currentIndentation > $tokenList->getBaseIndentation()) {
-                $currentIndentation--;
-                $this->injectTrailingClosingBrace($tokenList, $currentIndentation);
-            }
+            $this->injectClosingBraces(
+                $tokenList, $currentIndentation, $tokenList->getBaseIndentation()
+            );
             $this->setContent(PHP_EOL);
             if (!$this->isLineEmpty($tokenList)) {
                 $this->setAuxValue(';');
@@ -105,29 +107,27 @@ class NewLineToken extends CustomGenericToken
             $this->state = self::STATE_LAST_LINE;
             return true;
         }
-        
+
+        /*
+         * indentation difference
+         */
         $ownIndex = $tokenList->getTokenIndex($this);
         if ($nextIndentation > $currentIndentation) {
             $tokenList->injectToken(
-                new PHPToken('T_OPEN_BLOCK', ' ' . PythoPhant_Grammar::T_OPEN_BLOCK, $this->line),
-                $ownIndex
+                new PHPToken('T_OPEN_BLOCK', ' ' . PythoPhant_Grammar::T_OPEN_BLOCK, $this->line), $ownIndex
             );
             $this->state = self::STATE_OPEN_BLOCK;
             $this->setAuxValue('');
             return true;
         } elseif ($nextIndentation < $currentIndentation) {
-            while ($currentIndentation > $nextIndentation) {
-                $currentIndentation--;
-                $this->injectTrailingClosingBrace($tokenList, $currentIndentation);
-            }
-            
+            $this->injectClosingBraces($tokenList, $currentIndentation, $nextIndentation);
             $this->setAuxValue(';');
             return true;
         }
 
         return false;
     }
-    
+
     /**
      * returns the indentation level of the next indentation token
      * 
@@ -144,51 +144,36 @@ class NewLineToken extends CustomGenericToken
                 return $token->getNestingLevel();
             }
         }
-        
+
         return null;
     }
 
     /**
-     * inject closing braces
+     * injects as many braces as needed behind this token
      * 
      * @param TokenList $tokenList
-     * @param int       $indentation 
+     * @param int       $currentIndentation
+     * @param int       $targetIndentation 
      */
-    private function injectTrailingClosingBrace(TokenList $tokenList, $indentation)
+    private function injectClosingBraces(TokenList $tokenList, $currentIndentation, $targetIndentation)
     {
-        $nextNonWhitespace = $tokenList->getNextNonWhitespace($this, false);
-        $following = $tokenList->getAdjacentToken($this, 1, false);
-        
-        if ($nextNonWhitespace === null) {
-            $position = $tokenList->getTokenIndex($this);
-            $delete = $position + 1;
-            while ($tokenList->offsetUnset($delete)) {
-                $delete++;
-            }
-            $this->state = self::STATE_LAST_LINE;
-            $this->setContent(PHP_EOL);
-        } else {
-            $this->state = self::STATE_CLOSE_BLOCK;
-            $position = $tokenList->getTokenIndex($nextNonWhitespace) - 1;
-            $this->setContent(PHP_EOL);
-        }
-        
-        if (!$following || !$following instanceof IndentationToken) {
-            $tokenList->injectToken(
-                IndentationToken::create($indentation, $this->line),
-                $position +2 
-            );
-            $position++;
-        }
+        $position = $tokenList->getTokenIndex($this);
 
-        $tokenList->injectToken(
-            new PHPToken('T_CLOSE_BLOCK', PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL, $this->getLine()),
-            $position +1 
-        );
-        $tokenList->injectToken(
-            IndentationToken::create($indentation, $this->line),
-            $position +2 
-        );
+        while ($currentIndentation > $targetIndentation) {
+            $currentIndentation--;
+            //brace
+            $close = new PHPToken(
+                'T_CLOSE_BLOCK',
+                PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL,
+                $this->getLine()
+            );
+            $position = $position + 1;
+            $tokenList->injectToken($close, $position);
+            //indent brace one lever higher
+            $indent = IndentationToken::create($currentIndentation, $this->line);
+            $tokenList->injectToken($indent, $position);
+            $position = $tokenList->getTokenIndex($close);
+        }
     }
 
     /**
@@ -202,7 +187,7 @@ class NewLineToken extends CustomGenericToken
         $content = substr($this->content, 0, strpos($this->content, PHP_EOL));
         $content .= $this->auxValue;
 
-        return $content 
+        return $content
             . str_repeat(PHP_EOL, substr_count($this->content, PHP_EOL));
     }
 
@@ -230,7 +215,8 @@ class NewLineToken extends CustomGenericToken
     public function isLineEmpty(TokenList $tokenList)
     {
         $previous = $tokenList->getPreviousNonWhitespace($this);
-        
+
         return is_null($previous);
     }
+
 }
