@@ -1,38 +1,50 @@
 <?php
-
+/**
+ * XYZ_Controller
+ */
 class XYZ_Controller extends Zend_Controller_Action
     
+    /**
+     * @var string 
+     */
     const MY_CLASS_CONST = 'const'
 
     /**
      * some var 
+     * @var string
      */
     var someVar
 
 
-    "function to test something"
+    /**
+     * function to test something
+     * 
+     * @param string myparam = null "an important param"
+     * @param int    myparam1 = 1   "an important param too"
+     * 
+     * @return private
+     */
     private void myFunction 
-        @param string myparam = null "an important param"
-        @param int    myparam1 = 1   "an important param too"
+        
         myparam1 = strtolower: myparam1
-
         return myparam
     
-    "function to test something"
-    @param string myparam = null "an important param"
-    @param int    myparam1 = 1   "an important param too"
+    /**
+     * "function to test something"
+     * 
+     * @param string myparam = null "an important param"
+     * @param int    myparam1 = 1   "an important param too"
+     */
     private void myFunction2
         
         myparam1 = strtolower: myparam1
 
         return myparam
-    
-    private void myFunction2: string myParam = null
 
-
-
-
-    public addAction(SomeInterface xyz)
+    /**
+     * @param SomeInterface xyz
+     */
+    public addAction
         json = [12, 13]
         json[3] = 'somevar'
         json2 = {
@@ -60,7 +72,7 @@ class XYZ_Controller extends Zend_Controller_Action
     /**
      * some other comment 
      */
-    public someOtherFunction()
+    public someOtherFunction
         donothing(self::MY_CLASS_CONST)
         if ! @json[0] ctype_alnum?
             dosomething()

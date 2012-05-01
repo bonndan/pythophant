@@ -1,19 +1,39 @@
 <?php
-
+/**
+ * MyClass 
+ */
 class MyClass 
 extends ParentClass
 implements Foo, Bar
 
-    fooMethod()
+    /**
+     * foo
+     * @return void 
+     */
+    fooMethod:
         parent::fooMethod()
     
-    getCleanedString: aString
+    /**
+     * modifies a string
+     * 
+     * @param string aString 
+     * 
+     * @return string
+     */
+    getCleanedString:
         if aString strlen? > 3
             return strtolower: aString
         else
             return aString
-            
-    someFunc: MyInterface anObject, int mustBeInt, boolean mustBeBool
+
+    /**
+     * some funct
+     * 
+     * @param MyInterface anObject
+     * @param int mustBeInt
+     * @param boolean mustBeBool
+     */
+    someFunc:
         try
             return anObject.someFunc()
         catch Exception e

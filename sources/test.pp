@@ -37,7 +37,7 @@ implements Countable
                 break
             case false:
                 echo 'nothing'
-                break;
+                break
 
         return @someVar?true:false
 

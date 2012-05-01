@@ -1,28 +1,31 @@
 <?php
-class Schinken
+class NewEmpty
 {
     /**
      * hans
      * @var int 
      */
-    public $hans;
+    private  $hans;
+
     /**
      * myCountable
      * @var Countable 
      */
-    public $myCountable;
+    private  $myCountable;
+
     /**
      * wurst
      * @var string 
      */
-    public $wurst;
+    private $wurst;
+
     /**
      * an array
      * @var array
      */
-    public $anArray = array();
+    protected $anArray = array();
 
-;
+
     /**
      * hanswurst
      * 
@@ -30,13 +33,12 @@ class Schinken
      * @param string      wurst 
      * @return Schinken
      */
-    public function hanswurst(MyInterface $hans, string $wurst)
+    private function hanswurst(MyInterface $hans, $wurst)
     {
         $this->hans = $hans;
         self::$wurst = $wurst;
         $this->anArray[] = 1;
         $this->anArray[] = 2;
-
 
     }
 
@@ -45,12 +47,11 @@ class Schinken
      * 
      * @param int nothing
      */
-    public function someFunction(int $nothing)
+    final function someFunction($nothing)
     {
         $this->hanswurst(1, "hanswurst");
         $a = array('b', $var1, $nothing);
-        return $this->hans " " self::$wurst;
-
+        return $this->hans . " ".  self::$wurst;
 
     }
 
@@ -61,11 +62,12 @@ class Schinken
      */
     public function anotherMethod()
     {
-        if true;
+        if (true) {
             echo "Hello World";
-        else;
+        }
+        else {
             echo "World, Hello";
-
+        }
 
     }
 

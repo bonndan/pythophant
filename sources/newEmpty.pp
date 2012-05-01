@@ -1,6 +1,10 @@
 <?php
-
-class Schinken extends Wurst
+/**
+ * NewEmpty 
+ * 
+ * @since 30.04.2012
+ */
+class NewEmpty extends Wurst
     /**
      * hans
      * @var int 
@@ -23,7 +27,7 @@ class Schinken extends Wurst
      * @var array
      */
     protected anArray = []
-
+    
     /**
      * hanswurst
      * 

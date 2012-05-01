@@ -4,7 +4,7 @@ class ColonTest
     /**
      * @var string 
      */
-    public $aVar;
+    private $aVar;
 
     /**
      * myFunction
@@ -14,11 +14,12 @@ class ColonTest
      * 
      * @return int
      */
-    public function myFunction(Countable $aCountable, mixed $myVar)
+    public function myFunction(Countable $aCountable, $myVar = '')
     {
         unset($myVar);
         $aCountable->count();
         return int_val(count($aCountable));
+
     }
 
     /**
@@ -28,6 +29,7 @@ class ColonTest
     private function setVar($aVar, $bv)
     {
         $this->aVar = $aVar;
+
     }
 
     /**
@@ -41,6 +43,7 @@ class ColonTest
             $this->setVar(new SomeClass($myVar . "someConstructorArg", 1));
         }
         return ucfirst(str_replace('a', 'b', 'tesT'));
+
     }
 
     /**
@@ -48,7 +51,7 @@ class ColonTest
      * 
      * @param array data = null 
      */
-    private function aTest(array $data)
+    private function aTest(array $data = null)
     {
         if ( !empty($data)) {
             $this->aFunc();
@@ -64,7 +67,7 @@ class ColonTest
             $somearray[] = array($akey => strlen($val));
             echo $key . PHP_EOL;
         }
-        
+
     }
 
 }

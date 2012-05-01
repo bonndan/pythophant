@@ -7,14 +7,14 @@ class Test
      */
     const MY_CONST = 'test';
 
-;
+
     /**
      * private someVar
      * @var boolean 
      */
-    public $someVar = false;
+    private $someVar = false;
 
-;
+
     /**
      * count function
      * 
@@ -22,16 +22,21 @@ class Test
      */
     public function count()
     {
-        switch $this->someVar;
-            case true:;
-                if ! 'SomeClass' class_exists or 'MY_CONST' defined;
-                    $result = $this->someVar explode(':');
-                return 'myString' strtolower() ucfirst();
+        switch ($this->someVar) {
+            case true: {
+                if (! class_exists('SomeClass') or defined('MY_CONST')) {
+                    $result = explode(':', $this->someVar);
+                }
+                return ucfirst(strtolower('myString'));
                 break;
-            case false:;
+            }
+            case false: {
                 echo 'nothing';
-        return $this->someVar?true:false;
+                break;
 
+            }
+        }
+        return $this->someVar?true:false;
 
     }
 
@@ -42,11 +47,10 @@ class Test
      * 
      * @return boolean
      */
-    public function isSomethingContained(array $something)
+    private function isSomethingContained(array $something)
     {
         $something = (bool)$something;
-        return $something in_array(array('a', 1)) or $something ctype_alnum;
-
+        return in_array($something, array('a', 1)) or ctype_alnum($something);
 
     }
 
