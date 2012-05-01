@@ -31,6 +31,31 @@ class IndentationTokenTest extends PHPUnit_Framework_TestCase
         );
     }
     
+    /**
+     * @dataProvider indentationProvider
+     * @param type $content 
+     */
+    public function testGetNestingLevel($content, $expected)
+    {
+        $token = new IndentationToken('T_INDENT', $content, 1);
+        $this->assertEquals($expected, $token->getNestingLevel());
+    }
+    
+    public function indentationProvider()
+    {
+        return array(
+            array('', 0),
+            array('    ', 1),
+            array('        ' , 2),
+            array('    ' . PHP_EOL, 0),
+            array(PHP_EOL . '    ', 1),
+            array('    '.PHP_EOL.PHP_EOL, 0),
+            array('    '.PHP_EOL.PHP_EOL .'    ', 1),
+            array(PHP_EOL . '    '.PHP_EOL.PHP_EOL .'    ', 1),
+            array(PHP_EOL . '    '.PHP_EOL.PHP_EOL .'        ', 2),
+        );
+    }
+    
     public function testCreate()
     {
         $token = IndentationToken::create(2);

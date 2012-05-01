@@ -2,7 +2,8 @@
 /**
  * IndentationToken
  * 
- * token representing indentation
+ * token representing indentation. Indentation depth is determined by number of
+ * spaces. If eol occur, the number of whitespace after the last eol is used.
  *  
  */
 class IndentationToken extends CustomGenericToken
@@ -12,6 +13,11 @@ class IndentationToken extends CustomGenericToken
      */
     const INDENTATION_SPACES = 4;
 
+    /**
+     * @var int 
+     */
+    const SPACE = ' ';
+    
     /**
      * create a new indentation token
      * 
@@ -35,7 +41,7 @@ class IndentationToken extends CustomGenericToken
      */
     public function setContent($content)
     {
-        $content = str_replace("\t", str_repeat(' ', self::INDENTATION_SPACES), $content);
+        $content = str_replace("\t", str_repeat(self::SPACE, self::INDENTATION_SPACES), $content);
         parent::setContent($content);
         
         $level = $this->getNestingLevel();
@@ -67,7 +73,8 @@ class IndentationToken extends CustomGenericToken
      */
     public function getNestingLevel()
     {
-        return strlen($this->getContent()) / self::INDENTATION_SPACES;
+        $spaces = substr_count($this->getContent(), self::SPACE);
+        return $spaces / self::INDENTATION_SPACES;
     }
 
     /**
@@ -79,6 +86,6 @@ class IndentationToken extends CustomGenericToken
      */
     public function setNestingLevel($nestingLevel)
     {
-        $this->content = str_repeat(' ', self::INDENTATION_SPACES * (int)$nestingLevel);
+        $this->content = str_repeat(self::SPACE, self::INDENTATION_SPACES * (int)$nestingLevel);
     }
 }
