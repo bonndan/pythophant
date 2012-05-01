@@ -28,7 +28,7 @@ class IndentationToken extends CustomGenericToken
      */
     public static function create($nestingLevel, $line = 0)
     {
-        $content = str_repeat(' ', self::INDENTATION_SPACES * $nestingLevel);
+        $content = str_repeat(self::SPACE, self::INDENTATION_SPACES * $nestingLevel);
         return new IndentationToken(Token::T_INDENT, $content, $line);
     }
 
