@@ -91,8 +91,8 @@ class PythoPhant_TokenFactory implements TokenFactory
     public function __construct()
     {
         foreach (PythoPhant_Grammar::$controls as $control) {
-            self::$tokens[$control] = constant('PythoPhant_Grammar::' . $control);
-            self::$implementations[$control] = 'ControlToken';
+            $this->registerToken($control, constant('PythoPhant_Grammar::' . $control));
+            $this->registerImplementation($control, 'ControlToken');
         }
     }
     
@@ -113,6 +113,7 @@ class PythoPhant_TokenFactory implements TokenFactory
             if (in_array($tokenized, self::$tokens)) {
                 $flip = array_flip(self::$tokens);
                 $tokenName = $flip[$tokenized];
+            /** @todo refactor register return values */
             } elseif (in_array($tokenized, PythoPhant_Grammar::$returnValues)) {
                 $tokenName = Token::T_RETURNVALUE;
             }
@@ -214,5 +215,36 @@ class PythoPhant_TokenFactory implements TokenFactory
     {
         return array_key_exists($tokenName, self::$tokens);
     }
+    
+    /**
+     * register a token with content
+     * 
+     * @param string $tokenName
+     * @param string $content 
+     * 
+     * @return TokenFactory
+     */
+    public function registerToken($tokenName, $content)
+    {
+        self::$tokens[$tokenName] = $content;
+        
+        return $this;
+    }
+    
+    /**
+     * register (static) an implementation class for a token 
+     * 
+     * @param string $tokenName
+     * @param string $className
+     * 
+     * @return TokenFactory
+     */
+    public function registerImplementation($tokenName, $className)
+    {
+        self::$implementations[$tokenName] = $className;
+        
+        return $this;
+    }
+
 
 }

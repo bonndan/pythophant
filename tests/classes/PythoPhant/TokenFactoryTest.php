@@ -21,6 +21,15 @@ class PythoPhant_TokenFactoryTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * 
+     */
+    public function testConstructorRegistersControlTokens()
+    {
+        $token = $this->factory->getTokenName('if');
+        $this->assertEquals('T_IF', $token);
+    }
+    
+    /**
      * @dataProvider customTokenProvider
      */
     public function testGetTokenName($string, $expected)
@@ -87,5 +96,17 @@ class PythoPhant_TokenFactoryTest extends PHPUnit_Framework_TestCase
         $last = $tokens[count($tokens)-2];
         $tokenName = $this->factory->getTokenName($last);
         $this->assertEquals('T_CONST', $tokenName);
+    }
+    
+    public function testRegisterToken()
+    {
+        $this->factory->registerToken('T_TEST', 'testToken');
+        $this->assertAttributeContains('testToken', 'tokens', 'PythoPhant_TokenFactory');
+    }
+    
+    public function testRegisterImplementation()
+    {
+        $this->factory->registerImplementation('T_TEST', 'TestClass');
+        $this->assertAttributeContains('TestClass', 'implementations', 'PythoPhant_TokenFactory');
     }
 }
