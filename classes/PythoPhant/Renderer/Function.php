@@ -37,8 +37,13 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
         $buffer .= ' function ' . $this->function->getName();
         $buffer .= '(';
         $params = array();
+        $typeToken = null;
+        $body = $this->function->getBodyTokenList();
+        
+        
         foreach ($this->function->getParams() as $param) {
             $typeToken = new ReturnValueToken('T_RETURNVALUE', $param->getType(), 1);
+            $typeToken->insertTypecheckinTokenList($body, $param->getName());
             $type = $typeToken->getContent();
             if ($type != '') {
                 $type .= ' ';
@@ -49,16 +54,15 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
                 $default = ' = ' .$default;
             }
             /* @var $param PythoPhant_Reflection_FunctionParam */
-            $params[] =  $type. '$'.$param->getName() . $default;
+            $params[] =  $type. '$' . $param->getName() . $default;
         }
         $buffer .= implode(', ', $params);
         $buffer .= ')';
         
-        $body = $this->function->getBodyTokenList();
+       
         if ($body->count() == 0) {
             $buffer .= ';' . PHP_EOL;
         } else {
-            
             $buffer .= PHP_EOL . '    {' . PHP_EOL;
             foreach ($body as $token) {
                 $buffer .= $token->getContent();
