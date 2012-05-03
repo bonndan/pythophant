@@ -84,11 +84,4 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
         return $this;
     }
     
-    /**
-     * does nothing for interfaces 
-     */
-    public function parseListAffections()
-    {
-        
-    }
 }
