@@ -59,67 +59,48 @@ class ReturnValueToken extends CustomGenericToken
             return;
         }
         
-        $next = $this;
-        while ($next = $tokenList->getNextNonWhitespace($next)) {
-            $lastInLine = $next;
-        }
-
-        $lastIndex = $tokenList->getTokenIndex($lastInLine); #
-
-        $indentationToken = $tokenList->offsetGet($lastIndex + 2);
-        /** var $indentationToken IndentationToken */
+        $insert = $this->createCheckTokenList($variable);
         
-        $insert = $this->createCheckTokens($indentationToken, $variable);
-        
-        $i = 0;
+        $i = 1;
         foreach ($insert as $token) {
-            $tokenList->injectToken($token, $lastIndex + 3 + $i++);
+            $tokenList->injectToken($token, $i++);
         }
     }
 
     /**
-     * creates the list (array) of tokens to be injected
+     * creates the list of tokens to be injected
      * 
-     * @param Token $indentationToken
-     * @param type $variable
+     * @param string $variable var name
      * 
-     * @return array(Token) 
-     * @todo use macro
+     * @return TokenList
      */
-    private function createCheckTokens(Token $indentationToken, $variable)
+    private function createCheckTokenList($variable)
     {
-        $line = $indentationToken->getLine();
-        $function = 'is_' . $this->content;
-        
-        $insert = array();
-        $insert[] = new PHPToken('T_IF', 'if', $line);
-        $insert[] = new PHPToken('T_WHITESPACE', ' ', $line);
-        $insert[] = new ExclamationToken('T_NOT', '!', $line);
-        $insert[] = new PHPToken('T_WHITESPACE', ' ', $line);
-        $insert[] = new PHPToken('T_STRING', $function, $line);
-        $insert[] = new PHPToken('T_OPEN_BRACE', '(', $line);
-        $insert[] = new StringToken('T_STRING', (string) $variable, $line);
-        $insert[] = new PHPToken('T_CLOSE_BRACE', ')', $line);
-        $insert[] = NewLineToken::createEmpty($line);
-
-        $insert[] = IndentationToken::create($indentationToken->getNestingLevel() + 1, $line + 1);
-        $insert[] = new PHPToken('T_STRING', 'throw new InvalidArgumentException', $line + 1);
-        $insert[] = new PHPToken('T_OPEN_BRACE', '(', $line + 1);
-        $insert[] = new ConstToken(
-                Token::T_CONSTANT_ENCAPSED_STRING,
-                '"' . $variable . ' is not of type ' . $this->content . '"',
-                $line + 1
+        $file = new SplFileObject(
+            dirname(__DIR__) . DIRECTORY_SEPARATOR 
+            . 'macros' .DIRECTORY_SEPARATOR. 'scalarTypeHintException.pp'
         );
-        $insert[] = new PHPToken('T_CLOSE_BRACE', ')', $line + 1);
-        $insert[] = NewLineToken::createEmpty($line + 1)->setAuxValue(';');
-
-        $insert[] = IndentationToken::create($indentationToken->getNestingLevel(), $line + 2);
-        $insert[] = NewLineToken::createEmpty($line + 2);
+        $macro = new PythoPhant_Macro($file);
+        $params = array($this->content, $variable);
+        $macro->setParams($params);
+        $scanner = PythoPhant_Scanner::create();
+        $scanner->scanSource($macro->getSource());
+        $macroTokens = $scanner->getTokenList();
+        $macro->cleanTokenList($macroTokens, 1);
         
-        $insert[] = clone $indentationToken;
-        
-        return $insert;
+        return $macroTokens;
     }
+    
+    /**
+     * to string conversion uses the getContent method
+     * 
+     * @return string 
+     */
+    public function __toString()
+    {
+        return $this->getContent();
+    }
+    
     /**
      * get the content
      * 

@@ -97,6 +97,6 @@ class ReturnValueTokenTest extends PHPUnit_Framework_TestCase implements ParsedE
         
         $token->affectTokenList($tokenList);
         $token->insertTypecheckinTokenList($tokenList, 'myVar');
-        $this->assertEquals(25, $tokenList->count());
+        $this->assertEquals(32, $tokenList->count());
     }
 }
