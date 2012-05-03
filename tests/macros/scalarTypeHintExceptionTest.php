@@ -36,6 +36,6 @@ class ScalarTypeHintExceptionMacroTest extends PHPUnit_Framework_TestCase
        $scanner->scanSource($source);
        $tokenList = $scanner->getTokenList();
        $this->assertInstanceOf('TokenList', $tokenList);
-       $this->assertEquals(24, $tokenList->count());
+       $this->assertEquals(23, $tokenList->count());
     }
 }

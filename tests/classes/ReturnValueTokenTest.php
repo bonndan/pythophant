@@ -88,7 +88,7 @@ class ReturnValueTokenTest extends PHPUnit_Framework_TestCase implements ParsedE
         
         $param = new PythoPhant_Reflection_FunctionParam('string', 'myVar');
         $token->insertTypecheckinTokenList($tokenList, $param);
-        $this->assertEquals(33, $tokenList->count());
+        $this->assertEquals(32, $tokenList->count());
     }
     
     public function testTypeCheckingIsInsertedIfParamHasDefault()
