@@ -130,7 +130,7 @@ class PythoPhant_Parser implements Parser
             }
         }
 
-        if (!$name) {
+        if (!isset($name)) {
             throw new PythoPhant_Exception('Could not detect class', 0);
         }
 
