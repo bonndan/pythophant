@@ -16,9 +16,9 @@ interface PythoPhant_Reflection_Member extends PythoPhant_Reflection_Element
     /**
      * set the return type
      * 
-     * @param mixed type
+     * @param Token type
      */
-    public function setType($type);
+    public function setType(Token $type);
     
     /**
      * add tokens to the body 
