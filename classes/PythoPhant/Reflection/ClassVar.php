@@ -28,7 +28,7 @@ extends PythoPhant_Reflection_MemberAbstract
     {
         $types = $this->docComment->getAnnotation('var');
         if ($types !== null && !empty($types)) {
-            $this->type = current($types);
+            $this->type = new ReturnValueToken('T_RETURNVALUE', current($types), 0);
         }
     }
     

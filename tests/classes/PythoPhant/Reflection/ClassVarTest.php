@@ -27,7 +27,8 @@ class PythoPhant_Reflection_ClassVarTest extends PHPUnit_Framework_TestCase
     {
         $var = $this->getClassVar();
         $this->assertEquals('myVar', $var->getName());
-        $this->assertEquals('string', $var->getType());
+        $this->assertInstanceOf('ReturnValueToken', $var->getType());
+        $this->assertEquals('string', $var->getType()->getContent(true));
     }
     
     /**
