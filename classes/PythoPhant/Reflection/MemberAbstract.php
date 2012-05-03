@@ -17,7 +17,7 @@ abstract class PythoPhant_Reflection_MemberAbstract extends PythoPhant_Reflectio
 
     /**
      * return type
-     * @var string 
+     * @var Token 
      */
     protected $type = null;
 
@@ -62,13 +62,10 @@ abstract class PythoPhant_Reflection_MemberAbstract extends PythoPhant_Reflectio
     /**
      * set the return true, force original content form ReturnValueToken
      * 
-     * @param string|Tkoen $type 
+     * @param Token $type 
      */
-    public function setType($type)
+    public function setType(Token $type)
     {
-        if ($type instanceof Token) {
-            $type = $type->getContent(true);
-        }
         $this->type = $type;
     }
 
@@ -116,7 +113,8 @@ abstract class PythoPhant_Reflection_MemberAbstract extends PythoPhant_Reflectio
 
     /**
      * returns the variable type
-     * @return string|null
+     * 
+     * @return Token
      */
     public function getType()
     {
