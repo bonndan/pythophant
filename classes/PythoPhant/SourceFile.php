@@ -43,7 +43,21 @@ class PythoPhant_SourceFile
      * 
      * @throws PythoPhant_Exception
      */
-    public function __construct(SplFileObject $file)
+    public function __construct(SplFileObject $file = null)
+    {
+        if ($file instanceof SplFileObject) {
+            $this->setFile($file);
+        }
+    }
+    
+    /**
+     * set the source file
+     * 
+     * @param SplFileObject $file
+     * 
+     * @throws PythoPhant_Exception 
+     */
+    public function setFile(SplFileObject $file)
     {
         if (!$file->isReadable()) {
             throw new PythoPhant_Exception('The file is not accessible');
