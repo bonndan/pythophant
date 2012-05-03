@@ -59,8 +59,8 @@ class PythoPhant
      */
     private function getConverter()
     {
-        $scanner = new PythoPhant_Scanner($tokenFactory = new PythoPhant_TokenFactory());
-        $parser = new PythoPhant_Parser($tokenFactory);
+        $scanner = new PythoPhant_Scanner(new PythoPhant_TokenFactory());
+        $parser = new PythoPhant_Parser();
         $renderer = new PythoPhant_RenderHelper();
 
         return new PythoPhant_Converter($scanner, $parser, $renderer);
