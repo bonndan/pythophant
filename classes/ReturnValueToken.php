@@ -86,6 +86,8 @@ class ReturnValueToken extends CustomGenericToken
         $scanner = PythoPhant_Scanner::create();
         $scanner->scanSource($macro->getSource());
         $macroTokens = $scanner->getTokenList();
+        $parser = new PythoPhant_Parser();
+        $parser->processTokenList($macroTokens);
         $macro->cleanTokenList($macroTokens, 1);
         
         return $macroTokens;
