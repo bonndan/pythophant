@@ -42,7 +42,10 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
         
         
         foreach ($this->function->getParams() as $param) {
-            $typeToken = new ReturnValueToken('T_RETURNVALUE', $param->getType(), 1);
+            $typeToken = $param->getType();
+            if (!$typeToken instanceof ReturnValueToken) {
+                $typeToken = new ReturnValueToken(Token::T_RETURNVALUE, $param->getType(), 1);
+            }
             $typeToken->insertTypecheckinTokenList($body, $param->getName());
             $type = $typeToken->getContent();
             if ($type != '') {
