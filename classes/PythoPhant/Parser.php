@@ -45,7 +45,7 @@ class PythoPhant_Parser implements Parser
     }
 
     /**
-     * process a token list. custom tokens are processed before string tokens
+     * parse the token list for class or interface declaration
      * 
      * @param TokenList $tokenList
      */
@@ -55,6 +55,7 @@ class PythoPhant_Parser implements Parser
 
         $this->findClass();
         $this->findClassElements();
+        //class processTokenList recursively for each elemtn of class
         $this->class->parseListAffections($this);
     }
     
