@@ -57,19 +57,6 @@ class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
         $this->assertAttributeContains($token, "bodyTokens", $function);
     }
     
-    public function testSetType()
-    {
-        $content = 
-"/**
- * test
- */";
-        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
-        
-        $function = new PythoPhant_Reflection_Function('testFunction', $doc);
-        $function->setType('string');
-        $this->assertAttributeEquals('string', 'type', $function);
-    }
-    
     public function testSetTypeWithReturnValueToken()
     {
         $content = 
@@ -79,8 +66,9 @@ class PythoPhant_Reflection_FunctionTest extends PHPUnit_Framework_TestCase
         $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
         
         $function = new PythoPhant_Reflection_Function('testFunction', $doc);
-        $function->setType(new ReturnValueToken(Token::T_RETURNVALUE, 'string', 0));
-        $this->assertAttributeEquals('string', 'type', $function);
+        $token = new ReturnValueToken(Token::T_RETURNVALUE, 'string', 0);
+        $function->setType($token);
+        $this->assertAttributeEquals($token, 'type', $function);
     }
     
     /**
