@@ -62,28 +62,17 @@ class PythoPhant_Reflection_Class extends PythoPhant_Reflection_Interface
     }
 
     /**
-     * the "magic". First the "parsed early" tokens are processed, beginning with
-     * the first token in the list. The second pass treats all other tokens which
-     * could affect the list.
+     * have all necessary parts (token lists for these parts) parsed
+     * 
+     * @param Parser $parser
      */
-    public function parseListAffections()
+    public function parseListAffections(Parser $parser)
     {
         $members = array_merge($this->getVars(), $this->getConstants(), $this->getMethods());
 
         foreach ($members as $var) {
-            
             $tokenList = $var->getBodyTokenList();
-            foreach ($tokenList as $token) {
-                if ($token instanceof ParsedEarlyToken) {
-                    $token->affectTokenList($tokenList);
-                }
-            }
-
-            foreach ($tokenList as $token) {
-                if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
-                    $token->affectTokenList($tokenList);
-                }
-            }
+            $parser->processTokenList($tokenList);
         }
     }
 

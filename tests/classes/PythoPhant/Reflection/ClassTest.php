@@ -63,4 +63,27 @@ class PythoPhant_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         $this->assertAttributeContains('MyInterface1', 'implements', $class);
         $this->assertAttributeContains('MyInterface2', 'implements', $class);
     }
+    
+    /**
+     * 
+     */
+    public function testParseListAffections()
+    {
+        $content = "/**
+ * some thing
+ * @var string
+ */";
+        $doc = new DocCommentToken('T_DOC_COMMENT', $content, 0);
+        
+        $class = $this->getClass();
+        $var = new PythoPhant_Reflection_ClassVar('myVar', $doc);
+        $class->addVar($var);
+        $method = new PythoPhant_Reflection_Function('myFunc', $doc);
+        $class->addMethod($method);
+        
+        $parser = $this->getMock('Parser');
+        $parser->expects($this->exactly(2))
+            ->method('processTokenList');
+        $class->parseListAffections($parser);
+    }
 }
