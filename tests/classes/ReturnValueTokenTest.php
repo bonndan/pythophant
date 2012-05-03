@@ -83,20 +83,22 @@ class ReturnValueTokenTest extends PHPUnit_Framework_TestCase implements ParsedE
     public function testTypeCheckingIsInserted()
     {
         $tokenList = new TokenList();
-        $tokenList->pushToken(new PHPToken(Token::T_FUNCTION, 'function ', 1));
         $token = new ReturnValueToken(Token::T_RETURNVALUE, 'int', 1);
         $tokenList->pushToken($token);
-        $wsToken = new PHPToken('T_WHITESPACE', ' ', 1);
-        $tokenList->pushToken($wsToken);
-        $var = new StringToken(Token::T_STRING, 'myVar', 1);
-        $tokenList->pushToken($var);
-        $tokenList->pushToken(new PHPToken('T_CLOSE_BRACE', ')', 1));
-        $tokenList->pushToken(new NewLineToken(Token::T_NEWLINE, PHP_EOL, 1));
-        $wsToken = new IndentationToken(Token::T_INDENT, '    ', 2);
-        $tokenList->pushToken($wsToken);
         
-        $token->affectTokenList($tokenList);
-        $token->insertTypecheckinTokenList($tokenList, 'myVar');
-        $this->assertEquals(36, $tokenList->count());
+        $param = new PythoPhant_Reflection_FunctionParam('string', 'myVar');
+        $token->insertTypecheckinTokenList($tokenList, $param);
+        $this->assertEquals(33, $tokenList->count());
+    }
+    
+    public function testTypeCheckingIsInsertedIfParamHasDefault()
+    {
+        $tokenList = new TokenList();
+        $token = new ReturnValueToken(Token::T_RETURNVALUE, 'int', 1);
+        $tokenList->pushToken($token);
+        
+        $param = new PythoPhant_Reflection_FunctionParam('string', 'myVar', 'null');
+        $token->insertTypecheckinTokenList($tokenList, $param);
+        $this->assertEquals(1, $tokenList->count());
     }
 }

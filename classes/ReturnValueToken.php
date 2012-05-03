@@ -45,12 +45,19 @@ class ReturnValueToken extends CustomGenericToken
      * inserts type checking and a thrown exception
      * 
      * @param TokenList $tokenList
-     * @param string    $variable
+     * @param PythoPhant_Reflection_FunctionParam    $variable
      * 
      * @return void
      */
-    public function insertTypecheckinTokenList(TokenList $tokenList, $variable)
-    {
+    public function insertTypecheckinTokenList(
+        TokenList $tokenList,
+        PythoPhant_Reflection_FunctionParam $param
+    ){
+        if ($param->getDefault() != null) {
+            return;
+        }
+        
+        $variable = $param->getName();
         if ($this->content == 'boolean') {
             $this->content = 'bool';
         }
@@ -61,7 +68,7 @@ class ReturnValueToken extends CustomGenericToken
         
         $insert = $this->createCheckTokenList($variable);
         
-        $i = 1;
+        $i = 0;
         foreach ($insert as $token) {
             $tokenList->injectToken($token, $i++);
         }
