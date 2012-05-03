@@ -7,6 +7,13 @@
 interface Parser
 {
     /**
+     * find the class or structure
+     * 
+     * @param TokenList $tokenList
+     */
+    public function parseElement(TokenList $tokenList);
+    
+    /**
      * process a token list
      * 
      * @param TokenList $tokenList
@@ -19,5 +26,5 @@ interface Parser
      * 
      * @return PythoPhant_Reflection_Element
      */
-    public function getReflectionElement();
+    public function getElement();
 }

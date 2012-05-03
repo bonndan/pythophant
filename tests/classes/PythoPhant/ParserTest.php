@@ -41,7 +41,7 @@ class PythoPhant_ParserTest extends PHPUnit_Framework_TestCase
     /**
      * 
      */
-    public function testProcessTokenListFindsClass()
+    public function testParseElementFindsClass()
     {
         $scanner = $this->getScanner();
         $source = "<?php
@@ -53,13 +53,13 @@ class MyTest
 ";
         $scanner->scanSource($source);
         
-        $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
         $this->assertInstanceOf('PythoPhant_Reflection_Class', $class);
         $this->assertEquals('MyTest', $class->getName() );
     }
     
-    public function testProcessTokenListFindsClassWithExtends()
+    public function testParseElementListFindsClassWithExtends()
     {
         $scanner = $this->getScanner();
         $source = "<?php
@@ -72,15 +72,15 @@ extends Something
 ";
         $scanner->scanSource($source);
         
-        $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
         $this->assertAttributeEquals('Something', 'extends', $class);
     }
     
     /**
      * ensure implemented interfaces are passed
      */
-    public function testProcessTokenListFindsClassWithImplements()
+    public function testParseElementFindsClassWithImplements()
     {
         $scanner = $this->getScanner();
         $source = "<?php
@@ -93,8 +93,8 @@ implements Something, SomeOtherThing
 ";
         $scanner->scanSource($source);
         
-        $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
         $this->assertAttributeContains('Something', 'implements', $class);
         $this->assertAttributeContains('SomeOtherThing', 'implements', $class);
     }
@@ -104,7 +104,7 @@ implements Something, SomeOtherThing
     /**
      * 
      */
-    public function testProcessTokenListThrowsMissingDocCommentException()
+    public function testParseElementThrowsMissingDocCommentException()
     {
         $scanner = $this->getScanner();
         $source = "<?php
@@ -117,7 +117,7 @@ class MyTest
 ";
         $scanner->scanSource($source);
         $this->setExpectedException('PythoPhant_Exception');
-        $this->object->processTokenList($scanner->getTokenList());
+        $this->object->parseElement($scanner->getTokenList());
     }
     
     /**
@@ -146,8 +146,8 @@ class MyTest
 ";
         $scanner->scanSource($source);
         $tokenList = $scanner->getTokenList(); 
-        $this->object->processTokenList($tokenList);
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($tokenList);
+        $class = $this->object->getElement();
         $vars = $class->getVars();
         $this->assertEquals(2, count($vars));
         $this->assertArrayHasKey('aVar', $vars);
@@ -180,8 +180,8 @@ class MyTest
 ";
         $scanner->scanSource($source);
         $tokenList = $scanner->getTokenList();
-        $this->object->processTokenList($tokenList);
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($tokenList);
+        $class = $this->object->getElement();
         $consts = $class->getConstants();
         $this->assertEquals(1, count($consts));
         $this->assertArrayHasKey('MY_CONST', $consts);
@@ -190,7 +190,7 @@ class MyTest
     /**
      * 
      */
-    public function testProcessTokenListFindsClassMethods()
+    public function testParseElementFindsClassMethods()
     {
         $scanner = $this->getScanner();
         $source = "<?php
@@ -211,8 +211,8 @@ extends Something
 ";
         $scanner->scanSource($source);
         
-        $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
         $methods = $class->getMethods();
         $this->assertEquals(1, count($methods));
         $this->assertEquals('myFunction', key($methods));
@@ -244,8 +244,8 @@ extends Something
 ";
         $scanner->scanSource($source);
         
-        $this->object->processTokenList($scanner->getTokenList());
-        $class = $this->object->getReflectionElement();
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
         $methods = $class->getMethods();
         $myFunc = current($methods);
         $tokenList = $myFunc->getBodyTokenList();

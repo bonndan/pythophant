@@ -14,12 +14,6 @@ class PythoPhant_Parser implements Parser
     private $tokenList;
 
     /**
-     * token factory
-     * @var TokenFactory 
-     */
-    private $tokenFactory;
-
-    /**
      * class or interface that is built
      * @var PythoPhant_Reflection_Class|PythoPhant_Reflection_Interface
      */
@@ -36,16 +30,6 @@ class PythoPhant_Parser implements Parser
      * @var PythoPhant_Reflection_MemberAbstract 
      */
     private $currentElement = null;
-
-    /**
-     * pass a filename and a token factory
-     * 
-     * @param TokenFactory $factory factory instance
-     */
-    public function __construct(TokenFactory $factory)
-    {
-        $this->tokenFactory = $factory;
-    }
 
     /**
      * set the tokenlist to use
@@ -65,13 +49,37 @@ class PythoPhant_Parser implements Parser
      * 
      * @param TokenList $tokenList
      */
-    public function processTokenList(TokenList $tokenList)
+    public function parseElement(TokenList $tokenList)
     {
         $this->setTokenList($tokenList);
 
         $this->findClass();
         $this->findClassElements();
-        $this->class->parseListAffections();
+        $this->class->parseListAffections($this);
+    }
+    
+    /**
+     * the "magic". First the "parsed early" tokens are processed, beginning with
+     * the first token in the list. The second pass treats all other tokens which
+     * could affect the list.
+     * 
+     * @param TokenList $tokenList
+     * 
+     * @return void
+     */
+    public function processTokenList(TokenList $tokenList)
+    {
+        foreach ($tokenList as $token) {
+            if ($token instanceof ParsedEarlyToken) {
+                $token->affectTokenList($tokenList);
+            }
+        }
+
+        foreach ($tokenList as $token) {
+            if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
+                $token->affectTokenList($tokenList);
+            }
+        }
     }
 
     /**
@@ -141,7 +149,7 @@ class PythoPhant_Parser implements Parser
      * 
      * @return PythoPhant_Reflection_Element
      */
-    public function getReflectionElement()
+    public function getElement()
     {
         return $this->class;
     }
