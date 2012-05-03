@@ -35,6 +35,16 @@ class PythoPhant_Scanner implements Scanner
     }
 
     /**
+     * returns a new instance of the scanner
+     * 
+     * @return \PythoPhant_Scanner 
+     */
+    public static function create()
+    {
+        return new PythoPhant_Scanner(new PythoPhant_TokenFactory());
+    }
+    
+    /**
      * parses a string
      * 
      * @param string $source

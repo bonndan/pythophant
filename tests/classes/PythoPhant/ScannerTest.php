@@ -114,5 +114,10 @@ class PythoPhant_ScannerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('T_JSON_OPEN_OBJECT', $tokens[6]->getTokenName());
     }
 
+    public function testCreate()
+    {
+        $scanner = PythoPhant_Scanner::create();
+        $this->assertInstanceOf('PythoPhant_Scanner', $scanner);
+    }
 }
 
