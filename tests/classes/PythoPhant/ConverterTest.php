@@ -39,9 +39,9 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
         $this->scanner->expects($this->once())
             ->method('getTokenList')
             ->will($this->returnValue($this->getMock('TokenList')));
-        $this->parser->expects($this->once())->method('processTokenList');
+        $this->parser->expects($this->once())->method('parseElement');
         $this->parser->expects($this->once())
-            ->method('getReflectionElement')
+            ->method('getElement')
             ->will($this->returnValue($this->getMock('PythoPhant_Reflection_Element')));
         $this->renderer->expects($this->once())->method('enableDebugging');
         $this->renderer->expects($this->once())->method('setReflectionElement');
@@ -77,7 +77,7 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getMock('TokenList')));
         
         $this->parser->expects($this->once())
-            ->method('processTokenList')
+            ->method('parseElement')
             ->will($this->throwException(new PythoPhant_Exception('test', 1)));
         
         $observer = $this->getMock('PythoPhant_Observer');
@@ -102,7 +102,7 @@ class PythoPhant_ConverterTest extends PHPUnit_Framework_TestCase
             ->method('getTokenList')
             ->will($this->returnValue($this->getMock('TokenList')));
         $this->parser->expects($this->once())
-            ->method('getReflectionElement')
+            ->method('getElement')
             ->will($this->returnValue($this->getMock('PythoPhant_Reflection_Element')));
         $res = $this->converter->update($mock);
         $this->assertEquals($this->converter, $res);
