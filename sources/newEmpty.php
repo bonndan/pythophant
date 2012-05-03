@@ -35,6 +35,11 @@ class NewEmpty
      */
     private function hanswurst(MyInterface $hans, $wurst)
     {
+    php/*asdasd*/;
+        if (! is_string($wurst)) {
+            throw new InvalidArgumentException("wurst is not of type string") ;
+        }
+    //
         $this->hans = $hans;
         self::$wurst = $wurst;
         $this->anArray[] = 1;
@@ -49,6 +54,11 @@ class NewEmpty
      */
     final function someFunction($nothing)
     {
+    php/*asdasd*/;
+        if (! is_int($nothing)) {
+            throw new InvalidArgumentException("nothing is not of type int") ;
+        }
+    //
         $this->hanswurst(1, "hanswurst");
         $a = array('b', $var1, $nothing);
         return $this->hans . " ".  self::$wurst;

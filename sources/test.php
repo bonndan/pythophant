@@ -49,6 +49,11 @@ class Test
      */
     private function isSomethingContained(array $something)
     {
+    php/*asdasd*/;
+        if (! is_array($something)) {
+            throw new InvalidArgumentException("something is not of type array") ;
+        }
+    //
         $something = (bool)$something;
         return in_array($something, array('a', 1)) or ctype_alnum($something);
 

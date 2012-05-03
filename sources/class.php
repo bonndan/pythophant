@@ -20,6 +20,11 @@ class MyClass
      */
     public function getCleanedString($aString)
     {
+    php/*asdasd*/;
+        if (! is_string($aString)) {
+            throw new InvalidArgumentException("aString is not of type string") ;
+        }
+    //
         if (strlen($aString) > 3) {
             return strtolower($aString);
         }
@@ -38,6 +43,16 @@ class MyClass
      */
     public function someFunc(MyInterface $anObject, $mustBeInt, $mustBeBool)
     {
+    php/*asdasd*/;
+        if (! is_bool($mustBeBool)) {
+            throw new InvalidArgumentException("mustBeBool is not of type bool") ;
+        }
+    //
+    php/*asdasd*/;
+        if (! is_int($mustBeInt)) {
+            throw new InvalidArgumentException("mustBeInt is not of type int") ;
+        }
+    //
         try {
             return $anObject->someFunc();
         }

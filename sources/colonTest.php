@@ -28,6 +28,16 @@ class ColonTest
      */
     private function setVar($aVar, $bv)
     {
+    php/*asdasd*/;
+        if (! is_int($bv)) {
+            throw new InvalidArgumentException("bv is not of type int") ;
+        }
+    //
+    php/*asdasd*/;
+        if (! is_string($aVar)) {
+            throw new InvalidArgumentException("aVar is not of type string") ;
+        }
+    //
         $this->aVar = $aVar;
 
     }
