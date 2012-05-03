@@ -46,16 +46,24 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
             if (!$typeToken instanceof ReturnValueToken) {
                 $typeToken = new ReturnValueToken(Token::T_RETURNVALUE, $param->getType(), 1);
             }
-            $typeToken->insertTypecheckinTokenList($body, $param->getName());
-            $type = $typeToken->getContent();
-            if ($type != '') {
-                $type .= ' ';
-            }
             
             $default = $param->getDefault();
             if (trim($default) != '') {
                 $default = ' = ' .$default;
             }
+            
+            /** 
+             * @todo remove explicit call to insertTypecheckinTokenList, should
+             * be triggered by token
+             */
+            $typeToken->insertTypecheckinTokenList($body, $param);
+            
+            $type = $typeToken->getContent();
+            if ($type != '') {
+                $type .= ' ';
+            }
+            
+            
             /* @var $param PythoPhant_Reflection_FunctionParam */
             $params[] =  $type. '$' . $param->getName() . $default;
         }
