@@ -42,6 +42,15 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
     }
     
     /**
+     * 
+     * @return type 
+     */
+    public function getPreamble()
+    {
+        return $this->preamble;
+    }
+    
+    /**
      * add a class constant
      * 
      * @param PythoPhant_Reflection_ClassConst $const
