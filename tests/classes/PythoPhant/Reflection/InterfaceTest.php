@@ -23,6 +23,17 @@ class PythoPhant_Reflection_InterfaceTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * 
+     */
+    public function testSetPreamble()
+    {
+        $tokenList = new TokenList();
+        $class = $this->getClass();
+        $class->setPreamble($tokenList);
+        $this->assertAttributeEquals($tokenList, 'preamble', $class);
+    }
+    
+    /**
      * test class var addition 
      */
     public function testAddMethod()

@@ -1,6 +1,9 @@
 <?php
 /**
  * PythoPhant_Reflection_Interface
+ * 
+ * 
+ * 
  */
 class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstract
 {
@@ -21,6 +24,22 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
      * @var array
      */
     protected $methods = array();
+    
+    /**
+     * token list which is rendered before the actual element
+     * @var TokenList 
+     */
+    protected $preamble = null;
+    
+    /**
+     * set a token list which is rendered before the actual element
+     * 
+     * @param TokenList $tokenList 
+     */
+    public function setPreamble(TokenList $tokenList)
+    {
+        $this->preamble = $tokenList;
+    }
     
     /**
      * add a class constant
