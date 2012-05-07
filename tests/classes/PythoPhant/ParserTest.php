@@ -260,5 +260,43 @@ extends Something
         }
         $this->assertTrue($found);
     }
+    
+        /**
+     * testing of a function body
+     */
+    public function testPreambleIsFound()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+
+require_once 'someClass'
+
+namespace SomeNamespace
+
+/**
+ * doc comment
+ */
+class MyTest
+extends Something
+
+    /**
+     * some description
+     * @param string myString
+     */
+    myFunction:
+        if something == true
+            echo 'Test'
+        else
+            echo 'No Test'
+
+";
+        $scanner->scanSource($source);
+        
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
+        $preamble = $class->getPreamble();
+        $this->assertInstanceOf('TokenList', $preamble);
+        $this->assertGreaterThan(0, $preamble->count());
+    }
 }
 

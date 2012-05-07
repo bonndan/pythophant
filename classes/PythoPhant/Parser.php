@@ -32,6 +32,12 @@ class PythoPhant_Parser implements Parser
     private $currentElement = null;
 
     /**
+     * preamble
+     * @var TokenList
+     */
+    private $preamble = null;
+    
+    /**
      * set the tokenlist to use
      * 
      * @param TokenList $tokenList
@@ -54,32 +60,42 @@ class PythoPhant_Parser implements Parser
         $this->setTokenList($tokenList);
 
         $this->findClass();
+        $this->findPreamble();
         $this->findClassElements();
         //class processTokenList recursively for each elemtn of class
         $this->class->parseListAffections($this);
     }
     
     /**
-     * the "magic". First the "parsed early" tokens are processed, beginning with
-     * the first token in the list. The second pass treats all other tokens which
-     * could affect the list.
+     * finds any tokens before class/interface declaration
      * 
-     * @param TokenList $tokenList
      * 
-     * @return void
      */
-    public function processTokenList(TokenList $tokenList)
+    private function findPreamble()
     {
-        foreach ($tokenList as $token) {
-            if ($token instanceof ParsedEarlyToken) {
-                $token->affectTokenList($tokenList);
+        $lines = $this->tokenList->makeLines();
+        $this->preamble = new TokenList();
+        $declarations = PythoPhant_Grammar::$declarations;
+        foreach ($lines as $line) {
+            if ($line[0] instanceof IndentationToken) {
+                continue;
+            }
+
+            if ($line[0] instanceof DocCommentToken) {
+                continue;
+            }
+            
+            if (in_array($line[0]->getContent(), $declarations)) {
+                break;
+            }
+            
+            foreach ($line as $token) {
+                $this->preamble->pushToken($token);
             }
         }
-
-        foreach ($tokenList as $token) {
-            if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
-                $token->affectTokenList($tokenList);
-            }
+        
+        if ($this->preamble->count() > 0) {
+            $this->class->setPreamble($this->preamble);
         }
     }
 
@@ -267,5 +283,29 @@ class PythoPhant_Parser implements Parser
         
         $this->class->$setter($element);
         $this->currentElement = $element;
+    }
+    
+     /**
+     * the "magic". First the "parsed early" tokens are processed, beginning with
+     * the first token in the list. The second pass treats all other tokens which
+     * could affect the list.
+     * 
+     * @param TokenList $tokenList
+     * 
+     * @return void
+     */
+    public function processTokenList(TokenList $tokenList)
+    {
+        foreach ($tokenList as $token) {
+            if ($token instanceof ParsedEarlyToken) {
+                $token->affectTokenList($tokenList);
+            }
+        }
+
+        foreach ($tokenList as $token) {
+            if ($token instanceof CustomToken && !$token instanceof ParsedEarlyToken) {
+                $token->affectTokenList($tokenList);
+            }
+        }
     }
 }
