@@ -78,7 +78,7 @@ class PythoPhant_Renderer_Function implements PythoPhant_Renderer
             foreach ($body as $token) {
                 $buffer .= $token->getContent();
             }
-            $buffer .= PHP_EOL . '    }' . PHP_EOL . PHP_EOL;
+            $buffer .= '    }' . PHP_EOL . PHP_EOL;
         }
         return $buffer;
     }
