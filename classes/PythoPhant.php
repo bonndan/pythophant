@@ -40,8 +40,7 @@ class PythoPhant
         PythoPhant_Converter $converter = null,
         PythoPhant_DirectoryWatcher $watcher = null,
         PythoPhant_Event_Proxy $proxy = null
-    )
-    {
+    ) {
         $this->eventProxy = is_object($proxy) ? $proxy : new PythoPhant_Event_Proxy();
         $this->dirWatcher = is_object($watcher) ? $watcher : $this->getDirectoryWatcher();
         $this->converter = is_object($converter) ? $converter : $this->getConverter();
