@@ -99,6 +99,28 @@ implements Something, SomeOtherThing
         $this->assertAttributeContains('SomeOtherThing', 'implements', $class);
     }
     
+    /**
+     * ensure implemented interfaces are passed
+     */
+    public function testParseElementFindsClassWithExtendsAndImplements()
+    {
+        $scanner = $this->getScanner();
+        $source = "<?php
+/**
+ * doc comment
+ */
+class MyTest extends Bla
+implements Something, SomeOtherThing
+
+";
+        $scanner->scanSource($source);
+        
+        $this->object->parseElement($scanner->getTokenList());
+        $class = $this->object->getElement();
+        $this->assertAttributeEquals('Bla', 'extends', $class);
+        $this->assertAttributeContains('Something', 'implements', $class);
+        $this->assertAttributeContains('SomeOtherThing', 'implements', $class);
+    }
 
     
     /**

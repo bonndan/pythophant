@@ -85,7 +85,11 @@ class PythoPhant_Parser implements Parser
                 continue;
             }
             
-            if (in_array($line[0]->getContent(), $declarations)) {
+            if ($line[0]->getTokenName() == 'T_OPEN_TAG') {
+                continue;
+            }
+            
+            if (in_array($line[0]->getTokenName(), $declarations)) {
                 break;
             }
             
@@ -94,9 +98,7 @@ class PythoPhant_Parser implements Parser
             }
         }
         
-        if ($this->preamble->count() > 0) {
-            $this->class->setPreamble($this->preamble);
-        }
+        $this->class->setPreamble($this->preamble);
     }
 
     /**
@@ -124,39 +126,57 @@ class PythoPhant_Parser implements Parser
 
 
             $firstTokenName = $line[0]->getTokenName();
-            if ($firstTokenName == 'T_CLASS') {
+            if ($firstTokenName == 'T_CLASS' ) {
                 $type = 'PythoPhant_Reflection_Class';
                 $name = $this->tokenList->getNextNonWhitespace($line[0]);
             } elseif ($firstTokenName == 'T_INTERFACE') {
                 $type = 'PythoPhant_Reflection_Interface';
                 $name = $this->tokenList->getNextNonWhitespace($line[0]);
-            } elseif ($firstTokenName == 'T_EXTENDS') {
-                $extends = $this->tokenList->getNextNonWhitespace($line[0]);
-            } elseif ($firstTokenName == 'T_IMPLEMENTS') {
-                foreach ($line as $i => $token) {
-                    if ($i == 0) {
-                        continue;
-                    }
-                    if ($token instanceof NewLineToken) {
-                        break;
-                    }
-                    if ($token instanceof StringToken) {
-                        $implements[] = $token;
-                    }
+            } else {
+                continue;
+            }
+            
+            $this->class = new $type($name->getContent(), $docComment);
+            $this->findExtendsAndImplements($line[0]);
+            return;
+        }
+    }
+    
+    /**
+     * finds and reads implements, extends and their class names
+     * 
+     * @param Token $token
+     * 
+     * @return void
+     */
+    private function findExtendsAndImplements(Token $token)
+    {
+        $mode = null;
+        $index = $this->tokenList->getTokenIndex($token);
+        while ($index++) {
+            if (!$this->tokenList->offsetExists($index)) {
+                break;
+            }
+            
+            $token = $this->tokenList->offsetGet($index);
+            if ($token instanceof IndentationToken && $token->getNestingLevel() > 0) {
+                break;
+            }
+            $tokenName = $token->getTokenName();
+            
+            if ($tokenName == 'T_IMPLEMENTS') {
+                $mode = 'implements';
+            } elseif ($tokenName == 'T_EXTENDS') {
+                $mode = 'extends';
+            }
+            
+            if ($token instanceof StringToken) {
+                if ($mode == 'extends') {
+                    $this->class->setExtends($token);
+                } elseif ($mode == 'implements') {
+                    $this->class->setImplements(array($token->getContent() => $token));
                 }
             }
-        }
-
-        if (!isset($name)) {
-            throw new PythoPhant_Exception('Could not detect class', 0);
-        }
-
-        $this->class = new $type($name->getContent(), $docComment);
-        if ($extends) {
-            $this->class->setExtends($extends);
-        }
-        if ($this->class instanceof PythoPhant_Reflection_Class) {
-            $this->class->setImplements($implements);
         }
     }
 
