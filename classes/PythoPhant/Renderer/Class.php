@@ -15,6 +15,11 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
     private $class;
     
     /**
+     * @var PythoPhant_Renderer_TokenList 
+     */
+    private $preambleRenderer;
+    
+    /**
      * nested renderers
      * @var array 
      */
@@ -29,6 +34,7 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
     {
         $this->class = $element;
         
+        $this->preambleRenderer = new PythoPhant_Renderer_TokenList($this->class->getPreamble());
         
         foreach ($this->class->getConstants() as $const) {
             $renderer = new PythoPhant_Renderer_ClassConst();
@@ -60,7 +66,7 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
     public function enableDebugging($debug)
     {
         foreach ($this->renderers as $renderer) {
-            $renderer->enableDebuggin($debug);
+            $renderer->enableDebugging($debug);
         }
     }
 
@@ -73,8 +79,17 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
     {
         $buffer = '<?php' . PHP_EOL;
         
+        $buffer .= $this->preambleRenderer->getPHPSource();
+        
         $buffer .= $this->class->getDocComment()->getContent();
         $buffer .= 'class ' . $this->class->getName();
+        if ($this->class->getExtends() !== null) {
+            $buffer .= PHP_EOL . 'extends ' . $this->class->getExtends();
+        }
+        $implements = $this->class->getImplements();
+        if (!empty($implements)) {
+            $buffer .= PHP_EOL . 'implements ' . implode(', ', $implements);
+        }
         $buffer .= PHP_EOL . PythoPhant_Grammar::T_OPEN_BLOCK . PHP_EOL;
         
         foreach ($this->renderers as $renderer) {
