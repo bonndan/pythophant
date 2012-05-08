@@ -51,13 +51,14 @@ class PythoPhant_Reflection_Class extends PythoPhant_Reflection_Interface
      */
     public function setImplements(array $interfaces)
     {
-        foreach ($interfaces as $key => $interface) {
-            if ($interface instanceof StringToken) {
-                $interfaces[$key] = $interface->getContent();
+        foreach ($interfaces as $content) {
+            if ($content instanceof Token) {
+                $content = $content->getContent();
             }
+            $this->implements[] = $content;
         }
-
-        $this->implements = $interfaces;
+        
+        $this->implements = array_unique($this->implements);
         return $this;
     }
 
@@ -68,6 +69,10 @@ class PythoPhant_Reflection_Class extends PythoPhant_Reflection_Interface
      */
     public function parseListAffections(Parser $parser)
     {
+        if ($this->preamble instanceof TokenList) {
+            $parser->processTokenList($this->preamble);
+        }
+        
         $members = array_merge($this->getVars(), $this->getConstants(), $this->getMethods());
 
         foreach ($members as $var) {
