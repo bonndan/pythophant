@@ -34,8 +34,10 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
     {
         $this->class = $element;
         
-        $this->preambleRenderer = new PythoPhant_Renderer_TokenList($this->class->getPreamble());
-        
+        $preamble = $this->class->getPreamble();
+        if ($preamble !== null) {
+            $this->preambleRenderer = new PythoPhant_Renderer_TokenList($preamble);
+        }
         foreach ($this->class->getConstants() as $const) {
             $renderer = new PythoPhant_Renderer_ClassConst();
             $renderer->setReflectionElement($const);
@@ -79,7 +81,9 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
     {
         $buffer = '<?php' . PHP_EOL;
         
-        $buffer .= $this->preambleRenderer->getPHPSource();
+        if ($this->preambleRenderer !== null) {
+            $buffer .= $this->preambleRenderer->getPHPSource();
+        }
         
         $buffer .= $this->class->getDocComment()->getContent();
         $buffer .= 'class ' . $this->class->getName();
