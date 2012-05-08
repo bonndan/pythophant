@@ -63,6 +63,16 @@ class PythoPhant_Reflection_Class extends PythoPhant_Reflection_Interface
     }
 
     /**
+     * get all implemented interfaces
+     * 
+     * @return array 
+     */
+    public function getImplements()
+    {
+        return $this->implements;
+    }
+    
+    /**
      * have all necessary parts (token lists for these parts) parsed
      * 
      * @param Parser $parser

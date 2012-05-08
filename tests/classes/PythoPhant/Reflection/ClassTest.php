@@ -60,8 +60,9 @@ class PythoPhant_Reflection_ClassTest extends PHPUnit_Framework_TestCase
         );
         $class->setImplements($interfaces);
         
-        $this->assertAttributeContains('MyInterface1', 'implements', $class);
-        $this->assertAttributeContains('MyInterface2', 'implements', $class);
+        $impl = $class->getImplements();
+        $this->assertContains('MyInterface1', $impl);
+        $this->assertContains('MyInterface2', $impl);
     }
     
     /**
