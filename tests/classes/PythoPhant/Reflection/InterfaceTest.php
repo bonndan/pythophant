@@ -70,13 +70,13 @@ class PythoPhant_Reflection_InterfaceTest extends PHPUnit_Framework_TestCase
     {
         $class = $this->getClass();
         $class->setExtends('MyClass');
-        $this->assertAttributeEquals('MyClass', 'extends', $class);
+        $this->assertEquals('MyClass', $class->getExtends());
     }
     
     public function testSetExtendsWithStringToken()
     {
         $class = $this->getClass();
         $class->setExtends(new StringToken('T_STRING', 'MyClass', 0));
-        $this->assertAttributeEquals('MyClass', 'extends', $class);
+        $this->assertEquals('MyClass', $class->getExtends());
     }
 }

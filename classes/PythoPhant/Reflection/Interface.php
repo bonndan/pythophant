@@ -112,4 +112,13 @@ class PythoPhant_Reflection_Interface extends PythoPhant_Reflection_ElementAbstr
         return $this;
     }
     
+    /**
+     * get the name of the parent class
+     * 
+     * @return string|null
+     */
+    public function getExtends()
+    {
+        return $this->extends;
+    }
 }
