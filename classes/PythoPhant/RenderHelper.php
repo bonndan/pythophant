@@ -3,7 +3,7 @@
  * PythoPhant_Renderer
  * 
  * generic token renderer
- *  
+ * @
  */
 class PythoPhant_RenderHelper implements PythoPhant_Renderer
 {
@@ -51,7 +51,7 @@ class PythoPhant_RenderHelper implements PythoPhant_Renderer
      */
     public function addWaterMark($watermarkText)
     {
-        $this->ref->getDocComment()->appendToLongDescription($watermarkText);
+        $this->ref->getDocComment()->setAnnotation('ppWatermark', array($watermarkText));
         return $this;
     }
     

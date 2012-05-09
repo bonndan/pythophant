@@ -45,7 +45,7 @@ class PythoPhant_RenderHelperTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $doc->expects($this->once())
-            ->method('appendToLongDescription');
+            ->method('setAnnotation');
         $element->expects($this->once())
             ->method('getDocComment')
             ->will($this->returnValue($doc));
