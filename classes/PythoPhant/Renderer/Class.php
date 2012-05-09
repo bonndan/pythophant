@@ -85,7 +85,7 @@ class PythoPhant_Renderer_Class implements PythoPhant_Renderer
             $buffer .= $this->preambleRenderer->getPHPSource();
         }
         
-        $buffer .= $this->class->getDocComment()->getContent() . PHP_EOL;
+        $buffer .= $this->class->getDocComment()->getRebuiltContent();
         $buffer .= 'class ' . $this->class->getName();
         if ($this->class->getExtends() !== null) {
             $buffer .= PHP_EOL . 'extends ' . $this->class->getExtends();
