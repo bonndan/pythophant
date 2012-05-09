@@ -24,21 +24,15 @@ class DocCommentToken extends PHPToken
 
     /**
      * params noted in \@param
-     * @var array(array(string type, string description, string default)) 
+     * @var array(varname => array(string type, string description, string default)) 
      */
     private $param = array();
 
     /**
-     * excptions noted in \@throws
+     * annontation
      * @var array 
      */
-    private $throws = array();
-
-    /**
-     * params noted in \@author
-     * @var array 
-     */
-    private $author = array();
+    private $annotations = array();
 
     /**
      * return value
@@ -144,10 +138,10 @@ class DocCommentToken extends PHPToken
      */
     public function setAnnotation($tag, array $matches)
     {
-        if (!isset($this->$tag)) {
-            $this->$tag = array();
+        if (!isset($this->annotations[$tag])) {
+            $this->annotations[$tag] = array();
         }
-        array_push($this->$tag, trim(implode(' ', $matches)));
+        $this->annotations[$tag][] = trim(implode(' ', $matches));
     }
 
     /**
@@ -253,11 +247,11 @@ class DocCommentToken extends PHPToken
      */
     public function getAnnotation($name)
     {
-        if (!isset($this->$name)) {
+        if (!isset($this->annotations[$name])) {
             return null;
         }
 
-        return $this->$name;
+        return $this->annotations[$name];
     }
 
     /**
@@ -274,11 +268,39 @@ class DocCommentToken extends PHPToken
     /**
      * rebuild the content by the parsed content
      * 
+     * @param int $indentation 
+     * 
      * @todo rebuild the whole content, insert missing dollar signs for vars 
      */
-    public function getRebuiltContent()
+    public function getRebuiltContent($indentation = 0)
     {
+        $indentToken = IndentationToken::create($indentation);
+        $blanks = $indentToken->getContent();
+        $linePrefix = ' * ';
         
+        $content  = $blanks . '/**' . PHP_EOL;
+        $content .= $blanks . $linePrefix . $this->shortDesc . PHP_EOL;
+        $content .= $blanks . $linePrefix . PHP_EOL;
+        
+        foreach ($this->param as $varname => $values) {
+            $tmp = implode(' ', array('@param', $values[0], '$' . $varname, $values[1]));
+            $content .= $blanks . $linePrefix . $tmp . PHP_EOL; 
+        }
+        
+        if (!empty($this->return)) {
+            $content .= $blanks . $linePrefix . '@return '. $this->getReturnType() . PHP_EOL;            
+        }
+        
+        foreach ($this->annotations as $var => $values) {
+            foreach ($values as $annotation) {
+                $content .= $blanks . $linePrefix . '@'. $var. ' ' . $annotation . PHP_EOL;  
+            }
+        }
+        
+        
+        $content .= $blanks . ' */' .PHP_EOL;
+        
+        return $content;
     }
 
 }

@@ -13,26 +13,7 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
      * @var DocCommentToken 
      */
     private $token;
-    
-    protected function  getToken()
-    {
-        $content = 
-"/**
- * test
- *
- * more lines
- * here
- * 
- * @param string          test some var
- * @param SomeInterface[] test2 = array() some other var
- *
- * @return void
- * @author Daniel Pozzi <bonndan76@googlemail.com>
- */";
-        $token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
-        
-        return $token;
-    }
+
     
     /**
      * test the whole block indentation function 
@@ -132,5 +113,61 @@ class DocCommentTokenTest extends PHPUnit_Framework_TestCase
  */";
         $this->token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
         $this->assertTrue($this->token->isMethodComment());
+    }
+    
+    /**
+     * 
+     */
+    public function testGetRebuiltContent()
+    {
+                $content = 
+"/**
+ * test
+ *
+ * more lines
+ * here
+ * 
+ * @param string          test some var
+ * @param SomeInterface[] test2 = array() some other var
+ *
+ * @return void
+ * @throws InvalidArgumentException
+ * @author Daniel Pozzi <bonndan76@googlemail.com>
+ * @someToken someContent
+ */";
+        $token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        
+        $content = $token->getRebuiltContent();
+        $this->assertContains(' * test', $content);
+        $this->assertContains(' * @param string $test some var', $content);
+        $this->assertContains(' * @param SomeInterface[] $test2 some other var', $content);
+        $this->assertContains(' * @return void', $content);
+        $this->assertContains(' * @throws InvalidArgumentException', $content, $content);
+        $this->assertContains(' * @someToken someContent', $content, $content);
+        $this->assertContains(' * @author Daniel Pozzi <bonndan76@googlemail.com>', $content);
+    }
+    
+    /**
+     * get an isntance
+     * @return \DocCommentToken 
+     */
+    protected function  getToken()
+    {
+        $content = 
+"/**
+ * test
+ *
+ * more lines
+ * here
+ * 
+ * @param string          test some var
+ * @param SomeInterface[] test2 = array() some other var
+ *
+ * @return void
+ * @author Daniel Pozzi <bonndan76@googlemail.com>
+ */";
+        $token = new DocCommentToken('T_DOC_COMMENT', $content, 1);
+        
+        return $token;
     }
 }
