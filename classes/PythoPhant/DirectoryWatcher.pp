@@ -3,6 +3,9 @@
  * PythoPhant_DirectoryWatcher
  * 
  * recursively scans directories for pp files and notifies observers on change
+ * 
+ * @author Daniel Pozzi <bonndan76@googlemail.com>
+ * 
  */
 class PythoPhant_DirectoryWatcher
 extends PythoPhant_AbstractSubject
@@ -29,11 +32,11 @@ implements PythoPhant_Subject
     /**
      * add a directory path to watch
      * 
-     * @param string $dir
+     * @param string dir
      * 
      * @return \PythoPhant_DirectoryWatcher  
      */
-    addDirectory: dir
+    addDirectory:
         if (!is_dir(dir))
             return @notify: new PythoPhant_Event_Error: 'not a directory', dir
         
@@ -45,12 +48,11 @@ implements PythoPhant_Subject
     /**
      * loop over the directories, store file mtime for all watched files 
      * 
-     * @param int pollingInterval
+     * @param int pollingInterval = null
      * 
      * @return void
      */
-    run: pollingInterval = null
-        
+    run:
         if pollingInterval !== null
             @pollingInterval = pollingInterval
         
@@ -74,11 +76,11 @@ implements PythoPhant_Subject
     /**
      * scan recursive
      *
-     * @param string pattern
+     * @param string path
      * 
      * @return array
      */
-    private scanRecursive: path
+    private scanRecursive:
         
         files = []
         foreach new DirectoryIterator(path) as file

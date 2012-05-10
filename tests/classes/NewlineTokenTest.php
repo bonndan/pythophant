@@ -102,22 +102,26 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(' {', $openBrace->getContent());
     }
     
-    public function testAffectTokenlistInsertsCloseBraceIfNextLineIndentedLess()
+    public function testAffectTokenlistInsertsCloseBraceAndNewlineIfNextLineIndentedLess()
     {
         $token = NewLineToken::createEmpty(1);
-        $target = new StringToken('test2', 'test2',1);
         $tokenlist = new TokenList;
         $tokenlist->pushToken(IndentationToken::create(2));
         $tokenlist->pushToken(new StringToken('test', 'test',1));
         $tokenlist->pushToken($token);
         $tokenlist->pushToken(IndentationToken::create(1));
+        $target = new StringToken('test2', 'test2',1);
         $tokenlist->pushToken($target);
+        
         $token->affectTokenList($tokenlist);
-        $index = $tokenlist->getTokenIndex($target) -2 ;
+        $index = $tokenlist->getTokenIndex($target) - 3;
         $closeBrace = $tokenlist->offsetGet($index);
         
         $this->assertEquals('T_CLOSE_BLOCK', $closeBrace->getTokenName());
         $this->assertContains('}', $closeBrace->getContent());
+        
+        $nl = $tokenlist->offsetGet($index+1);
+        $this->assertEquals('T_NEWLINE', $nl->getTokenName());
     }
     
     /**
@@ -168,9 +172,10 @@ class NewlineTokenTest extends PHPUnit_Framework_TestCase
         $this->assertContains(';', $token->getContent());
         $close = $tokenlist->getNextNonWhitespace($token);
         $this->assertEquals('T_CLOSE_BLOCK', $close->getTokenName());
+        /*
         $close = $tokenlist->getNextNonWhitespace($close);
         $this->assertEquals('T_CLOSE_BLOCK', $close->getTokenName());
-        $this->assertNull($tokenlist->getNextNonWhitespace($close));
+        $this->assertNull($tokenlist->getNextNonWhitespace($close));*/
     }
     
     /**

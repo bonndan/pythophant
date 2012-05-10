@@ -164,15 +164,21 @@ class NewLineToken extends CustomGenericToken
             //brace
             $close = new PHPToken(
                 'T_CLOSE_BLOCK',
-                PythoPhant_Grammar::T_CLOSE_BLOCK . PHP_EOL,
+                PythoPhant_Grammar::T_CLOSE_BLOCK,
                 $this->getLine()
             );
             $position = $position + 1;
             $tokenList->injectToken($close, $position);
+            
             //indent brace one lever higher
             $indent = IndentationToken::create($currentIndentation, $this->line);
             $tokenList->injectToken($indent, $position);
             $position = $tokenList->getTokenIndex($close);
+            
+            $nl = new NewLineToken('T_NEWLINE', PHP_EOL, $this->line);
+            $nl->setAuxValue('');
+            $tokenList->injectToken($nl, $position + 1);
+            $position = $tokenList->getTokenIndex($nl);
         }
     }
 

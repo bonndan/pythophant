@@ -152,6 +152,7 @@ abstract class PythoPhant_Grammar
         'T_COMMA',
         'T_OPEN_ARRAY',
         'T_JSON_OPEN_OBJECT',
+        'T_CLOSE_BLOCK',
     );
     
     /**
