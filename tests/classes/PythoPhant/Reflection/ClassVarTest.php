@@ -42,6 +42,6 @@ class PythoPhant_Reflection_ClassVarTest extends PHPUnit_Framework_TestCase
  * @property
  */";
         $var = $this->getClassVar($content);
-        $this->assertEquals('property', $var->isProperty());
+        $this->assertTrue($var->isProperty());
     }
 }
