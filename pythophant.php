@@ -4,7 +4,7 @@
  * 
  *  
  */
-require_once dirname(__FILE__) . '/classes/autoload.php';
+require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 define('PATH_PYTHOPHANT', __DIR__);
 define('PATH_PYTHOPHANT_MACROS', PATH_PYTHOPHANT . DIRECTORY_SEPARATOR . 'macros');
