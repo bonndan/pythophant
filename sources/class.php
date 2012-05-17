@@ -1,5 +1,8 @@
 <?php
+
 class MyClass
+extends ParentClass
+implements Foo, Bar
 {
     /**
      * foo
@@ -8,7 +11,6 @@ class MyClass
     public function fooMethod()
     {
         parent::fooMethod();
-
     }
 
     /**
@@ -20,7 +22,6 @@ class MyClass
      */
     public function getCleanedString($aString)
     {
-    php/*asdasd*/;
         if (! is_string($aString)) {
             throw new InvalidArgumentException("aString is not of type string") ;
         }
@@ -31,7 +32,6 @@ class MyClass
         else {
             return $aString;
         }
-
     }
 
     /**
@@ -43,12 +43,10 @@ class MyClass
      */
     public function someFunc(MyInterface $anObject, $mustBeInt, $mustBeBool)
     {
-    php/*asdasd*/;
         if (! is_bool($mustBeBool)) {
             throw new InvalidArgumentException("mustBeBool is not of type bool") ;
         }
     //
-    php/*asdasd*/;
         if (! is_int($mustBeInt)) {
             throw new InvalidArgumentException("mustBeInt is not of type int") ;
         }
@@ -59,7 +57,6 @@ class MyClass
         catch (Exception $e) {
             echo $e->getMessage();
         }
-
     }
 
 }

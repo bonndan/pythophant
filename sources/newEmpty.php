@@ -1,5 +1,7 @@
 <?php
+
 class NewEmpty
+extends Wurst
 {
     /**
      * hans
@@ -35,7 +37,6 @@ class NewEmpty
      */
     private function hanswurst(MyInterface $hans, $wurst)
     {
-    php/*asdasd*/;
         if (! is_string($wurst)) {
             throw new InvalidArgumentException("wurst is not of type string") ;
         }
@@ -44,7 +45,6 @@ class NewEmpty
         self::$wurst = $wurst;
         $this->anArray[] = 1;
         $this->anArray[] = 2;
-
     }
 
     /**
@@ -54,7 +54,6 @@ class NewEmpty
      */
     final function someFunction($nothing)
     {
-    php/*asdasd*/;
         if (! is_int($nothing)) {
             throw new InvalidArgumentException("nothing is not of type int") ;
         }
@@ -62,7 +61,6 @@ class NewEmpty
         $this->hanswurst(1, "hanswurst");
         $a = array('b', $var1, $nothing);
         return $this->hans . " ".  self::$wurst;
-
     }
 
     /**
@@ -78,7 +76,6 @@ class NewEmpty
         else {
             echo "World, Hello";
         }
-
     }
 
     /**
@@ -89,7 +86,6 @@ class NewEmpty
     public function anotherMethodAgain()
     {
         echo "Hello World";
-
     }
 
 }

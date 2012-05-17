@@ -1,5 +1,7 @@
 <?php
+
 class XYZ_Controller
+extends Zend_Controller_Action
 {
     /**
      * @var string 
@@ -25,7 +27,6 @@ class XYZ_Controller
     {
         $myparam1 = strtolower($myparam1);
         return $myparam;
-
     }
 
     /**
@@ -39,7 +40,6 @@ class XYZ_Controller
         $myparam1 = strtolower($myparam1);
 
         return $myparam;
-
     }
 
     /**
@@ -74,7 +74,6 @@ class XYZ_Controller
             echo MY_CONSTANT;
             echo PHP_EOL;
         }
-
     }
 
     /**
@@ -91,7 +90,6 @@ class XYZ_Controller
             $myString = "a string ".  "b string".  $myVar;
             
         }
-
     }
 
 }
