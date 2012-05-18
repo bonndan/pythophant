@@ -67,7 +67,7 @@ class TemplateMacro implements Macro
      * clean a token list
      * 
      * @param TokenList $tokenList
-     * @param type $indentation 
+     * @param int       $indentation 
      */
     public function cleanTokenList(TokenList $tokenList, $indentation = 0)
     {
@@ -95,7 +95,7 @@ class TemplateMacro implements Macro
                     } else {
                         try {
                             $lastTokenIndex = $tokenList->getTokenIndex($lastToken) + 1;
-                        } catch (OutOfBoundsException $exc) {
+                        } catch (\OutOfBoundsException $exc) {
                             $lastTokenIndex = $tokenList->getTokenIndex($token);
                         }
                         $tokenList->injectToken(IndentationToken::create($indentation), $lastTokenIndex);

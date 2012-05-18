@@ -33,32 +33,9 @@ class ProjectTest extends \PHPUnit_Framework_TestCase
     /**
      * 
      */
-    public function testReadsConfigFileWithNull()
-    {
-        $this->assertTrue($this->project->getTestAfterConversion());
-        chdir(dirname(dirname(dirname(__DIR__))));
-        $this->project->readConfigurationFile();
-    }
-    
-    /**
-     * 
-     */
-    public function testReadConfigFileWithNullIfNotConfigFilePresent()
-    {
-        $this->assertTrue($this->project->getTestAfterConversion());
-        chdir(__DIR__);
-        $this->setExpectedException('\InvalidArgumentException');
-        $this->project->readConfigurationFile();
-    }
-    
-    
-    /**
-     * 
-     */
     public function testReadConfigFile()
     {
-        $file = 
-            dirname(dirname(dirname(dirname(__FILE__))))
+        $file = dirname(PATH_TEST)
             . DIRECTORY_SEPARATOR 
             . Project::DEFAULT_CONFIG_FILE
         ;

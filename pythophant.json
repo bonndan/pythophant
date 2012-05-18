@@ -4,12 +4,16 @@
     "watch": [
         "./classes",
         "./tests",
-        "./sources"
+        "./fixtures"
     ],
     
     "testAfterConversion": true,
 
+    "macros": [
+        "macros"
+    ],
+    
     "loggers": [
-        "Console"
+        "\\PythoPhant\\Event\\Logger\\Console"
     ]
 }

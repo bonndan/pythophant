@@ -64,7 +64,7 @@ class TemplateMacroTest extends \PHPUnit_Framework_TestCase
     /**
      * get a scanner
      * 
-     * @return PythoPhant_Scanner 
+     * @return PythoPhant\Core\Scanner 
      */
     protected function getScanner()
     {
@@ -101,6 +101,6 @@ class TemplateMacroTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($count-1, $tokenList->count());
         $first = $tokenList[0];
-        $this->assertInstanceOf('IndentationToken', $first, $first->getContent());
+        $this->assertInstanceOf("PythoPhant\IndentationToken", $first, $first->getContent());
     }
 }

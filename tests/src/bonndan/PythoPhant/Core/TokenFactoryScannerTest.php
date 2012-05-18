@@ -8,7 +8,7 @@ use PythoPhant\PHPToken;
 /**
  * Test class for Scanner.
  */
-class ScannerTest extends \PHPUnit_Framework_TestCase
+class TokenFactoryScannerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Scanner
@@ -69,7 +69,7 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
             ->method('getTokenName')
             ->will($this->throwException(new \LogicException('test', 1)));
         
-        $this->setExpectedException("PythoPhant\Exception");
+        $this->setExpectedException("\PythoPhant\Exception");
         $source = "<?php \necho 'Hello World';";
         $res = $this->object->scanSource($source);
     }
@@ -90,7 +90,7 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
             ->method('createToken')
             ->will($this->throwException(new \PythoPhant\Exception('test', 1)));
         
-        $this->setExpectedException('PythoPhant_Exception');
+        $this->setExpectedException("\PythoPhant\Exception");
         $source = "<?php \necho 'Hello World';";
         $res = $this->object->scanSource($source);
     }

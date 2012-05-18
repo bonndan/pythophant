@@ -70,13 +70,6 @@ class PropertyToken extends CustomGenericToken implements MacroConsumer
         $typeToken->setContent('');
         $type = $typeToken->getContent(true);
         
-        if (!defined('PATH_PYTHOPHANT_MACROS')) {
-            define(
-                'PATH_PYTHOPHANT_MACROS',
-                dirname(__DIR__) . DIRECTORY_SEPARATOR . 'macros'
-            );
-        }
-        
         $this->generateGetter($tokenList, $type, $varName);
         $this->generateSetter($tokenList, $type, $varName);
         
@@ -127,7 +120,7 @@ class PropertyToken extends CustomGenericToken implements MacroConsumer
         TokenList $tokenList,
         Scanner $scanner
     ) {
-        $macro = new Macro($file);
+        $macro = new TemplateMacro($file);
         $macro->setParams($params);
         $scanner->scanSource($macro->getSource());
         $macroTokens = $scanner->getTokenList();

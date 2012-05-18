@@ -65,7 +65,7 @@ class TokenList implements \Iterator, \Countable, \ArrayAccess
         
         if ($index === FALSE) {
             throw new \OutOfBoundsException(
-                'Token is not part of the list: ' . $token->getContent()
+                'Token is not part of the list: ' . $token->getTokenName().': '.$token->getContent()
             );
         }
         
@@ -314,24 +314,25 @@ class TokenList implements \Iterator, \Countable, \ArrayAccess
     /**
      * gets the next token of a given type and search direction
      * 
-     * @param string $type
+     * @param string $tokenName
      * @param Token  $token
      * @param int    $incrementor
      * @param bool   $newLineEnds
      * 
-     * @return null|Token 
+     * @return null|Token
      */
-    private function getAdjacentTokenOfType($type, Token $token, $incrementor, $newLineEnds = true)
+    private function getAdjacentTokenOfType($tokenName, Token $token, $incrementor, $newLineEnds = true)
     {
         $ownIndex = $this->getTokenIndex($token);
         $index = $ownIndex + $incrementor;
         
         while($this->offsetExists($index)) {
             $token = $this->offsetGet($index);
-            if ($type !== 'NewLineToken' && $newLineEnds === true && $token instanceof NewLineToken) {
+            if ($tokenName !== Token::T_NEWLINE && $newLineEnds === true && $token instanceof NewLineToken) {
                 return null;
             }
-            if ($token instanceof $type) {
+            
+            if ($token->getTokenName() == $tokenName) {
                 return $token;
             }
             $index += $incrementor;
@@ -378,7 +379,7 @@ class TokenList implements \Iterator, \Countable, \ArrayAccess
      */
     public function getLineIndentationToken(Token $token)
     {
-        return $this->getPreviousTokenOfType('IndentationToken', $token);
+        return $this->getPreviousTokenOfType(Token::T_INDENT, $token);
     }
     
     /**

@@ -49,7 +49,7 @@ class StringToken extends CustomGenericToken
         $preCondition = false;
         $indent = $tokenList->getLineIndentationToken($this);
         if ($indent !== null && $indent->getNestingLevel() == 1) {
-            $newline = $tokenList->getPreviousTokenOfType('NewLineToken', $this);
+            $newline = $tokenList->getPreviousTokenOfType(Token::T_NEWLINE, $this);
             $docComment = $tokenList->getAdjacentToken($newline, -1);
             if ($docComment instanceof DocCommentToken) {
                 if ($docComment->isMethodComment()) {

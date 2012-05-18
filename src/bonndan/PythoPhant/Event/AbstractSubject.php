@@ -27,9 +27,9 @@ abstract class AbstractSubject
     /**
      * attach an observer
      * 
-     * @param PythoPhant_Observer $observer
+     * @param Observer $observer
      * 
-     * @return \PythoPhant_DirectoryWatcher 
+     * @return AbstractSubjectr 
      */
     public function attach(Observer $observer)
     {
@@ -39,9 +39,9 @@ abstract class AbstractSubject
 
     /**
      *
-     * @param PythoPhant_Observer $observer
+     * @param Observer $observer
      * 
-     * @return PythoPhant_AbstractSubject
+     * @return AbstractSubject
      */
     public function detach(Observer $observer)
     {

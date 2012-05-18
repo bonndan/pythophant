@@ -31,12 +31,12 @@ class ControlTokenTest extends \PHPUnit_Framework_TestCase
         
         $index = $tokenList->getTokenIndex($token);
         $openBrace = $tokenList->offsetGet($index + 2);
-        $this->assertInstanceOf('PHPToken', $openBrace);
+        $this->assertInstanceOf("PythoPhant\PHPToken", $openBrace);
         $this->assertEquals('T_OPEN_BRACE', $openBrace->getTokenName());
         
         $index = $tokenList->getTokenIndex($newLine);
         $closeBrace = $tokenList->offsetGet($index-1);
-        $this->assertInstanceOf('PHPToken', $closeBrace);
+        $this->assertInstanceOf("PythoPhant\PHPToken", $closeBrace);
         $this->assertEquals('T_CLOSE_BRACE', $closeBrace->getTokenName());
     }
     

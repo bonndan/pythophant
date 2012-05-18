@@ -2,6 +2,7 @@
 namespace PythoPhant;
 
 use PythoPhant\Reflection\Param;
+use PythoPhant\Core\TokenFactoryScanner;
 
 /**
  * ReturnValueToken
@@ -32,7 +33,7 @@ class ReturnValueToken extends CustomGenericToken
         $ownIndex = $tokenList->getTokenIndex($this);
         try {
             $next = $tokenList->offsetGet($ownIndex + 1);
-        } catch (OutOfBoundsException $exc) {
+        } catch (\OutOfBoundsException $exc) {
             throw new PythoPhant_Exception(
                 'T_RETURNVALUE is not followed by any token', $this->line
             );
@@ -87,13 +88,12 @@ class ReturnValueToken extends CustomGenericToken
     private function createCheckTokenList($variable)
     {
         $file = new \SplFileObject(
-            dirname(__DIR__) . DIRECTORY_SEPARATOR 
-            . 'macros' .DIRECTORY_SEPARATOR. 'scalarTypeHintException.pp'
+            PATH_PYTHOPHANT_MACROS . DIRECTORY_SEPARATOR. 'scalarTypeHintException.pp'
         );
-        $macro = new Macro($file);
+        $macro = new TemplateMacro($file);
         $params = array($this->content, $variable);
         $macro->setParams($params);
-        $scanner = PythoPhant\Core\TokenFactoryScanner::create();
+        $scanner = TokenFactoryScanner::create();
         $scanner->scanSource($macro->getSource());
         $macroTokens = $scanner->getTokenList();
         $parser = new \PythoPhant\Core\ReflectionParser();

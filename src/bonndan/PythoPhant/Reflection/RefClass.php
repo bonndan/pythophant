@@ -89,7 +89,7 @@ class RefClass extends RefInterface
         }
         
         $members = array_merge($this->getVars(), $this->getConstants(), $this->getMethods());
-
+        
         foreach ($members as $var) {
             $tokenList = $var->getBodyTokenList();
             $parser->processTokenList($tokenList);

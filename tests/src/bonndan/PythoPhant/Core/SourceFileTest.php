@@ -34,9 +34,7 @@ class SourceFileTest extends \PHPUnit_Framework_TestCase
 
     private function getFileMock()
     {
-        return $this->getMockBuilder('\SplFileObject')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->getMock('\SplFileObject', array('isReadable'), array(__FILE__));
     }
     
     public function testConstructorIsFile()
@@ -47,7 +45,6 @@ class SourceFileTest extends \PHPUnit_Framework_TestCase
     
     public function testConstructorFileIsNotAccessible()
     {
-        $this->markTestSkipped('SplFileObject throws LogicException: The parent constructor was not called: the object is in an invalid state');
         $mock = $this->getFileMock();
         $mock->expects($this->once())
             ->method('isReadable')

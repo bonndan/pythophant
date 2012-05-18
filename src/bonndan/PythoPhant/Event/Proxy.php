@@ -35,75 +35,22 @@ class Proxy extends AbstractSubject implements Subject, Observer
      */
     public function addLogger($logger)
     {
+        if (is_string($logger)) {
+            if (class_exists($logger)) {
+                $logger = new $logger();
+            } else {
+                throw new \PythoPhant\Exception($logger . ' is not loadable.');
+            }
+        }
+        
         /**
          * observer passed 
          */
         if ($logger instanceof Observer) {
             $this->attach($logger);
             return $logger;
+        } else {
+            throw new \PythoPhant\Exception(gettype($logger) . ' passed object must implement Observer.');
         }
-
-        if (!is_string($logger)) {
-            return;
-        }
-
-        /**
-         * valid class name given
-         */
-        if ($instance = $this->tryLoadLoggerClass($logger)) {
-            $this->attach($instance);
-            return $instance;
-        }
-
-        /**
-         * prepend namespace 
-         */
-        $className = "PythoPhant\Logger\\" . $logger;
-        if ($instance = $this->tryLoadLoggerClass($className)) {
-            $this->attach($instance);
-            return $instance;
-        }
-    }
-
-    /**
-     * tries to load a class via autoloading
-     * 
-     * @param string $classname
-     * 
-     * @return false|PythoPhant_Observer
-     */
-    private function tryLoadLoggerClass($classname)
-    {
-        $result = false;
-        try {
-            set_error_handler(array($this, 'silentErrorHandler'));
-            if (class_exists($classname)) {
-                $logger = new $classname();
-                if (!$logger instanceof Observer) {
-                    $this->notify(
-                        new Error(
-                            $classname . ' must implement PythoPhant\Event\Observer.',
-                            $classname
-                        )
-                    );
-                } else {
-                    $result = $logger;
-                }
-            }  
-        } catch (Exception $exc) {
-            
-        }
-        restore_error_handler();
-        return $result;
-    }
-
-    /**
-     * does nothing
-     * 
-     * @param type $null 
-     */
-    public function silentErrorHandler($null)
-    {
-        
     }
 }

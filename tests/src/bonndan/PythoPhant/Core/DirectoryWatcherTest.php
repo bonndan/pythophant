@@ -36,24 +36,11 @@ class DirectoryWatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testRun()
     {
-        $this->watcher->addDirectory(dirname(__FILE__));
+        $this->watcher->addDirectory(dirname(PATH_TEST). DIRECTORY_SEPARATOR . '/fixtures');
         $this->watcher->run();
-        $filename = dirname(__FILE__) . '/' . basename(__FILE__, 'php') . 'pp';
-        $expected = array($filename => filemtime($filename));
-        $this->assertAttributeEquals($expected, 'files', $this->watcher);
-    }
-
-    /**
-     * test the recursive scan 
-     */
-    public function testRunScansRecursive()
-    {
-        $this->watcher->addDirectory(dirname(dirname(__FILE__)));
-        $this->watcher->run();
-        $filename = dirname(__FILE__) . '/' . basename(__FILE__, 'php') . 'pp';
-        $expected = array($filename => filemtime($filename));
-        $this->assertAttributeEquals($expected, 'files', $this->watcher);
-        
+        $filename = dirname(PATH_TEST) . '/fixtures/test.pp';
+        $this->assertArrayHasKey($filename, $this->watcher->getWatchedFiles());
+        $this->assertContains(filemtime($filename), $this->watcher->getWatchedFiles());
     }
 
 }

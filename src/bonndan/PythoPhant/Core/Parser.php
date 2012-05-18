@@ -1,7 +1,7 @@
 <?php
 namespace PythoPhant\Core;
 
-use PythoPhant\TokenList as TokenList;
+use PythoPhant\TokenList;
 
 /**
  * Parser interface

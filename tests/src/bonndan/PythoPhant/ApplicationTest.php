@@ -33,18 +33,17 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $watcher->expects($this->once())->method('attach');
         $this->pp = new Application(null, $watcher, $proxy);
         
-        $cwd = dirname(dirname(__DIR__));
+        $cwd = dirname(PATH_TEST);
         chdir($cwd);
-        $proxy->expects($this->once())->method('addLogger')->with('Console');
         
         $watcher->expects($this->exactly(3))->method('addDirectory');
         $watcher->expects($this->once())->method('run');
+        $this->pp->setConfigDir($cwd);
         $this->pp->main(array());
         
         $project = $this->pp->getProject();
         
         $this->assertInstanceOf("PythoPhant\Core\Project", $project);
-        $this->assertContains('Console', $project->getLoggers(), serialize($project->getLoggers()));
     }
     
     public function testMainWithNothingLooksForProjectAndStartsWatching()
@@ -55,7 +54,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         
         chdir(__DIR__);
         
-        $watcher->expects($this->once())->method('addDirectory');
+        $watcher->expects($this->any())->method('addDirectory');
         $watcher->expects($this->once())->method('run');
         $this->pp->main(array());
         
@@ -63,10 +62,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("PythoPhant\Core\Project", $project);
     }
     
+    /**
+     * 
+     */
     public function _testMainWithFileConvertsFile()
     {
-        $this->markTestSkipped('Endless loop');
-        
         $converter = $this->getMockBuilder("PythoPhant\Core\Converter")
             ->disableOriginalConstructor()->getMock();
         $converter->expects($this->once())->method('convert');
@@ -79,7 +79,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testMainWithDirStartsWatchingOnlyDir()
     {
         $watcher = $this->getMock("PythoPhant\Core\DirectoryWatcher");
-        $dir = 'sources';
+        $dir = __DIR__;
         $watcher->expects($this->once())->method('addDirectory')->with($dir);
         $this->pp = new Application(null, $watcher);
         

@@ -1,8 +1,9 @@
 <?php
 namespace PythoPhant\Core;
 
-use PythoPhant\Token as Token;
-use PythoPhant\TokenList as TokenList;
+use PythoPhant\Token;
+use PythoPhant\Exception;
+use PythoPhant\TokenList;
 
 /**
  * File scanner, uses the php tokenizer
@@ -70,9 +71,9 @@ class TokenFactoryScanner implements Scanner
 
             try {
                 $tokenNames = (array) $this->tokenFactory->getTokenName($token);
-            } catch (LogicException $exception) {
+            } catch (\LogicException $exception) {
                 $this->errorLine = $currentLine;
-                throw new PythoPhant_Exception(
+                throw new Exception(
                     $exception->getMessage() . serialize($content),
                     $currentLine
                 );
@@ -83,12 +84,12 @@ class TokenFactoryScanner implements Scanner
                     $tokenInstance = $this->tokenFactory->createToken(
                         $tokenName, $content, $currentLine
                     );
-                } catch (Exception $exc) {
+                } catch (\Exception $exc) {
                     $this->errorLine = $currentLine;
                     $message = $exc->getMessage() 
                         . $this->getDebuggingMessage($tokens, $index);
                     
-                    throw new PythoPhant_Exception($message, $currentLine);
+                    throw new Exception($message, $currentLine);
                 }
                 $this->tokenList->pushToken($tokenInstance);
             }

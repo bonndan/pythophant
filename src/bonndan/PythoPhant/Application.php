@@ -47,6 +47,12 @@ class Application
     private $project;
 
     /**
+     * project configuration dir
+     * @var string 
+     */
+    private $configDir; 
+    
+    /**
      * creates a converter and directory watcher if not passed, makes them 
      * listen to the event proxy and vice versa
      * 
@@ -94,6 +100,29 @@ class Application
     }
 
     /**
+     *
+     * @param string $dir 
+     */
+    public function setConfigDir($dir)
+    {
+        $this->configDir = $dir;
+    }
+    
+    /**
+     * returns the path where the config file is expected
+     * 
+     * @return string 
+     */
+    private function getConfigDir()
+    {
+        if ($this->configDir === null) {
+            return getcwd();
+        }
+        
+        return $this->configDir;
+    }
+    
+    /**
      * if pythophant is run with a file as param, it is converted
      * 
      * @param array $args 
@@ -101,20 +130,17 @@ class Application
     public function main(array $args)
     {
         $this->project = new Project();
-
+        $this->eventProxy->addLogger(new Event\Logger\Console());
+        
         $configFound = false;
-        try {
-            if ($this->project->readConfigurationFile()) {
-                $configFound = true;
+        $configFile = $this->getConfigDir() . DIRECTORY_SEPARATOR . Core\Project::DEFAULT_CONFIG_FILE;
+        
+        if (is_file($configFile) && $this->project->readConfigurationFile($configFile)) {
+            $configFound = true;
 
-                foreach ($this->project->getLoggers() as $logger) {
-                    $this->eventProxy->addLogger($logger);
-                }
-            } else {
-                $this->eventProxy->addLogger(new PythoPhant\Core\Logger\Console());
+            foreach ($this->project->getLoggers() as $logger) {
+                $this->eventProxy->addLogger($logger);
             }
-        } catch (\InvalidArgumentException $exc) {
-            $this->eventProxy->update(new Info($exc->getMessage()));
         }
 
         /**
@@ -158,13 +184,13 @@ class Application
     public function convert($filename, $debug = false)
     {
         $file = new \SplFileObject($filename);
-        return $this->converter->convert(new SourceFile($file), $debug);
+        return $this->converter->convert(new Core\SourceFile($file), $debug);
     }
 
     /**
      * returns the current project (if main was called)
      * 
-     * @return PythoPhant_Project|null
+     * @return PythoPhant\Core\Project|null
      */
     public function getProject()
     {

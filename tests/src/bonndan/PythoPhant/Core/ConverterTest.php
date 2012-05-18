@@ -97,11 +97,11 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $mock->expects($this->once())->method('getPath')
-            ->will($this->returnValue(dirname(PATH_TEST) . '/sources/test.pp'));
+            ->will($this->returnValue(dirname(PATH_TEST) . '/fixtures/test.pp'));
         
         $this->scanner->expects($this->once())
             ->method('getTokenList')
-            ->will($this->returnValue($this->getMock('TokenList')));
+            ->will($this->returnValue($this->getMock("PythoPhant\TokenList")));
         $this->parser->expects($this->once())
             ->method('getElement')
             ->will($this->returnValue($this->getMock("PythoPhant\Reflection\Element")));

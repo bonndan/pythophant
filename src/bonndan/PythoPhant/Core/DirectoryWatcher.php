@@ -121,5 +121,14 @@ class DirectoryWatcher extends AbstractSubject implements Subject
         
     }
 
+    /**
+     * for debugging. returns an array of watched fiels
+     * 
+     * @return array(path => filemtime)
+     */
+    public function getWatchedFiles()
+    {
+        return $this->files;
+    }
 }
 

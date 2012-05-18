@@ -10,7 +10,7 @@ require_once dirname(__FILE__) . '/bootstrap.php';
 class ProxyTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PythoPhant_Event_Proxy 
+     * @var Proxy 
      */
     private $proxy;
     
@@ -38,37 +38,32 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     
     public function testAddLoggerWithFullClassname()
     {
-        $res = $this->proxy->addLogger("PythoPhant\Logger\Console");
-        $this->assertInstanceOf("PythoPhant\Event\Observer", $res);
-    }
-    
-    public function testAddLoggerWithAbbrevClassname()
-    {
-        $res = $this->proxy->addLogger('Console');
+        $res = $this->proxy->addLogger("PythoPhant\Event\Logger\Console");
         $this->assertInstanceOf("PythoPhant\Event\Observer", $res);
     }
     
     public function testAddLoggerWithObserver()
     {
-        $res = $this->proxy->addLogger($this->getMock("PythoPhant\Observer"));
+        $res = $this->proxy->addLogger($this->getMock("PythoPhant\Event\Observer"));
         $this->assertInstanceOf("PythoPhant\Event\Observer", $res);
     }
     
-    public function testAddLoggerWithOtherInstance()
+    public function testAddLoggerUnloadable()
     {
-        $observer = $this->getMock("PythoPhant\Event\Observer");
-        $observer->expects($this->once())
-            ->method('update');
-        $this->proxy->attach($observer);
-        
-        $res = $this->proxy->addLogger('TokenList');
-        
-        $this->assertNull($res);
+        $this->setExpectedException("PythoPhant\Exception");
+        $res = $this->proxy->addLogger("\PythoPhant\Unloadable");
+    }
+    
+    public function testAddLoggerFails()
+    {
+        $this->setExpectedException("PythoPhant\Exception");
+        $this->proxy->addLogger("\PythoPhant\TokenList");
     }
     
     public function testAddLoggerWithArray()
     {
+        $this->setExpectedException("PythoPhant\Exception");
         $res = $this->proxy->addLogger(array());
-        $this->assertNull($res);
     }
+    
 }

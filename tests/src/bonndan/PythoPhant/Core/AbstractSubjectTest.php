@@ -3,6 +3,7 @@ namespace PythoPhant\Core;
 
 require_once dirname(__FILE__) . '/bootstrap.php';
 
+use PythoPhant\Event\Event;
 use PythoPhant\Event\AbstractSubject;
 
 /**
@@ -57,7 +58,7 @@ class AbstractSubjectTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getMock("PythoPhant\Event\Observer");
         $this->subject->attach($mock);
         
-        $event = $this->getMock("PythoPhant\Event");
+        $event = $this->getMock("PythoPhant\Event\Event");
         $mock->expects($this->once())->method('update')->with($event);
         $this->subject->testNotification($event);
     }

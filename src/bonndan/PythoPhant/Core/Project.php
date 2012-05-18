@@ -8,7 +8,7 @@ namespace PythoPhant\Core;
  */
 class Project
 {
-    const DEFAULT_CONFIG_FILE = '.pythophant.json';
+    const DEFAULT_CONFIG_FILE = 'pythophant.json';
     /**
      * name of the project
      * @var type 
@@ -45,11 +45,8 @@ class Project
      * @throws InvalidArgumentException
      * @return boolean
      */
-    public function readConfigurationFile($filename = null)
+    public function readConfigurationFile($filename)
     {
-        if ($filename === null) {
-            $filename = getcwd() . DIRECTORY_SEPARATOR . self::DEFAULT_CONFIG_FILE;
-        }
         if (!is_file($filename) || !is_readable($filename)) {
             throw new \InvalidArgumentException('Config file not accessible: '. $filename);
         }
@@ -61,7 +58,7 @@ class Project
     /**
      * read the project config json file
      * 
-     * @param stdClass $filename 
+     * @param stdClass|string $config 
      * 
      * @return boolean
      * @throws \RuntimeException
