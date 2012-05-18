@@ -6,6 +6,10 @@ use PythoPhant\Token;
 use PythoPhant\IndentationToken;
 use PythoPhant\Grammar;
 use PythoPhant\DocCommentToken;
+use PythoPhant\StringToken;
+use PythoPhant\ReturnValueToken;
+use PythoPhant\ParsedEarlyToken;
+use PythoPhant\CustomToken;
 
 /**
  * ReflectionParser
@@ -21,7 +25,7 @@ class ReflectionParser implements Parser
 
     /**
      * class or interface that is built
-     * @var PythoPhant_Reflection_Class|PythoPhant_Reflection_Interface
+     * @var PythoPhant\Reflection\RefClass | PythoPhant\Reflection\RefInterface
      */
     private $class;
 
@@ -269,7 +273,6 @@ class ReflectionParser implements Parser
             $setter = 'addMethod';
         }
         
-        $name = null;
         foreach ($line as $i => $token) {
             if ($this->tokenList->isTokenIncluded(array($token), Grammar::$modifiers)) {
                 $modifiers[] = $token;
