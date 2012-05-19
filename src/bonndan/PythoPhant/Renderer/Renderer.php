@@ -1,22 +1,12 @@
 <?php
 namespace PythoPhant\Renderer;
 
-use PythoPhant\Reflection\Element;
-
 /**
  * Interface for renderers
  *  
- * @package PythoPhant
  */
 interface Renderer
 {
-    /**
-     * inject the tokens
-     * 
-     * @param PythoPhant\Reflection\Element $element
-     */
-    public function setReflectionElement(Element $element);
-    
     /**
      * enable or disable debugging mode
      * 
@@ -32,5 +22,4 @@ interface Renderer
      * @return string 
      */
     public function getPHPSource();
-    
 }

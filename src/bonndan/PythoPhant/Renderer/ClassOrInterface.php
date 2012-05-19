@@ -5,13 +5,13 @@ use PythoPhant\Reflection\Element;
 use PythoPhant\Grammar;
 
 /**
- * PythoPhant_Renderer_Class
+ * ClassOrInterface
  * 
- * A renderer for reflection classes.
+ * A renderer for reflection classes and interfaces.
  * 
  * 
  */
-class ClassOrInterface implements Renderer
+class ClassOrInterface implements ReflectionElement
 {
     /**
      * ref class
@@ -33,7 +33,7 @@ class ClassOrInterface implements Renderer
     /**
      * constructor requires a reflection class
      * 
-     * @param PythoPhant_Reflection_Class $class 
+     * @param PythoPhant\Reflection\Element $class 
      */
     public function setReflectionElement(Element $element)
     {

@@ -7,7 +7,8 @@ require_once __DIR__ "someclass.php"
 
 namespace SuperNamespace
 
-use SomeOtherNamespace.SomeOtherClass as SomeOtherClass
+use SomeOtherNamespace.SomeClass
+use SomeOtherNamespace.SomeOtherClass as OtherNameClass
 
 /**
  * class comment

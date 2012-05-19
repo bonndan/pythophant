@@ -1,4 +1,9 @@
 <?php
+namespace PythoPhant\Renderer;
+
+use PythoPhant\Reflection\Element;
+use PythoPhant\Reflection\ClassVar as ReflectionClassVar;
+
 /**
  * PythoPhant_Renderer_ClassVar
  * 
@@ -6,7 +11,7 @@
  * 
  * 
  */
-class PythoPhant_Renderer_ClassVar implements PythoPhant_Renderer
+class ClassVar implements ReflectionElement
 {
     /**
      * class var to render
@@ -14,6 +19,10 @@ class PythoPhant_Renderer_ClassVar implements PythoPhant_Renderer
      */
     private $classVar;
     
+    /**
+     * @todo implement
+     * @param bool $debug 
+     */
     public function enableDebugging($debug)
     {
         
@@ -45,15 +54,15 @@ class PythoPhant_Renderer_ClassVar implements PythoPhant_Renderer
     /**
      * set the classVar to render
      * 
-     * @param PythoPhant_Reflection_Element $element
+     * @param Element $element
      * 
      * @throws InvalidArgumentException 
      */
-    public function setReflectionElement(PythoPhant_Reflection_Element $element)
+    public function setReflectionElement(Element $element)
     {
-        if (!$element instanceof PythoPhant_Reflection_ClassVar) {
-            throw new InvalidArgumentException(
-                'ClassVar renderer requires an instance of PythoPhant_Reflection_ClassVar'
+        if (!$element instanceof ReflectionClassVar) {
+            throw new \InvalidArgumentException(
+                'ClassVar renderer requires an instance of PythoPhant\Reflection\ClassVar'
             );
         }
         

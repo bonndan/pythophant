@@ -8,7 +8,7 @@ use PythoPhant\Reflection\Element;
  * 
  * generic token renderer
  */
-class Helper implements Renderer
+class Helper implements ReflectionElement
 {
     /**
      * element to render

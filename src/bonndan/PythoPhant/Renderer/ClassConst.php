@@ -1,4 +1,7 @@
 <?php
+namespace PythoPhant\Renderer;
+
+use PythoPhant\Reflection\ClassConst;
 
 /**
  * PythoPhant_Renderer_ClassConstant
@@ -7,7 +10,7 @@
  * 
  * 
  */
-class PythoPhant_Renderer_ClassConst implements PythoPhant_Renderer
+class ClassConst implements ReflectionElement
 {
 
     /**
@@ -51,11 +54,11 @@ class PythoPhant_Renderer_ClassConst implements PythoPhant_Renderer
      * 
      * @throws InvalidArgumentException 
      */
-    public function setReflectionElement(PythoPhant_Reflection_Element $element)
+    public function setReflectionElement(Element $element)
     {
-        if (!$element instanceof PythoPhant_Reflection_ClassConst) {
+        if (!$element instanceof ClassConst) {
             throw new InvalidArgumentException(
-                'ClassConst renderer requires an instance of PythoPhant_Reflection_ClassConst'
+                'ClassConst renderer requires an instance of PythoPhant\Reflection\ClassConst'
             );
         }
 

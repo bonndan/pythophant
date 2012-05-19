@@ -1,9 +1,14 @@
 <?php
+namespace PythoPhant\Renderer;
+
+use PythoPhant\TokenList as Tokens;
+
 /**
- * PythoPhant_Renderer_TokenList
+ * TokenList
  * 
+ * A renderer for token lists.
  */
-class PythoPhant_Renderer_TokenList
+class TokenList implements Renderer
 {
     /**
      *
@@ -12,13 +17,25 @@ class PythoPhant_Renderer_TokenList
     private $tokenList;
     
     /**
-     * cosntructor
+     * constructor requires a token list
      * 
-     * @param TokenList $tokenlist 
+     * @param PythoPhant\TokenList $tokenlist 
      */
-    public function __construct(TokenList $tokenlist)
+    public function __construct(Tokens $tokenlist)
     {
         $this->tokenList = $tokenlist;
+    }
+    
+    /**
+     * enable or disable debugging mode
+     * 
+     * @param bool $debug 
+     * 
+     * @return Renderer
+     */
+    public function enableDebugging($debug)
+    {
+        
     }
     
     /**

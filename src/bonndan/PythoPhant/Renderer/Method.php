@@ -12,7 +12,7 @@ use PythoPhant\ReturnValueToken;
  * 
  * 
  */
-class Method implements Renderer
+class Method implements ReflectionElement
 {
     /**
      * class var to render
@@ -92,7 +92,7 @@ class Method implements Renderer
     /**
      * set the classVar to render
      * 
-     * @param PythoPhant_Reflection_Element $element
+     * @param Element $element
      * 
      * @throws InvalidArgumentException 
      */
