@@ -5,7 +5,7 @@ use PythoPhant\Event\AbstractSubject;
 use PythoPhant\Event\Observer;
 use PythoPhant\Event\Subject;
 use PythoPhant\Event\Event;
-use PythoPhant\Event\FileChanged;
+use PythoPhant\Event\FileChange;
 use PythoPhant\Event\Error;
 use PythoPhant\Exception;
 use PythoPhant\Renderer\Helper as RenderHelper;
@@ -57,13 +57,13 @@ class Converter extends AbstractSubject implements Observer, Subject
     }
     
     /**
-     * receives fileChanged events and converts the related files
+     * receives fileChange events and converts the related files
      * 
      * @param Event $event 
      */
     public function update(Event $event)
     {
-        if ($event instanceof FileChanged) {
+        if ($event instanceof FileChange) {
             $source = new SourceFile(
                 new \SplFileObject($event->getPath())
             );

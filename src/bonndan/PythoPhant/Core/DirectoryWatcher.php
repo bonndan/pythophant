@@ -1,17 +1,20 @@
 <?php
 namespace PythoPhant\Core;
 
-use PythoPhant\Event\Subject as Subject;
-use PythoPhant\Event\AbstractSubject as AbstractSubject;
-use PythoPhant\Event\Error as Error;
-use PythoPhant\Event\FileChanged as FileChanged;
-use PythoPhant\Event\Info as Info;
+use PythoPhant\Event\Event;
+use PythoPhant\Event\Observer;
+use PythoPhant\Event\Subject;
+use PythoPhant\Event\AbstractSubject;
+use PythoPhant\Event\Error;
+use PythoPhant\Event\FileChange;
+use PythoPhant\Event\Info;
+use PythoPhant\Event\ScanTrigger;
 
 /**
  * DirectoryWatcher
  * 
  */
-class DirectoryWatcher extends AbstractSubject implements Subject
+class DirectoryWatcher extends AbstractSubject implements Subject, Observer
 {
     /**
      * directories to watch
@@ -43,14 +46,14 @@ class DirectoryWatcher extends AbstractSubject implements Subject
      */
     public function addDirectory($dir)
     {
-        if (! is_string($dir)) {
+        if (!is_string($dir)) {
             throw new \InvalidArgumentException("dir is not of type string") ;
         }
-        //
-        if ((!is_dir($dir))) {
-            return $this->notify(new Error('not a directory', $dir));
-
+        
+        if (!is_dir($dir)) {
+            return $this->notify(new Error('not a directory: ' . $dir, $dir));
         }
+        
         $this->directories[] = $dir;
         $this->directories = array_unique($this->directories);
 
@@ -67,7 +70,7 @@ class DirectoryWatcher extends AbstractSubject implements Subject
     public function run($pollingInterval = null)
     {
         if ($pollingInterval !== null) {
-            $this->pollingInterval = $pollingInterval;
+            $this->setPollingInterval($pollingInterval);
 
         }
         $files = array();
@@ -79,7 +82,7 @@ class DirectoryWatcher extends AbstractSubject implements Subject
             $lastChange = filemtime($filename);
             if (isset($this->files[$filename])) {
                 if (($this->files[$filename] - $lastChange) != 0) {
-                    $this->notify(new FileChanged($filename));
+                    $this->notify(new FileChange($filename));
                 }
             }
             else {
@@ -90,10 +93,23 @@ class DirectoryWatcher extends AbstractSubject implements Subject
         }
         if ($this->pollingInterval > -1) {
             sleep($this->pollingInterval / 1000);
-            call_user_func(array($this, 'run'));
+            $this->notify(new ScanTrigger());
         }
     }
 
+    /**
+     * set the polling interval (microseconds)
+     * 
+     * @param int $interval
+     * 
+     * @return \PythoPhant\Core\DirectoryWatcher 
+     */
+    public function setPollingInterval($interval)
+    {
+        $this->pollingInterval = (int)$interval;
+        return $this;
+    }
+    
     /**
      * scan recursive
      *
@@ -128,6 +144,18 @@ class DirectoryWatcher extends AbstractSubject implements Subject
     public function getWatchedFiles()
     {
         return $this->files;
+    }
+    
+    /**
+     * observe ScanTrigger events
+     * 
+     * @param Event $event 
+     */
+    public function update(Event $event)
+    {
+        if ($event instanceof ScanTrigger) {
+            $this->run();
+        }
     }
 }
 

@@ -93,7 +93,7 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdate()
     {
-        $mock = $this->getMockBuilder("PythoPhant\Event\FileChanged")
+        $mock = $this->getMockBuilder("PythoPhant\Event\FileChange")
             ->disableOriginalConstructor()
             ->getMock();
         $mock->expects($this->once())->method('getPath')

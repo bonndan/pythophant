@@ -42,6 +42,23 @@ class DirectoryWatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey($filename, $this->watcher->getWatchedFiles());
         $this->assertContains(filemtime($filename), $this->watcher->getWatchedFiles());
     }
+    
+    public function testUpdate()
+    {
+        $observer = $this->getMock("PythoPhant\Event\Observer");
+        $this->watcher->attach($observer);
+        $this->watcher->setPollingInterval(500);
+        
+        $event = new \PythoPhant\Event\ScanTrigger();
+        $observer->expects($this->once())
+            ->method('update')
+            ->will($this->returnCallback(array($this, 'update')));
+        $this->watcher->update($event);
+    }
 
+    public function update($ev)
+    {
+        $this->assertInstanceOf("PythoPhant\Event\ScanTrigger", $ev);
+    }
 }
 

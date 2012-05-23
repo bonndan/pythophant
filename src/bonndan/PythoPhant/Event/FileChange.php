@@ -2,13 +2,13 @@
 namespace PythoPhant\Event;
 
 /**
- * PythoPhant_Event_FileChanged
+ * FileChange
  * 
  * notifies observers when a file has changed
  * 
  * @see PythoPhant\Core\DirectoryWatcher
  */
-class FileChanged implements Event
+class FileChange implements Event
 {
     /**
      * file path
