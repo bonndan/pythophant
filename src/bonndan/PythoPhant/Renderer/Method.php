@@ -2,8 +2,9 @@
 namespace PythoPhant\Renderer;
 
 use PythoPhant\Reflection\Element;
-use PythoPhant\Reflection\Method;
+use PythoPhant\Reflection\Method as RefMethod;
 use PythoPhant\ReturnValueToken;
+use PythoPhant\Token;
 
 /**
  * Method
@@ -12,13 +13,13 @@ use PythoPhant\ReturnValueToken;
  * 
  * 
  */
-class Method implements ReflectionElement
+class Method implements ReflectionRenderer
 {
     /**
      * class var to render
-     * @var PythoPhant_Reflection_Function 
+     * @var PythoPhant\Reflection\Method 
      */
-    private $function;
+    private $method;
     
     /**
      * toogle debugging
@@ -38,16 +39,16 @@ class Method implements ReflectionElement
      */
     public function getPHPSource()
     {
-        $buffer = '    ' . $this->function->getDocComment()->getContent() . PHP_EOL;
-        $buffer .= '    ' . $this->function->getModifiers();
-        $buffer .= ' function ' . $this->function->getName();
+        $buffer = '    ' . $this->method->getDocComment()->getContent() . PHP_EOL;
+        $buffer .= '    ' . $this->method->getModifiers();
+        $buffer .= ' function ' . $this->method->getName();
         $buffer .= '(';
         $params = array();
         $typeToken = null;
-        $body = $this->function->getBodyTokenList();
+        $body = $this->method->getBodyTokenList();
         
         
-        foreach ($this->function->getParams() as $param) {
+        foreach ($this->method->getParams() as $param) {
             $typeToken = $param->getType();
             if (!$typeToken instanceof ReturnValueToken) {
                 $typeToken = new ReturnValueToken(Token::T_RETURNVALUE, $param->getType(), 1);
@@ -98,13 +99,13 @@ class Method implements ReflectionElement
      */
     public function setReflectionElement(Element $element)
     {
-        if (!$element instanceof Method) {
+        if (!$element instanceof RefMethod) {
             throw new \InvalidArgumentException(
                 'Function renderer requires an instance of PythoPhant\Reflection\Method'
             );
         }
         
-        $this->function = $element;
+        $this->method = $element;
     }
 
 }

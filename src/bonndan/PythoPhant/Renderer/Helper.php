@@ -8,7 +8,7 @@ use PythoPhant\Reflection\Element;
  * 
  * generic token renderer
  */
-class Helper implements ReflectionElement
+class Helper implements ReflectionRenderer
 {
     /**
      * element to render
@@ -66,6 +66,8 @@ class Helper implements ReflectionElement
     public function getPHPSource()
     {
         $renderer = new ClassOrInterface();
+        $class = get_class($this->ref);
+        if($class != 'PythoPhant\Reflection\RefClass')throw new \Exception($class);
         $renderer->setReflectionElement($this->ref);
         return $renderer->getPHPSource();
     }

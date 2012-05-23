@@ -8,7 +8,7 @@ use PythoPhant\Reflection\Element;
  * 
  *  
  */
-interface ReflectionElement extends Renderer
+interface ReflectionRenderer extends Renderer
 {
     /**
      * inject a reflection element

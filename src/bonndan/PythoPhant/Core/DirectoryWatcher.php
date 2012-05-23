@@ -111,8 +111,7 @@ class DirectoryWatcher extends AbstractSubject implements Subject
         foreach (new \DirectoryIterator($path) as $file) {
             if ($file->getExtension() == 'pp') {
                 $files[] = $file->getRealPath();
-            }
-            elseif ($file->isDir() && ! in_array($file->getBasename(), array('.', '..'))) {
+            } elseif ($file->isDir() && ! in_array($file->getBasename(), array('.', '..'))) {
                 $files = array_merge($files, $this->scanRecursive($file->getRealPath()));
 
             }

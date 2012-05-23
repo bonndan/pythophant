@@ -145,6 +145,10 @@ class ClassLoader
      */
     public function loadClass($class)
     {
+        if (class_exists($class, false)) {
+            return true;
+        }
+        
         if ($file = $this->findFile($class)) {
             require_once $file;
             return true;

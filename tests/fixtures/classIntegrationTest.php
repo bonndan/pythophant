@@ -1,18 +1,20 @@
 <?php
 
-require_once dirname(dirname(__FILE__)) . '/bootstrap.php';
+namespace PythoPhant;
+
+require_once dirname(__FILE__) . '/bootstrap.php';
 
 /**
  * conversion test
  * 
  */
-class testIntegrationTest extends PHPUnit_Framework_TestCase
+class ClassIntegrationTest extends \PHPUnit_Framework_TestCase
 {
     public function testConversion()
     {
-        $cwd = dirname(dirname(__DIR__));
+        $cwd = dirname(PATH_TEST);
         chdir($cwd);
-        $file = $cwd . '/sources/test.pp';
+        $file = $cwd . '/fixtures/class.pp';
         
         ob_start();
         passthru('php pythophant.php ' . $file, $res);

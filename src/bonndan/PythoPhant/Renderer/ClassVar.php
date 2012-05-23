@@ -11,7 +11,7 @@ use PythoPhant\Reflection\ClassVar as ReflectionClassVar;
  * 
  * 
  */
-class ClassVar implements ReflectionElement
+class ClassVar implements ReflectionRenderer
 {
     /**
      * class var to render

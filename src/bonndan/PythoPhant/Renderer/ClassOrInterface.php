@@ -2,6 +2,10 @@
 namespace PythoPhant\Renderer;
 
 use PythoPhant\Reflection\Element;
+use PythoPhant\Reflection\ClassConst as RefClassConst;
+use PythoPhant\Reflection\ClassVar as RefClassVar;
+use PythoPhant\Reflection\Method as RefMethod;
+
 use PythoPhant\Grammar;
 
 /**
@@ -11,7 +15,7 @@ use PythoPhant\Grammar;
  * 
  * 
  */
-class ClassOrInterface implements ReflectionElement
+class ClassOrInterface implements ReflectionRenderer
 {
     /**
      * ref class
