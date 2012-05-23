@@ -25,6 +25,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeInstanceOf("PythoPhant\Core\Converter", 'converter', $this->pp);
     }
     
+    public function testProxyReceivesObservers()
+    {
+        $proxy = $this->getMock("PythoPhant\Event\Proxy");
+        $proxy->expects($this->exactly(2))
+            ->method('attach');
+        $app = new Application(null, null, $proxy);
+    }
+    
     public function testMainWithNothingFindsProject()
     {
         $proxy = $this->getMock("PythoPhant\Event\Proxy");
@@ -86,5 +94,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $cwd = dirname(dirname(__DIR__));
         chdir($cwd);
         $this->pp->main(array(0, $dir));
+    }
+    
+    public function testConvert()
+    {
+        $converter = $this->getMockBuilder("PythoPhant\Core\Converter")
+            ->disableOriginalConstructor()->getMock();
+        $app = new Application($converter);
+        $converter->expects($this->once())
+            ->method('convert');
+        $app->convert(__FILE__);
     }
 }

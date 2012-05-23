@@ -58,7 +58,7 @@ class Application
      * 
      * @param Converter        $converter
      * @param DirectoryWatcher $watcher
-     * @param Proxy      $proxy 
+     * @param Proxy            $proxy 
      */
     public function __construct(
         Converter $converter = null,
@@ -73,6 +73,7 @@ class Application
         $this->dirWatcher->attach($this->eventProxy);
 
         $this->eventProxy->attach($this->converter);
+        $this->eventProxy->attach($this->dirWatcher);
     }
 
     /**
