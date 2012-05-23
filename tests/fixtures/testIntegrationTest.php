@@ -14,7 +14,7 @@ class testIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $cwd = dirname(PATH_TEST);
         chdir($cwd);
-        $file = $cwd . '/sources/test.pp';
+        $file = $cwd . '/fixtures/test.pp';
         
         ob_start();
         passthru('php pythophant.php ' . $file, $res);
