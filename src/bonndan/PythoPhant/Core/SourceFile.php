@@ -115,13 +115,23 @@ class SourceFile
     }
     
     /**
-     * returns the path and file name of the source file
+     * returns the file name of the source file
      * 
      * @return string
      */
     public function getFilename()
     {
         return $this->filename;
+    }
+    
+    /**
+     * returns the path name of the source file
+     * 
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->dirname;
     }
     
     /**

@@ -108,4 +108,57 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
         $res = $this->converter->update($mock);
         $this->assertEquals($this->converter, $res);
     }
+    
+    /**
+     * ensures that the convert searches a unit test file 
+     */
+    public function testConverterRequiresTestFileFails()
+    {
+        $this->converter->setTestFileDir(PATH_TEST);
+        $file = new \SplFileObject(dirname(PATH_TEST). '/fixtures/colonTest.php');
+        $source = new \PythoPhant\Core\SourceFile($file);
+        
+        $observer = $this->getMock("PythoPhant\Event\Observer");
+        $observer->expects($this->once())
+            ->method('update')
+            ->will($this->returnCallback(array($this, 'fileNotFound')));
+        $this->converter->attach($observer);
+        
+        $this->converter->convert($source);
+    }
+    
+    public function fileNotFound($event)
+    {
+        $this->assertInstanceOf("PythoPhant\Event\Error", $event);
+        $this->assertContains('Test file not found', $event->__toString());
+    }
+    
+    /**
+     * ensures that the convert searches a unit test file 
+     */
+    public function testConverterRequiresTestFile()
+    {
+        $this->converter->setTestFileDir(PATH_TEST);
+        $file = new \SplFileObject(dirname(PATH_TEST). '/fixtures/class.php');
+        $source = new \PythoPhant\Core\SourceFile($file);
+        
+        $observer = $this->getMock("PythoPhant\Event\Observer");
+        $observer->expects($this->once())
+            ->method('update')
+            ->will($this->returnCallback(array($this, 'fileFound')));
+        $this->converter->attach($observer);
+        
+        $this->scanner->expects($this->once())
+            ->method('getTokenList')
+            ->will($this->throwException(new \RuntimeException('skipping the rest')));
+        
+        $this->setExpectedException("\RuntimeException");
+        $this->converter->convert($source);
+    }
+    
+    public function fileFound($event)
+    {
+        $this->assertInstanceOf("PythoPhant\Event\Info", $event, $event->__toString());
+        $this->assertContains('Test results', $event->__toString());
+    }
 }

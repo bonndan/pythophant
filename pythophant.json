@@ -2,12 +2,12 @@
     "project": "PythoPhant",
     
     "watch": [
-        "./classes",
         "./tests",
         "./fixtures"
     ],
     
     "testAfterConversion": true,
+    "testDir": "./tests",
 
     "macros": [
         "macros"
