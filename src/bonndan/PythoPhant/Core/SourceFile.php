@@ -96,10 +96,9 @@ class SourceFile
         
         file_put_contents($destination, $content);
         
-        ob_start();
-        passthru('php -l ' . $destination . ' 2>&1', $returnVal);
-        $output = ob_get_contents();
-        ob_end_clean();
+        $command = ShellCommand::createWith('php -l ' . $destination . ' 2>&1');
+        $returnVal = $command->execute();
+        $output = $command->getOutput();
         
         if ($returnVal) {
             //$output = implode('', $output);
