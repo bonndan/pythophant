@@ -68,7 +68,6 @@ abstract class AbstractSubject
         foreach ($this->getObservers() as $observer) {
             $observer->update($event);
         }
-
     }
 
 }
