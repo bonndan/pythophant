@@ -1,13 +1,16 @@
 <?php
+namespace PythoPhant\Event;
+
+use PythoPhant\Core\SourceFile;
+
 /**
- * PythoPhant_Event_FileConverted
+ * FileConverted
  * 
  * notifies observers when a pp file has been converted to php
  * 
  *  
  */
-class PythoPhant_Event_FileConverted
-implements PythoPhant_Event
+class FileConverted implements \PythoPhant\Event\Event
 {
     /**
      * file path
@@ -16,10 +19,11 @@ implements PythoPhant_Event
     private $file;
     
     /**
-     *
-     * @param PythoPhant_SourceFile $file 
+     * pass an instance of a source file
+     * 
+     * @param SourceFile $file 
      */
-    public function __construct(PythoPhant_SourceFile $file)
+    public function __construct(SourceFile $file)
     {
         $this->file = $file;
     }
@@ -27,7 +31,7 @@ implements PythoPhant_Event
     /**
      * returns the path of the changed file
      * 
-     * @return PythoPhant_SourceFile 
+     * @return SourceFile 
      */
     public function getFile()
     {
